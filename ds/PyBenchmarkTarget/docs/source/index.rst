@@ -1,0 +1,2 @@
+.. automodule:: PythonBenchmark
+    :members: PythonBenchmark
