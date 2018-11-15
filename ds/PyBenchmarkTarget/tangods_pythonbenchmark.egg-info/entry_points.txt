@@ -1,3 +1,0 @@
-[console_scripts]
-PythonBenchmark = PythonBenchmark:main
-
