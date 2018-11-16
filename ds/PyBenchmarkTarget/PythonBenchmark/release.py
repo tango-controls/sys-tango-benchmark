@@ -12,7 +12,8 @@
 name = """tangods-pythonbenchmark"""
 version = "1.0.0"
 version_info = version.split(".")
-description = """Benchmark device for counting attribute, command and pipe calls"""
+description = "Benchmark device for counting attribute, " + \
+              "command and pipe calls"
 author = "jankotan"
 author_email = "jankotan at gmail.com"
 license = """GPL"""

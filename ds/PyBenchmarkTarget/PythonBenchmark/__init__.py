@@ -15,6 +15,7 @@ Benchmark device for counting attribute, command and pipe calls
 from . import release
 from .PythonBenchmark import PythonBenchmark, main
 
+__all__ = [PythonBenchmark, main]
 __version__ = release.version
 __version_info__ = release.version_info
 __author__ = release.author

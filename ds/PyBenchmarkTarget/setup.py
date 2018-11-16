@@ -11,10 +11,7 @@
 import os
 import sys
 from setuptools import setup
-from setuptools.command.build_py import build_py
-from distutils.command.clean import clean
-from distutils.util import get_platform
-import shutil
+from PythonBenchmark.release import name, version
 
 setup_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -35,14 +32,16 @@ pytest_runner = ['pytest-runner'] if needs_pytest else []
 
 setup(name=name,
       version=version,
-      description='Benchmark device for counting attribute, command and pipe calls',
+      description='Benchmark device for counting attribute, '
+      'command and pipe calls',
       packages=pack,
       include_package_data=True,
       zip_safe=False,
       setup_requires=pytest_runner,
       tests_require=['pytest'],
       # test_suite="test",
-      entry_points={'console_scripts':['PythonBenchmark = PythonBenchmark:main']},
+      entry_points={
+          'console_scripts': ['PythonBenchmark = PythonBenchmark:main']},
       author='jankotan',
       author_email='jankotan at gmail.com',
       license='GPL',
