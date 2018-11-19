@@ -5,3 +5,6 @@
 *.pyc
 # Compiled C files
 *.o
+# pycharm files
+.idea
+.idea/*
