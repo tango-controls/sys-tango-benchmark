@@ -1,0 +1,34 @@
+language: python
+sudo: required
+dist: trusty
+group: deprecated-2017Q2
+
+env:
+  - TEST="flake8"
+  - OS_TYPE=debian9 PYTHON=2 TEST="testsuit"
+  - OS_TYPE=debian9 PYTHON=3 TEST="testsuit"
+  - OS_TYPE=ubuntu18.04 PYTHON=2 TEST="testsuit"
+  - OS_TYPE=ubuntu18.04 PYTHON=3 TEST="testsuit"
+
+services:
+  - docker
+
+before_install:
+  - if [ $TEST == "flake8" ]; then sudo apt-get update -qq ; fi
+  - if [ $TEST == "flake8" ]; then sudo pip install flake8; fi
+  - if [ $TEST == "testsuit" ]; then chmod +x .travis/run.sh; fi
+  - if [ $TEST == "testsuit" ]; then chmod +x .travis/install.sh; fi
+
+before_script:
+  - if [ $TEST == "testsuit" ]; then docker build -t s2i .travis/${OS_TYPE}_py${PYTHON}; fi
+  - if [ $TEST == "testsuit" ]; then docker run  --name  s2i -d -it -v `pwd`:/home/tango  s2i; fi
+  - if [ $TEST == "testsuit" ]; then .travis/install.sh ${OS_TYPE} ${PYTHON}; fi
+
+script:
+  - if [ $TEST == "testsuit" ]; then .travis/run.sh ${PYTHON}; fi
+  - if [ $TEST == "flake8" ]; then flake8; fi
+
+
+after-script:
+  - if [ $TEST == "testsuit" ]; then docker stop s2i; fi
+  - if [ $TEST == "testsuit" ]; then docker rm s2i; fi
