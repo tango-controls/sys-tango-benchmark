@@ -23,3 +23,16 @@
 #
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
+
+"""Benchmark device
+
+Benchmark device for counting attribute, command and pipe calls
+"""
+
+from . import release
+from .PyBenchmarkTarget import PyBenchmarkTarget, main
+
+__all__ = [PyBenchmarkTarget, main]
+__version__ = release.version
+__version_info__ = release.version_info
+__author__ = release.author

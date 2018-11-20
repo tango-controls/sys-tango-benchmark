@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
-  <classes name="PythonBenchmark" pogoRevision="9.4">
+  <classes name="PyBenchmarkTarget" pogoRevision="9.4">
     <description description="Benchmark device for counting attribute, command and pipe calls" title="Benchmark device" sourcePath="/home/jkotan/sources/sys-tango-benchmark/ds/PyBenchmarkTarget" language="PythonHL" filestogenerate="XMI   file" license="GPL" copyright="" hasMandatoryProperty="false" hasConcreteProperty="false" hasAbstractCommand="false" hasAbstractAttribute="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at gmail.com - jankotan" author="jankotan" emailDomain="gmail.com" classFamily="Simulators" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="" reference=""/>

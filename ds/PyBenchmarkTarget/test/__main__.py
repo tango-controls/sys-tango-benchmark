@@ -23,3 +23,10 @@
 #
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
+
+import PyBenchmarkTarget_test
+from PyBenchmarkTarget_test import PyBenchmarkTargetDeviceTest
+
+__all__ = [PyBenchmarkTargetDeviceTest]
+
+PyBenchmarkTarget_test.main()

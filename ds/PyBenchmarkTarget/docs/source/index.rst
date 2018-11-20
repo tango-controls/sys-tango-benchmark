@@ -1,2 +1,2 @@
-.. automodule:: PythonBenchmark
-    :members: PythonBenchmark
+.. automodule:: PyBenchmarkTarget
+    :members: PyBenchmarkTarget

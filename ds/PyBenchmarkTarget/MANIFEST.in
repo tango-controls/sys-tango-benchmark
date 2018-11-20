@@ -1,7 +1,7 @@
-recursive-include PythonBenchmark *.py
+recursive-include PyBenchmarkTarget *.py
 recursive-include test *.py
 include *.rst
-include PythonBenchmark.xmi
+include PyBenchmarkTarget.xmi
 include *.txt
 graft docs
 

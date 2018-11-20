@@ -1,8 +1,25 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# This file is part of the PythonBenchmark project
+# Copyright (C) 2018  Jan Kotanski <jankotan@gmail.com> / S2Innovation
 #
+# lavue is an image viewing program for photon science imaging detectors.
+# Its usual application is as a live viewer using hidra as data source.
 #
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation in  version 2
+# of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA  02110-1301, USA.
 #
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
@@ -21,10 +38,12 @@ from PyTango import AttrWriteType
 import numpy as np
 import time
 
-__all__ = ["PythonBenchmark", "main"]
+
+__all__ = ["PyBenchmarkTarget", "main"]
 
 
-class PythonBenchmark(Device):
+class PyBenchmarkTarget(Device):
+
     """
     Benchmark device for counting attribute, command and pipe calls
     """
@@ -292,7 +311,7 @@ class PythonBenchmark(Device):
 
 
 def main(args=None, **kwargs):
-    return run((PythonBenchmark,), args=args, **kwargs)
+    return run((PyBenchmarkTarget,), args=args, **kwargs)
 
 
 if __name__ == '__main__':

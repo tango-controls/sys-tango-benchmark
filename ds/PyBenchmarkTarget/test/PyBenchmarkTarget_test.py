@@ -1,12 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# This file is part of the PythonBenchmark project
+# Copyright (C) 2018  Jan Kotanski <jankotan@gmail.com> / S2Innovation
 #
+# lavue is an image viewing program for photon science imaging detectors.
+# Its usual application is as a live viewer using hidra as data source.
 #
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation in  version 2
+# of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA  02110-1301, USA.
 #
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
+
 """Contain the tests for the Benchmark device."""
 
 import sys
@@ -24,7 +41,7 @@ sys.path.insert(0, os.path.abspath(path))
 
 
 # Device test case
-class PythonBenchmarkDeviceTest(unittest.TestCase):
+class PyBenchmarkTargetDeviceTest(unittest.TestCase):
     """Test case for packet generation."""
 
     def __init__(self, methodName):
@@ -33,16 +50,16 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
         """
         unittest.TestCase.__init__(self, methodName)
         self.instance = 'TEST'
-        self.device = 'test/pythonbenchmark/000'
+        self.device = 'test/pybenchmarktarget/000'
         self.new_device_info_benchmark = PyTango.DbDevInfo()
-        self.new_device_info_benchmark._class = "PythonBenchmark"
-        self.new_device_info_benchmark.server = "PythonBenchmark/%s" % \
+        self.new_device_info_benchmark._class = "PyBenchmarkTarget"
+        self.new_device_info_benchmark.server = "PyBenchmarkTarget/%s" % \
                                                 self.instance
         self.new_device_info_benchmark.name = self.device
         self.proxy = None
 
     def setUp(self):
-        print("tearing down ...")
+        print("\nsetting up ...")
         db = PyTango.Database()
         db.add_device(self.new_device_info_benchmark)
         db.add_server(
@@ -50,25 +67,26 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
             self.new_device_info_benchmark)
 
         if sys.version_info > (3,):
-            if os.path.isfile("../PythonBenchmark"):
+            if os.path.isfile("../PyBenchmarkTarget"):
                 self._psub = subprocess.call(
-                    "cd ..; python3 ./PythonBenchmark %s &" % self.instance,
+                    "cd ..; python3 ./PyBenchmarkTarget %s &" % self.instance,
                     stdout=None,
                     stderr=None, shell=True)
             else:
                 self._psub = subprocess.call(
-                    "python3 PythonBenchmark %s &" % self.instance,
+                    "python3 PyBenchmarkTarget %s &" % self.instance,
                     stdout=None,
                     stderr=None, shell=True)
         else:
-            if os.path.isfile("../PythonBenchmark"):
+            if os.path.isfile("../PyBenchmarkTarget"):
                 self._psub = subprocess.call(
-                    "cd ..; ./PythonBenchmark %s &" % self.instance,
+                    "cd ..; python ./PyBenchmarkTarget %s &" % self.instance,
                     stdout=None,
                     stderr=None, shell=True)
             else:
                 self._psub = subprocess.call(
-                    "PythonBenchmark %s &" % self.instance, stdout=None,
+                    "python PyBenchmarkTarget %s &" % self.instance,
+                    stdout=None,
                     stderr=None, shell=True)
         sys.stdout.write("waiting for server ")
 
@@ -82,7 +100,9 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
                 if dp.state() == PyTango.DevState.ON:
                     found = True
             except Exception as e:
-                # print(e)
+                # sys.stderr.write("%s\n" % e)
+                # if cnt > 100:
+                #     raise
                 found = False
             cnt += 1
         print("")
@@ -94,7 +114,7 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
         db.delete_server(self.new_device_info_benchmark.server)
 
         pipe = subprocess.Popen(
-            "ps -ef | grep 'PythonBenchmark %s'" % self.instance,
+            "ps -ef | grep 'PyBenchmarkTarget %s'" % self.instance,
             stdout=subprocess.PIPE, shell=True).stdout
 
         res = str(pipe.read()).split("\n")
@@ -108,14 +128,20 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_State(self):
         """Test for State"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.assertEqual(self.proxy.State(), PyTango.DevState.ON)
 
     def test_Status(self):
         """Test for Status"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.assertEqual(self.proxy.Status(), 'State is ON')
 
     def test_BenchmarkCommand(self):
         """Test for BenchmarkCommand"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.CommandCallsCount, 0)
 
@@ -125,6 +151,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_SetSpectrumSize(self):
         """Test for SetSpectrumSize"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.SetSpectrumSize(123)
         self.assertEqual(len(self.proxy.BenchmarkSpectrumAttribute), 123)
         self.proxy.SetSpectrumSize(1024)
@@ -132,15 +160,27 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_SetImageSize(self):
         """Test for SetImageSize"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.SetImageSize([123, 456])
-        self.assertEqual(self.proxy.BenchmarkImageAttribute.shape,
-                         (123, 456))
-        self.proxy.SetImageSize([1024, 2096])
-        self.assertEqual(self.proxy.BenchmarkImageAttribute.shape,
-                         (1024, 2096))
+        value = self.proxy.BenchmarkImageAttribute
+        if isinstance(value, np.ndarray):
+            self.assertEqual(value.shape, (123, 456))
+            self.proxy.SetImageSize([1024, 2096])
+            self.assertEqual(
+                self.proxy.BenchmarkImageAttribute.shape, (1024, 2096))
+        else:
+            self.assertEqual(len(value), 123)
+            self.assertEqual(len(value[0]), 456)
+            self.proxy.SetImageSize([1024, 2096])
+            value2 = self.proxy.BenchmarkImageAttribute
+            self.assertEqual(len(value2), 1024)
+            self.assertEqual(len(value2[0]), 2096)
 
     def test_ResetCounters(self):
         """Test for ResetCounters"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         t1 = self.proxy.TimeSinceReset
 
@@ -188,6 +228,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_BenchmarkScalarAttribute(self):
         """Test for BenchmarkScalarAttribute"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.ScalarReadsCount, 0)
         self.assertEqual(self.proxy.ScalarWritesCount, 0)
@@ -202,6 +244,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_AlwaysExecutedHookCount(self):
         """Test for AlwaysExecutedHookCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         t1 = self.proxy.TimeSinceReset
 
@@ -243,6 +287,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_ReadAttributeHardwareCount(self):
         """Test for ReadAttributeHardwareCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         t1 = self.proxy.TimeSinceReset
 
@@ -282,6 +328,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_WriteAttributeCounterCount(self):
         """Test for WriteAttributeCounterCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
 
         self.proxy.ResetCounters()
         t1 = self.proxy.TimeSinceReset
@@ -322,6 +370,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_ScalarReadsCount(self):
         """Test for ScalarReadsCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.ScalarReadsCount, 0)
 
@@ -331,6 +381,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_SpectrumReadsCount(self):
         """Test for SpectrumReadsCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.SpectrumReadsCount, 0)
 
@@ -340,6 +392,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_ImageReadsCount(self):
         """Test for ImageReadsCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.ImageReadsCount, 0)
 
@@ -349,6 +403,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_ScalarWritesCount(self):
         """Test for ScalarWritesCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.ScalarWritesCount, 0)
 
@@ -358,26 +414,32 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_SpectrumWritesCount(self):
         """Test for SpectrumWritesCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.SpectrumWritesCount, 0)
 
         for i in range(10):
             self.proxy.BenchmarkSpectrumAttribute = np.zeros(
-                shape=[i*10], dtype=float)
+                shape=[i * 10 + 1], dtype=float)
             self.assertEqual(self.proxy.SpectrumWritesCount, i + 1)
 
     def test_ImageWritesCount(self):
         """Test for ImageWritesCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.ImageWritesCount, 0)
 
         for i in range(10):
             self.proxy.BenchmarkImageAttribute = np.zeros(
-                shape=[i * 10, i * 20], dtype=float)
+                shape=[i * 10 + 1, i * 20 + 1], dtype=float)
             self.assertEqual(self.proxy.ImageWritesCount, i + 1)
 
     def test_CommandCallsCount(self):
         """Test for CommandCallsCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.CommandCallsCount, 0)
 
@@ -387,6 +449,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_TimeSinceReset(self):
         """Test for TimeSinceReset"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         tbr1 = time.time()
         self.proxy.ResetCounters()
         tar1 = time.time()
@@ -424,6 +488,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_BenchmarkSpectrumAttribute(self):
         """Test for BenchmarkSpectrumAttribute"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.SpectrumReadsCount, 0)
         self.assertEqual(self.proxy.SpectrumWritesCount, 0)
@@ -439,6 +505,8 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
 
     def test_BenchmarkImageAttribute(self):
         """Test for BenchmarkImageAttribute"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
         self.proxy.ResetCounters()
         self.assertEqual(self.proxy.ImageReadsCount, 0)
         self.assertEqual(self.proxy.ImageWritesCount, 0)
@@ -450,11 +518,23 @@ class PythonBenchmarkDeviceTest(unittest.TestCase):
             self.assertEqual(self.proxy.ImageWritesCount, i + 1)
             rvl = self.proxy.BenchmarkImageAttribute
             self.assertEqual(self.proxy.ImageReadsCount, i + 1)
-            self.assertEqual(wvl.shape, rvl.shape)
-            for i in range(wvl.shape[0]):
-                self.assertEqual(list(wvl[i, :]), list(rvl[i, :]))
+            if isinstance(rvl, np.ndarray):
+                self.assertEqual(wvl.shape, rvl.shape)
+                for i in range(wvl.shape[0]):
+                    self.assertEqual(list(wvl[i, :]), list(rvl[i, :]))
+            else:
+                # workaround for pytango without numpy
+                self.assertEqual(wvl.shape[0], len(rvl))
+                self.assertEqual(wvl.shape[1], len(rvl[0]))
+                for i in range(wvl.shape[0]):
+                    self.assertEqual(list(wvl[i, :]), list(rvl[i]))
+
+
+def main():
+    """ main function"""
+    unittest.main()
 
 
 # Main execution
 if __name__ == "__main__":
-    unittest.main()
+    main()
