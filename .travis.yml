@@ -6,9 +6,9 @@ group: deprecated-2017Q2
 env:
   - TEST="flake8"
   - OS_TYPE=debian9 PYTHON=2 TEST="testsuit"
-  - OS_TYPE=debian9 PYTHON=3 TEST="testsuit"
   - OS_TYPE=ubuntu18.04 PYTHON=2 TEST="testsuit"
-  - OS_TYPE=ubuntu18.04 PYTHON=3 TEST="testsuit"
+#  - OS_TYPE=ubuntu18.04 PYTHON=3 TEST="testsuit
+#  - OS_TYPE=debian9 PYTHON=3 TEST="testsuit"
 
 services:
   - docker
