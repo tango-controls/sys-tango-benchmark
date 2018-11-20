@@ -80,12 +80,12 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         else:
             if os.path.isfile("../PyBenchmarkTarget"):
                 self._psub = subprocess.call(
-                    "cd ..; python ./PyBenchmarkTarget %s &" % self.instance,
+                    "cd ..; python2 ./PyBenchmarkTarget %s &" % self.instance,
                     stdout=None,
                     stderr=None, shell=True)
             else:
                 self._psub = subprocess.call(
-                    "python PyBenchmarkTarget %s &" % self.instance,
+                    "python2 PyBenchmarkTarget %s &" % self.instance,
                     stdout=None,
                     stderr=None, shell=True)
         sys.stdout.write("waiting for server ")
