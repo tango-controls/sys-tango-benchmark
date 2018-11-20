@@ -20,9 +20,9 @@ before_install:
   - if [ "$TEST" == "testsuit" ]; then chmod +x .travis/install.sh; fi
 
 before_script:
-  - if [ "$TEST" == "testsuit" ]; then docker build -t s2i .travis/${OS_TYPE}_py${PYTHON}; fi
+  - if [ "$TEST" == "testsuit" ]; then docker build -t s2i .travis/"${OS_TYPE}"_py"${PYTHON}"; fi
   - if [ "$TEST" == "testsuit" ]; then docker run  --name  s2i -d -it -v `pwd`:/home/tango  s2i; fi
-  - if [ "$TEST" == "testsuit" ]; then .travis/install.sh ${OS_TYPE} ${PYTHON}; fi
+  - if [ "$TEST" == "testsuit" ]; then .travis/install.sh "${OS_TYPE}" "${PYTHON}"; fi
 
 script:
   - if [ "$TEST" == "testsuit" ]; then .travis/run.sh ${PYTHON}; fi
