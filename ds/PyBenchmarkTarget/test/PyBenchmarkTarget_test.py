@@ -99,10 +99,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                 time.sleep(0.1)
                 if dp.state() == PyTango.DevState.ON:
                     found = True
-            except Exception as e:
-                # sys.stderr.write("%s\n" % e)
-                # if cnt > 100:
-                #     raise
+            except Exception:
                 found = False
             cnt += 1
         print("")
