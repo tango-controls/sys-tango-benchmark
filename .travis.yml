@@ -5,10 +5,10 @@ group: deprecated-2017Q2
 
 env:
   - TEST="flake8"
-  - OS_TYPE=debian9 PYTHON=2 TEST="testsuit"
-  - OS_TYPE=ubuntu18.04 PYTHON=2 TEST="testsuit"
-  - OS_TYPE=ubuntu18.04 PYTHON=3 TEST="testsuit
-  - OS_TYPE=debian9 PYTHON=3 TEST="testsuit"
+  - OS=debian9 PY=2 TEST="testsuit"
+  - OS=ubuntu18.04 PY=2 TEST="testsuit"
+  - OS=ubuntu18.04 PY=3 TEST="testsuit
+  - OS=debian9 PY=3 TEST="testsuit"
 
 services:
   - docker
@@ -20,12 +20,12 @@ before_install:
   - if [ "$TEST" == "testsuit" ]; then chmod +x .travis/install.sh; fi
 
 before_script:
-  - if [ "$TEST" == "testsuit" ]; then docker build -t s2i .travis/"${OS_TYPE}"_py"${PYTHON}"; fi
+  - if [ "$TEST" == "testsuit" ]; then docker build -t s2i .travis/"${OS}"_py"${PY}"; fi
   - if [ "$TEST" == "testsuit" ]; then docker run  --name  s2i -d -it -v `pwd`:/home/tango  s2i; fi
-  - if [ "$TEST" == "testsuit" ]; then .travis/install.sh "${OS_TYPE}" "${PYTHON}"; fi
+  - if [ "$TEST" == "testsuit" ]; then .travis/install.sh "${OS}" "${PY}"; fi
 
 script:
-  - if [ "$TEST" == "testsuit" ]; then .travis/run.sh ${PYTHON}; fi
+  - if [ "$TEST" == "testsuit" ]; then .travis/run.sh ${PY}; fi
   - if [ "$TEST" == "flake8" ]; then flake8; fi
 
 
