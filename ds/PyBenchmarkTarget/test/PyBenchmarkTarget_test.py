@@ -111,7 +111,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         db.delete_server(self.new_device_info_benchmark.server)
 
         pipe = subprocess.Popen(
-            "ps -ef | grep 'PyBenchmarkTarget %s'" % self.instance,
+            "ps -ef | grep 'PyBenchmarkTarget %s' | grep -v grep" %
+            self.instance,
             stdout=subprocess.PIPE, shell=True).stdout
 
         res = str(pipe.read()).split("\n")
