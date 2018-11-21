@@ -99,10 +99,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                 time.sleep(0.1)
                 if dp.state() == PyTango.DevState.ON:
                     found = True
-            except Exception as e:
-                # sys.stderr.write("%s\n" % e)
-                # if cnt > 100:
-                #     raise
+            except Exception:
                 found = False
             cnt += 1
         print("")
@@ -114,7 +111,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         db.delete_server(self.new_device_info_benchmark.server)
 
         pipe = subprocess.Popen(
-            "ps -ef | grep 'PyBenchmarkTarget %s'" % self.instance,
+            "ps -ef | grep 'PyBenchmarkTarget %s' | grep -v grep" %
+            self.instance,
             stdout=subprocess.PIPE, shell=True).stdout
 
         res = str(pipe.read()).split("\n")
