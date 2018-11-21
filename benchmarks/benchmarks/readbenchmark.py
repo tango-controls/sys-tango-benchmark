@@ -24,10 +24,60 @@
 import argparse
 import sys
 import PyTango
+import time
 
 from argparse import RawTextHelpFormatter
+from multiprocessing import Process, Queue
 
 from . import release
+
+
+class Worker(Process):
+    """ worker instance
+    """
+
+    def __init__(self, wid, device, attribute, period, qresult):
+        """ constructor
+
+        :param wid: worker id
+        :type wid: :obj:`int`
+        :param device: device name
+        :type device: :obj:`str`
+        :param attribute: attribute name
+        :type attribute: :obj:`str`
+        :param attribute: time period
+        :type attribute: :obj:`float`
+        :param qresult: queue with result
+        :type qresult: :class:`Queue.Queue` or `queue.queue`
+
+        """
+        Process.__init__(self)
+
+        # : (:obj:`int`) worker id
+        self.__wid = wid
+        # : (:obj:`float`) time period in seconds
+        self.__period = float(period)
+        #: (:obj:`str`) device proxy
+        self.__device = device
+        #: (:obj:`str`) device attribute name
+        self.__attribute = attribute
+        # : (:class:`PyTango.AttributeProxy`) attribute proxy
+        self.__proxy = None
+        # : (:class:`Queue.Queue`) result queue
+        self.__qresult = qresult
+        # : (:obj:`int`) counter
+        self.__counter = 0
+
+    def run(self):
+        """ worker thread
+        """
+        self.__proxy = PyTango.AttributeProxy(
+            "%s/%s" % (self.__device, self.__attribute))
+        stime = time.time()
+        while time.time() - stime < self.__period:
+            self.__proxy.read()
+            self.__counter += 1
+        print("id: %s, counts: %s" % (self.__wid, self.__counter))
 
 
 class ReadBenchmark():
@@ -41,20 +91,33 @@ class ReadBenchmark():
         :type options: :class:`argparse.Namespace`
         """
 
-        # : (:obj:`str`) device proxy
+        #: (:obj:`str`) device proxy
         self.__device = options.device
-
-        # : (:obj:`str`) device attribute name
+        #: (:obj:`str`) device attribute name
         self.__attribute = options.attribute
-
-        # : (:obj:`float`) time period in seconds
+        #: (:obj:`float`) time period in seconds
         self.__period = float(options.period)
+        #: (:obj:`int`) number of clients
+        self.__clients = int(options.clients)
+        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
+        self.__results = [Queue() for i in range(self.__clients)]
+        #: (:obj:`list` < :class:`Worker` >) process worker
+        self.__workers = [
+            Worker(i, self.__device, self.__attribute, self.__period,
+                   self.__results[i])
+            for i in range(self.__clients)
+        ]
 
-        # : (:obj:`int`) number of clients
-        self.__clients = float(options.clients)
-
-    def start():
+    def start(self):
         """ start benchmark
+        """
+        for wk in self.__workers:
+            wk.start()
+        for wk in self.__workers:
+            wk.join()
+
+    def output(self):
+        """ create output
         """
 
 
@@ -124,6 +187,7 @@ def main():
 
     rdbm = ReadBenchmark(options=options)
     rdbm.start()
+    rdbm.output()
 
 
 if __name__ == "__main__":
