@@ -33,6 +33,14 @@ from . import release
 from . import utils
 
 
+def cb_tango(*args):
+    """ tango callback
+    """
+    event_data = args[0]
+    if event_data.err:
+        print(event_data.errors)
+
+
 class Worker(Process):
     """ worker instance
     """
@@ -72,19 +80,25 @@ class Worker(Process):
     def run(self):
         """ worker thread
         """
-        self.__proxy = PyTango.AttributeProxy(
-            "%s/%s" % (self.__device, self.__attribute))
+        self.__proxy = PyTango.DeviceProxy(self.__device)
+        time.sleep(20)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
-            self.__proxy.read()
+            # id_ = \
+            self.__proxy.subscribe_event(
+                self.__attribute,
+                PyTango.EventType.CHANGE_EVENT,
+                cb_tango)
+            # pool.unsubscribe_event(id_)
+
             etime = time.time()
             self.__counter += 1
         self.__qresult.put(
             utils.Result(self.__wid, self.__counter, etime - stime))
 
 
-class ReadBenchmark():
+class EventBenchmark():
     """  master class for read benchmark
     """
 
@@ -137,8 +151,8 @@ def main():
     """
 
     parser = argparse.ArgumentParser(
-        description='perform check if and how a number of simultaneous '
-        'clients affect attributes reads speed',
+        description='perform check if and how number of parallel '
+        'subscribers affects subscription time',
         formatter_class=RawTextHelpFormatter)
     parser.add_argument(
         "-v", "--version",
@@ -196,7 +210,7 @@ def main():
     if not options.attribute:
         options.attribute = "BenchmarkScalarAttribute"
 
-    rdbm = ReadBenchmark(options=options)
+    rdbm = EventBenchmark(options=options)
     rdbm.start()
     rdbm.output()
 

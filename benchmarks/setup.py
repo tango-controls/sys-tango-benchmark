@@ -55,7 +55,11 @@ SETUPDATA = dict(
     include_package_data=True,
     zip_safe=False,
     entry_points={
-        'console_scripts': ['readbenchmark = benchmarks.readbenchmark:main']},
+        'console_scripts': [
+            'readbenchmark = benchmarks.readbenchmark:main',
+            'writebenchmark = benchmarks.writebenchmark:main',
+            'eventbenchmark = benchmarks.eventbenchmark:main',
+        ]},
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',
     license='GPL',

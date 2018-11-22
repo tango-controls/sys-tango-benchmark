@@ -25,6 +25,7 @@ import argparse
 import sys
 import PyTango
 import time
+import numpy as np
 
 from argparse import RawTextHelpFormatter
 from multiprocessing import Process, Queue
@@ -37,7 +38,7 @@ class Worker(Process):
     """ worker instance
     """
 
-    def __init__(self, wid, device, attribute, period, qresult):
+    def __init__(self, wid, device, attribute, period, value, qresult):
         """ constructor
 
         :param wid: worker id
@@ -48,6 +49,8 @@ class Worker(Process):
         :type attribute: :obj:`str`
         :param attribute: time period
         :type attribute: :obj:`float`
+        :param value:  attribute value
+        :type value: :class:`numpy.ndarray`
         :param qresult: queue with result
         :type qresult: :class:`Queue.Queue` or `queue.queue`
 
@@ -62,6 +65,8 @@ class Worker(Process):
         self.__device = device
         #: (:obj:`str`) device attribute name
         self.__attribute = attribute
+        #: (:obj:`float` or :class:`np.array`) device attribute value
+        self.__value = value
         # : (:class:`PyTango.AttributeProxy`) attribute proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
@@ -77,14 +82,14 @@ class Worker(Process):
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
-            self.__proxy.read()
+            self.__proxy.write(self.__value)
             etime = time.time()
             self.__counter += 1
         self.__qresult.put(
             utils.Result(self.__wid, self.__counter, etime - stime))
 
 
-class ReadBenchmark():
+class WriteBenchmark():
     """  master class for read benchmark
     """
 
@@ -103,12 +108,41 @@ class ReadBenchmark():
         self.__period = float(options.period)
         #: (:obj:`int`) number of clients
         self.__clients = int(options.clients)
+        #: (:obj:`float` or :class:`numpy.array`) attribute value to write
+        self.__value = 0
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
         self.__results = [Queue() for i in range(self.__clients)]
+
+        try:
+            shape = list(map(int, options.shape.split(',')))
+        except Exception:
+            shape = None
+
+        try:
+            value = list(
+                map(float, options.value.replace('m', '-').split(',')))
+        except Exception:
+            value = [0]
+        if shape is None:
+            if len(value) == 1:
+                self.__value = value[0]
+            elif len(value) > 1:
+                self.__value = np.array(value)
+        elif len(shape) == 1:
+            self.__value = np.array(
+                (value * (shape[0] / max(1, len(value) - 1)))[:shape[0]]
+            ).reshape(shape)
+        elif len(shape) == 2:
+            self.__value = np.array(
+                (
+                    value * (shape[0] * shape[1] / max(1, len(value) - 1))
+                )[:shape[0] * shape[1]]
+            ).reshape(shape)
+
         #: (:obj:`list` < :class:`Worker` >) process worker
         self.__workers = [
             Worker(i, self.__device, self.__attribute, self.__period,
-                   self.__results[i])
+                   self.__value, self.__results[i])
             for i in range(self.__clients)
         ]
 
@@ -138,7 +172,7 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='perform check if and how a number of simultaneous '
-        'clients affect attributes reads speed',
+        'clients affect attributes write speed',
         formatter_class=RawTextHelpFormatter)
     parser.add_argument(
         "-v", "--version",
@@ -159,6 +193,16 @@ def main():
         "-a", "--attribute", dest="attribute",
         default="BenchmarkScalarAttribute",
         help="attribute which will be read, default: BenchmarkScalarAttribute")
+    parser.add_argument(
+        "-s", "--attribute-shape", dest="shape",
+        default="",
+        help="attribute which will be read, default: '', "
+        "e.g. -s '128,64' ")
+    parser.add_argument(
+        "-w", "--attribute-value", dest="value",
+        default="0",
+        help="value to be written, default: 0, "
+        "e.g. -w '12.28,12.234,m123.3' where m123.3 means -123.3")
 
     options = parser.parse_args()
 
@@ -196,7 +240,7 @@ def main():
     if not options.attribute:
         options.attribute = "BenchmarkScalarAttribute"
 
-    rdbm = ReadBenchmark(options=options)
+    rdbm = WriteBenchmark(options=options)
     rdbm.start()
     rdbm.output()
 

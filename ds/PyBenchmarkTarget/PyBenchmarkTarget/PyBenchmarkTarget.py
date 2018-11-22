@@ -165,6 +165,9 @@ class PyBenchmarkTarget(Device):
             shape=[1024], dtype=float)
         self.__benchmark_image_attribute = np.zeros(
             shape=[1024, 2048], dtype=float)
+        self.set_change_event("BenchmarkScalarAttribute", True, False)
+        self.set_change_event("BenchmarkSpectrumAttribute", True, False)
+        self.set_change_event("BenchmarkImageAttribute", True, False)
 
     def always_executed_hook(self):
         self.__always_executed_hook_count += 1

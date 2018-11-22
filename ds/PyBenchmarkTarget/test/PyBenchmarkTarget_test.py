@@ -39,6 +39,9 @@ import PyTango
 path = os.path.join(os.path.dirname(__file__), os.pardir)
 sys.path.insert(0, os.path.abspath(path))
 
+#: python3 running
+PY3 = (sys.version_info > (3,))
+
 
 # Device test case
 class PyBenchmarkTargetDeviceTest(unittest.TestCase):
@@ -66,7 +69,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             self.new_device_info_benchmark.server,
             self.new_device_info_benchmark)
 
-        if sys.version_info > (3,):
+        if PY3:
             if os.path.isfile("../PyBenchmarkTarget"):
                 self._psub = subprocess.call(
                     "cd ..; python3 ./PyBenchmarkTarget %s &" % self.instance,
@@ -110,18 +113,36 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         db = PyTango.Database()
         db.delete_server(self.new_device_info_benchmark.server)
 
-        pipe = subprocess.Popen(
-            "ps -ef | grep 'PyBenchmarkTarget %s' | grep -v grep" %
-            self.instance,
-            stdout=subprocess.PIPE, shell=True).stdout
+        if PY3:
+            with subprocess.Popen(
+                    "ps -ef | grep 'PyBenchmarkTarget %s' | grep -v grep" %
+                    self.instance,
+                    stdout=subprocess.PIPE, shell=True) as proc:
 
-        res = str(pipe.read()).split("\n")
-        for r in res:
-            sr = r.split()
-            if len(sr) > 2:
-                subprocess.call("kill -9 %s" %
-                                sr[1], stderr=subprocess.PIPE, shell=True)
-        pipe.close()
+                pipe = proc.stdout
+                res = str(pipe.read(), "utf8").split("\n")
+                for r in res:
+                    sr = r.split()
+                    if len(sr) > 2:
+                        subprocess.call(
+                            "kill -9 %s" % sr[1], stderr=subprocess.PIPE,
+                            shell=True)
+                pipe.close()
+        else:
+            pipe = subprocess.Popen(
+                "ps -ef | grep 'PyBenchmarkTarget %s' | grep -v grep" %
+                self.instance,
+                stdout=subprocess.PIPE, shell=True).stdout
+
+            res = str(pipe.read()).split("\n")
+            for r in res:
+                sr = r.split()
+                if len(sr) > 2:
+                    subprocess.call(
+                        "kill -9 %s" % sr[1], stderr=subprocess.PIPE,
+                        shell=True)
+            pipe.close()
+
         self.proxy = None
 
     def test_State(self):
