@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-MAINTAINER DESY, Jan Kotanski <jankotan@gmail.com>
+MAINTAINER Jan Kotanski <jankotan@gmail.com>
 
 RUN apt-get -qq update && export DEBIAN_FRONTEND=noninteractive && apt-get -qq install -y software-properties-common curl
 RUN apt-get -qq update && export DEBIAN_FRONTEND=noninteractive && apt-get -qq dist-upgrade
