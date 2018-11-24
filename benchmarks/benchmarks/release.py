@@ -26,10 +26,10 @@
 
 """Release information for Python Package"""
 
-name = """tangods-pybenchmarktarget"""
+name = """pybenchmark"""
 version = "1.0.0"
 version_info = version.split(".")
-description = "Benchmark device for counting attribute, " + \
+description = "Benchmark script for counting attribute, " + \
               "command and pipe calls"
 author = "jankotan"
 author_email = "jankotan at gmail.com"
