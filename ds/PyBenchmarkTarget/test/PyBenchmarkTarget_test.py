@@ -130,7 +130,6 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                         subprocess.call(
                             "kill -9 %s" % sr[1], stderr=subprocess.PIPE,
                             shell=True)
-                pipe.close()
         else:
             pipe = subprocess.Popen(
                 "ps -ef | grep 'PyBenchmarkTarget %s' | grep -v grep" %
