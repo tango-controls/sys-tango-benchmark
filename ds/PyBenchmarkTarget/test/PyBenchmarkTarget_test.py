@@ -118,9 +118,12 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                     "ps -ef | grep 'PyBenchmarkTarget %s' | grep -v grep" %
                     self.instance,
                     stdout=subprocess.PIPE, shell=True) as proc:
-
-                pipe = proc.stdout
-                res = str(pipe.read(), "utf8").split("\n")
+                try:
+                    outs, errs = proc.communicate(timeout=15)
+                except TimeoutExpired:
+                    proc.kill()
+                    outs, errs = proc.communicate()
+                res = str(outs, "utf8").split("\n")
                 for r in res:
                     sr = r.split()
                     if len(sr) > 2:
