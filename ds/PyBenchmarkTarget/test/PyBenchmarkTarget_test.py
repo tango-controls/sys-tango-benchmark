@@ -120,7 +120,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                     stdout=subprocess.PIPE, shell=True) as proc:
                 try:
                     outs, errs = proc.communicate(timeout=15)
-                except TimeoutExpired:
+                except subprocess.TimeoutExpired:
                     proc.kill()
                     outs, errs = proc.communicate()
                 res = str(outs, "utf8").split("\n")
