@@ -21,6 +21,59 @@
 # Boston, MA  02110-1301, USA.
 #
 
+import numpy as np
+
+
+class Benchmark(object):
+    """  master class for read benchmark
+    """
+
+    def __init__(self):
+        """ constructor
+
+        :param options: commandline options
+        :type options: :class:`argparse.Namespace`
+        """
+
+        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
+        self._results = []
+        #: (:obj:`list` < :class:`Worker` >) process worker
+        self._workers = []
+
+    def start(self):
+        """ start benchmark
+        """
+        for wk in self._workers:
+            wk.start()
+        for wk in self._workers:
+            wk.join()
+
+    def output(self):
+        """ create output
+        """
+        results = []
+        for qres in self._results:
+            try:
+                res = qres.get(block=False)
+                results.append(res)
+                # print("id: %s, counts: %s, time: %s s,
+                # speed: %s counts/s" % (
+                # res.wid, res.counts, res.ctime, res.speed()))
+            except Exception:
+                pass
+        avg = Average(results)
+        mcnts = avg.counts()
+        mtm = avg.ctime()
+        mspd = avg.speed()
+        mspd = avg.speed()
+        # mspd = avg.simplespeed()
+        print("nr: %s: counts: %s +/- %s, time: (%s +/- %s) s, "
+              "speed: (%s +/ %s) counts/s" % (
+                  avg.size(),
+                  mcnts[0], mcnts[1],
+                  mtm[0], mtm[1],
+                  mspd[0], mspd[1]))
+
 
 class Result(object):
     """ benchmark result
@@ -50,3 +103,73 @@ class Result(object):
         :returns: counting speed
         """
         return self.counts / self.ctime
+
+
+class Average(object):
+    """ benchmark result
+    """
+
+    def __init__(self, results):
+        """ constructor
+
+        :param results: a list of results
+        :type results: :obj:`list` <:class:`Result`>
+        """
+        self.__results = results
+
+    def counts(self):
+        """ provides mean counts and its standard deviation
+        std = sqrt(mean(abs(x - x.mean())**2))
+
+        :rtype: (:class:`numpy.float`, :class:`numpy.float`)
+        :returns: mean counts, std
+        """
+        cnts = [res.counts for res in self.__results]
+        return np.mean(cnts), np.std(cnts)
+
+    def ctime(self):
+        """ provides mean time and its standard deviation
+        std = sqrt(mean(abs(x - x.mean())**2))
+
+        :rtype: (:class:`numpy.float`, :class:`numpy.float`)
+        :returns: mean time, std
+        """
+        ctms = [res.ctime for res in self.__results]
+        return np.mean(ctms), np.std(ctms)
+
+    def speed(self):
+        """ provides mean time and its standard deviation
+        std_f ** 2 = (d_t f) ** 2 * std_t ** 2 + (d_c f) ** 2 *  std_c ** 2
+
+        :rtype: (:class:`numpy.float`, :class:`numpy.float`)
+        :returns: mean time, std
+        """
+        # ctms = [res.speed() for res in self.__results]
+        # return np.mean(ctms), np.std(ctms)
+
+        mtm = self.ctime()
+        mcnts = self.counts()
+        mean = mcnts[0]/mtm[0]
+        std = np.sqrt(
+            mcnts[1] ** 2 / mtm[0] ** 2 +
+            mtm[1] ** 2 * mcnts[0] ** 2 / (mtm[0] ** 4))
+        return mean, std
+
+    def simplespeed(self):
+        """ provides mean time and its standard deviation
+        std = sqrt(mean(abs(x - x.mean())**2))
+        from aproximated formula
+        (anyhow we dont know distribution of counts and time)
+
+        :rtype: (:class:`numpy.float`, :class:`numpy.float`)
+        :returns: mean time, std
+        """
+        ctms = [res.speed() for res in self.__results]
+        return np.mean(ctms), np.std(ctms)
+
+    def size(self):
+        """ provides number of results
+        :rtype: int
+        :returns: number of results
+        """
+        return len(self.__results)

@@ -89,8 +89,8 @@ class Worker(Process):
             utils.Result(self.__wid, self.__counter, etime - stime))
 
 
-class WriteBenchmark():
-    """  master class for read benchmark
+class WriteBenchmark(utils.Benchmark):
+    """  master class for write benchmark
     """
 
     def __init__(self, options):
@@ -100,6 +100,7 @@ class WriteBenchmark():
         :type options: :class:`argparse.Namespace`
         """
 
+        utils.Benchmark.__init__(self)
         #: (:obj:`str`) device proxy
         self.__device = options.device
         #: (:obj:`str`) device attribute name
@@ -111,7 +112,7 @@ class WriteBenchmark():
         #: (:obj:`float` or :class:`numpy.array`) attribute value to write
         self.__value = 0
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self.__results = [Queue() for i in range(self.__clients)]
+        self._results = [Queue() for i in range(self.__clients)]
 
         try:
             shape = list(map(int, options.shape.split(',')))
@@ -140,30 +141,11 @@ class WriteBenchmark():
             ).reshape(shape)
 
         #: (:obj:`list` < :class:`Worker` >) process worker
-        self.__workers = [
+        self._workers = [
             Worker(i, self.__device, self.__attribute, self.__period,
-                   self.__value, self.__results[i])
+                   self.__value, self._results[i])
             for i in range(self.__clients)
         ]
-
-    def start(self):
-        """ start benchmark
-        """
-        for wk in self.__workers:
-            wk.start()
-        for wk in self.__workers:
-            wk.join()
-
-    def output(self):
-        """ create output
-        """
-        for qres in self.__results:
-            try:
-                res = qres.get(block=False)
-                print("id: %s, counts: %s, time: %s s, speed: %s counts/s" % (
-                    res.wid, res.counts, res.ctime, res.speed()))
-            except Exception:
-                pass
 
 
 def main():
@@ -184,8 +166,10 @@ def main():
         "-d", "--device", dest="device",
         help="device on which the test will be performed")
     parser.add_argument(
-        "-n", "--number-of-clients", dest="clients", default="1",
-        help="number of clients to be spawned, default: 1")
+        "-n", "--numbers-of-clients", dest="clients", default="1",
+        help="numbers of clients to be spawned separated by ',' .\n"
+        "The numbers can be given as python slices <start>:<stop>:<step>, "
+        "e.g. 1,23,45:50:2 , default: 1")
     parser.add_argument(
         "-p", "--test-period", dest="period", default="10",
         help="time in seconds for which counting is preformed, default: 10")
@@ -206,6 +190,8 @@ def main():
 
     options = parser.parse_args()
 
+    clients = []
+
     if options.version:
         print(release.version)
         sys.exit(0)
@@ -219,7 +205,13 @@ def main():
         options.clients = "1"
     else:
         try:
-            int(options.clients)
+            sclients = options.clients.split(',')
+            for sc in sclients:
+                if ":" in sc:
+                    sld = list(map(int, sc.split(":")))
+                    clients.extend(list(range(*sld)))
+                else:
+                    clients.append(int(sc))
         except Exception:
             print("Error: number of clients is not an integer")
             parser.print_help()
@@ -230,7 +222,7 @@ def main():
         options.period = "10"
     else:
         try:
-            float(options.clients)
+            float(options.period)
         except Exception:
             print("Error: test period is not a number")
             parser.print_help()
@@ -240,9 +232,11 @@ def main():
     if not options.attribute:
         options.attribute = "BenchmarkScalarAttribute"
 
-    rdbm = WriteBenchmark(options=options)
-    rdbm.start()
-    rdbm.output()
+    for cl in clients:
+        options.clients = cl
+        bm = WriteBenchmark(options=options)
+        bm.start()
+        bm.output()
 
 
 if __name__ == "__main__":
