@@ -109,7 +109,7 @@ class WriteBenchmark(utils.Benchmark):
         #: (:obj:`float` or :class:`numpy.array`) attribute value to write
         self.__value = 0
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._results = [Queue() for i in range(self.__clients)]
+        self._qresults = [Queue() for i in range(self.__clients)]
 
         try:
             shape = list(map(int, options.shape.split(',')))
@@ -140,7 +140,7 @@ class WriteBenchmark(utils.Benchmark):
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
             Worker(i, self.__device, self.__attribute, self.__period,
-                   self.__value, self._results[i])
+                   self.__value, self._qresults[i])
             for i in range(self.__clients)
         ]
 
@@ -165,7 +165,7 @@ def main():
     parser.add_argument(
         "-n", "--numbers-of-clients", dest="clients", default="1",
         help="numbers of clients to be spawned separated by ',' .\n"
-        "The numbers can be given as python slices <start>:<stop>:<step>, "
+        "The numbers can be given as python slices <start>:<stop>:<step> ,\n"
         "e.g. 1,23,45:50:2 , default: 1")
     parser.add_argument(
         "-p", "--test-period", dest="period", default="10",
@@ -184,6 +184,15 @@ def main():
         default="0",
         help="value to be written, default: 0, "
         "e.g. -w '12.28,12.234,m123.3' where m123.3 means -123.3")
+    parser.add_argument(
+        "-c", "--cvs-file", dest="cvsfile",
+        help="write output in a CVS file")
+    parser.add_argument(
+        "-r", "--rst", dest="rst", action="store_true", default=False,
+        help="write output as a RST output stream")
+    parser.add_argument(
+        "--verbose", dest="verbose", action="store_true", default=False,
+        help="verbose mode")
 
     options = parser.parse_args()
 
@@ -229,11 +238,17 @@ def main():
     if not options.attribute:
         options.attribute = "BenchmarkScalarAttribute"
 
+    if options.rst or options.cvsfile:
+        print("Output not implemented")
+        sys.exit(255)
+
     for cl in clients:
         options.clients = cl
         bm = WriteBenchmark(options=options)
         bm.start()
-        bm.output()
+        bm.fetchresults(options.verbose)
+        if not options.rst:
+            bm.output()
 
 
 if __name__ == "__main__":

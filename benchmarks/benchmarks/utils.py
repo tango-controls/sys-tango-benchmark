@@ -33,6 +33,8 @@ class Benchmark(object):
         """
 
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
+        self._qresults = []
+        #: (:obj:`list` < :class:`Result` >) result list
         self._results = []
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = []
@@ -45,20 +47,30 @@ class Benchmark(object):
         for wk in self._workers:
             wk.join()
 
-    def output(self):
-        """ create output
+    def fetchresults(self, verbose):
+        """ fetches the results from queue
+
+        :param verbose: verbose mode
+        :type verbose: :obj:`bool`
         """
-        results = []
-        for qres in self._results:
+        self._results = []
+        for qres in self._qresults:
             try:
                 res = qres.get(block=False)
-                results.append(res)
-                # print("id: %s, counts: %s, time: %s s,
-                # speed: %s counts/s" % (
-                # res.wid, res.counts, res.ctime, res.speed()))
+                self._results.append(res)
+                if verbose:
+                    print("VERBOSE: id: %s,  counts: %s,  "
+                          "speed: %s counts/s,  time: %s s" %
+                          (res.wid, res.counts,
+                           res.speed(), res.ctime))
             except Exception:
                 pass
-        avg = Average(results)
+
+    def output(self):
+        """ shows a simple output
+        """
+
+        avg = Average(self._results)
         mcnts = avg.counts()
         mtm = avg.ctime()
         mspd = avg.speed()
@@ -74,13 +86,13 @@ class Benchmark(object):
         if mspd[1]:
             prs = "%." + str(max(0, int(2 - np.log10(mspd[1])))) + "f"
 
-        fmt = "nr clients: %i, counts: " + prc + " +/- " + prc + \
-              ", time: (" + prt + " +/- " + prt + ") s, " \
-              "speed: (" + prs + " +/- " + prs + ") counts/s"
+        fmt = "nr_clients: %i,  counts: " + prc + " +/- " + prc + \
+              ",  speed: (" + prs + " +/- " + prs + ") counts/s" \
+              ",  time: (" + prt + " +/- " + prt + ") s "
         print(fmt % (avg.size(),
                      float(mcnts[0]), float(mcnts[1]),
-                     float(mtm[0]), float(mtm[1]),
-                     float(mspd[0]), float(mspd[1])))
+                     float(mspd[0]), float(mspd[1]),
+                     float(mtm[0]), float(mtm[1])))
 
         # print("nr: %i, counts: %f +/- %f, time: (%f +/- %f) s, "
         #       "speed: (%f +/- %f) counts/s" % (
