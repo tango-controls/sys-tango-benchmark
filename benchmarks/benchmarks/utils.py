@@ -64,12 +64,30 @@ class Benchmark(object):
         mspd = avg.speed()
         mspd = avg.speed()
         # mspd = avg.simplespeed()
-        print("nr: %s: counts: %s +/- %s, time: (%s +/- %s) s, "
-              "speed: (%s +/- %s) counts/s" % (
-                  avg.size(),
-                  mcnts[0], mcnts[1],
-                  mtm[0], mtm[1],
-                  mspd[0], mspd[1]))
+        prc = "%s"
+        prt = "%s"
+        prs = "%s"
+        if mcnts[1]:
+            prc = "%." + str(max(0, int(2 - np.log10(mcnts[1])))) + "f"
+        if mtm[1]:
+            prt = "%." + str(max(0, int(2 - np.log10(mtm[1])))) + "f"
+        if mspd[1]:
+            prs = "%." + str(max(0, int(2 - np.log10(mspd[1])))) + "f"
+
+        fmt = "nr clients: %i, counts: " + prc + " +/- " + prc + \
+              ", time: (" + prt + " +/- " + prt + ") s, " \
+              "speed: (" + prs + " +/- " + prs + ") counts/s"
+        print(fmt % (avg.size(),
+                     float(mcnts[0]), float(mcnts[1]),
+                     float(mtm[0]), float(mtm[1]),
+                     float(mspd[0]), float(mspd[1])))
+
+        # print("nr: %i, counts: %f +/- %f, time: (%f +/- %f) s, "
+        #       "speed: (%f +/- %f) counts/s" % (
+        #               avg.size(),
+        #               mcnts[0], mcnts[1],
+        #               mtm[0], mtm[1],
+        #               mspd[0], mspd[1]))
 
 
 class Result(object):
