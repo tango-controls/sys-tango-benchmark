@@ -2,12 +2,9 @@
 
 # Copyright (C) 2018  Jan Kotanski, S2Innovation
 #
-# lavue is an image viewing program for photon science imaging detectors.
-# Its usual application is as a live viewer using hidra as data source.
-#
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation in  version 2
+# as published by the Free Software Foundation in  version 3
 # of the License.
 #
 # This program is distributed in the hope that it will be useful,
@@ -68,7 +65,7 @@ class Benchmark(object):
         mspd = avg.speed()
         # mspd = avg.simplespeed()
         print("nr: %s: counts: %s +/- %s, time: (%s +/- %s) s, "
-              "speed: (%s +/ %s) counts/s" % (
+              "speed: (%s +/- %s) counts/s" % (
                   avg.size(),
                   mcnts[0], mcnts[1],
                   mtm[0], mtm[1],

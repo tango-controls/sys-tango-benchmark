@@ -3,12 +3,9 @@
 #
 # Copyright (C) 2018  Jan Kotanski <jankotan@gmail.com> / S2Innovation
 #
-# lavue is an image viewing program for photon science imaging detectors.
-# Its usual application is as a live viewer using hidra as data source.
-#
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation in  version 2
+# as published by the Free Software Foundation in  version 3
 # of the License.
 #
 # This program is distributed in the hope that it will be useful,
