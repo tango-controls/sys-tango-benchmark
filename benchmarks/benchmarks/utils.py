@@ -32,22 +32,33 @@ class CSVOutput(object):
     def __init__(self, filename, options):
         """ constructor
 
+        :param filename: file name
+        :type filename: :obj:`str`
         :param options: commandline options
         :type options: :class:`argparse.Namespace`
         """
+        #: (:obj:`str`) filename
         self._filename = filename
+        #: (:obj:`list` <:obj:`str`> ) hidden options
         self.__hidden = ["title", "description",
                          "verbose", "version"]
 
+        #: (:obj:`str`) title
         self._title = options.title
+        #: (:obj:`str`) description
         self._description = options.description
+        #: (:obj:`str`) date and time
         self._date = self.__currenttime()
 
+        #: (:obj:`dict` <:obj:`str`, `any` >)
+        #  dictionary with options
         self._dictoptions = dict(options.__dict__)
         for key in list(self._dictoptions.keys()):
             if key in self.__hidden:
                 self._dictoptions.pop(key)
+        #: (:class:`File`) output file
         self._csvfile = None
+        #: (:class:`csv.Writer`) CSV writer
         self._writer = None
 
     def __currenttime(self, witht=False):
@@ -79,11 +90,17 @@ class CSVOutput(object):
 
     def printHeader(self, labels):
         """ shows header
+
+        :param labels: labels list
+        :type labels: :obj:`list` <:obj:`str`>
         """
         self._writer.writerow([lb.strip() for lb in labels])
 
     def printLine(self, records):
         """ shows header
+
+        :param record: record list
+        :type record: :obj:`list` <:obj:`str`>
         """
         self._writer.writerow(records)
 
@@ -103,14 +120,21 @@ class RSTOutput(object):
         :param options: commandline options
         :type options: :class:`argparse.Namespace`
         """
+        #: (:obj:`list` <:obj:`str`> ) hidden options
         self.__hidden = ["title", "description",
                          "verbose", "version"]
 
+        #: (:obj:`str`) title
         self._title = options.title
+        #: (:obj:`str`) description
         self._description = options.description
+        #: (:obj:`str`) date and time
         self._date = self.__currenttime()
+        #: (:obj:`list` <:obj:`int`> ) headers sizes
         self._hsizes = []
 
+        #: (:obj:`dict` <:obj:`str`, `any` >)
+        #  dictionary with options
         self._dictoptions = dict(options.__dict__)
         for key in list(self._dictoptions.keys()):
             if key in self.__hidden:
@@ -152,6 +176,9 @@ class RSTOutput(object):
 
     def printHeader(self, labels):
         """ shows header
+
+        :param labels: labels list
+        :type labels: :obj:`list` <:obj:`str`>
         """
         self._hsizes = [len(lb) for lb in labels]
 
@@ -161,6 +188,9 @@ class RSTOutput(object):
 
     def printLine(self, records):
         """ shows header
+
+        :param record: record list
+        :type record: :obj:`list` <:obj:`str`>
         """
         lrecords = [str(rc) + " " * (self._hsizes[i] - len(str(rc)))
                     for i, rc in enumerate(records)]
@@ -217,6 +247,11 @@ class Benchmark(object):
 
     def output(self, show=False):
         """ shows a simple output
+
+        :param show: show output flag
+        :type show: :obj:`type`
+        :rtype: :obj:`dict` <:obj:`str`, :obj:`str`>
+        :returns: output dictionary
         """
 
         avg = Average(self._results)
@@ -360,6 +395,7 @@ class Average(object):
 
     def size(self):
         """ provides number of results
+
         :rtype: int
         :returns: number of results
         """
