@@ -37,7 +37,7 @@ class CSVOutput(object):
         """
         self._filename = filename
         self.__hidden = ["title", "description",
-                         "verbose", "version", "simple"]
+                         "verbose", "version"]
 
         self._title = options.title
         self._description = options.description
@@ -70,6 +70,12 @@ class CSVOutput(object):
         """
         self._csvfile = open(self._filename, 'w')
         self._writer = csv.writer(self._csvfile)
+        self._writer.writerow([self._title])
+        self._writer.writerow([self._date])
+        self._writer.writerow(
+            [
+                ("%s = %s" % (key, self._dictoptions[key] or ""))
+                for key in sorted(self._dictoptions.keys())])
 
     def printHeader(self, labels):
         """ shows header
@@ -98,7 +104,7 @@ class RSTOutput(object):
         :type options: :class:`argparse.Namespace`
         """
         self.__hidden = ["title", "description",
-                         "verbose", "version", "simple"]
+                         "verbose", "version"]
 
         self._title = options.title
         self._description = options.description
