@@ -140,13 +140,19 @@ def main():
         default="BenchmarkScalarAttribute",
         help="attribute which will be read, default: BenchmarkScalarAttribute")
     parser.add_argument(
-        "-c", "--cvs-file", dest="cvsfile",
-        help="write output in a CVS file")
+        "-c", "--csv-file", dest="csvfile",
+        help="write output in a CSV file")
     parser.add_argument(
-        "-r", "--rst", dest="rst", action="store_true", default=False,
-        help="write output as a RST output stream")
+        "-t", "--title", dest="title",
+        default="Read Benckmark",
+        help="benchmark title")
     parser.add_argument(
-        "--verbose", dest="verbose", action="store_true", default=False,
+        "--description", dest="description",
+        default="Speed test",
+        help="benchmark description")
+    parser.add_argument(
+        "--verbose", dest="verbose", action="store_true",
+        default=False,
         help="verbose mode")
 
     options = parser.parse_args()
@@ -193,17 +199,46 @@ def main():
     if not options.attribute:
         options.attribute = "BenchmarkScalarAttribute"
 
-    if options.rst or options.cvsfile:
-        print("Output not implemented")
-        sys.exit(255)
+    headers = [
+        "Run no.",
+        "Sum counts [read]", "error [read]",
+        "Sum Speed [read/s]", "error [read/s]",
+        "Counts [read]", "error [read]",
+        "Speed [read/s]", "error [read/s]",
+        "No. ", "  Time [s]  ", "error [s]"
+    ]
 
-    for cl in clients:
+    if options.csvfile:
+        csvo = utils.CSVOutput(options.csvfile, options)
+        csvo.printInfo()
+        csvo.printHeader(headers)
+
+    rst = utils.RSTOutput(options)
+    rst.printInfo()
+    rst.printHeader(headers)
+
+    for i, cl in enumerate(clients):
         options.clients = cl
         bm = ReadBenchmark(options=options)
         bm.start()
-        bm.fetchresults(options.verbose)
-        if not options.rst:
-            bm.output()
+        bm.fetchResults(options.verbose)
+        out = bm.output(False)
+        record = [
+            str(i),
+            out["sumcounts"], out["err_sumcounts"],
+            out["sumspeed"], out["err_sumspeed"],
+            out["counts"], out["err_counts"],
+            out["speed"], out["err_speed"],
+            cl,
+            out["time"], out["err_time"]
+        ]
+        rst.printLine(record)
+        if options.csvfile:
+            csvo.printLine(record)
+
+    rst.printEnd()
+    if options.csvfile:
+        csvo.printEnd()
 
 
 if __name__ == "__main__":

@@ -19,6 +19,151 @@
 #
 
 import numpy as np
+import time
+import pytz
+import datetime
+import csv
+
+
+class CSVOutput(object):
+    """ creates CSV output
+    """
+
+    def __init__(self, filename, options):
+        """ constructor
+
+        :param options: commandline options
+        :type options: :class:`argparse.Namespace`
+        """
+        self._filename = filename
+        self.__hidden = ["title", "description",
+                         "verbose", "version", "simple"]
+
+        self._title = options.title
+        self._description = options.description
+        self._date = self.__currenttime()
+
+        self._dictoptions = dict(options.__dict__)
+        for key in list(self._dictoptions.keys()):
+            if key in self.__hidden:
+                self._dictoptions.pop(key)
+        self._csvfile = None
+        self._writer = None
+
+    def __currenttime(self, witht=False):
+        """ returns current time string
+
+        :returns: current time
+        :rtype: :obj:`str`
+        """
+        tzone = time.tzname[0]
+        tz = pytz.timezone(tzone)
+        if witht:
+            fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
+        else:
+            fmt = '%Y-%m-%d %H:%M:%S.%f%z'
+        starttime = tz.localize(datetime.datetime.now())
+        return str(starttime.strftime(fmt))
+
+    def printInfo(self):
+        """ shows general info
+        """
+        self._csvfile = open(self._filename, 'w')
+        self._writer = csv.writer(self._csvfile)
+
+    def printHeader(self, labels):
+        """ shows header
+        """
+        self._writer.writerow([lb.strip() for lb in labels])
+
+    def printLine(self, records):
+        """ shows header
+        """
+        self._writer.writerow(records)
+
+    def printEnd(self):
+        """ shows header
+        """
+        self._csvfile.close()
+
+
+class RSTOutput(object):
+    """ creates RST output
+    """
+
+    def __init__(self, options):
+        """ constructor
+
+        :param options: commandline options
+        :type options: :class:`argparse.Namespace`
+        """
+        self.__hidden = ["title", "description",
+                         "verbose", "version", "simple"]
+
+        self._title = options.title
+        self._description = options.description
+        self._date = self.__currenttime()
+        self._hsizes = []
+
+        self._dictoptions = dict(options.__dict__)
+        for key in list(self._dictoptions.keys()):
+            if key in self.__hidden:
+                self._dictoptions.pop(key)
+
+    def __currenttime(self):
+        """ returns current time string
+
+        :returns: current time
+        :rtype: :obj:`str`
+        """
+        tzone = time.tzname[0]
+        tz = pytz.timezone(tzone)
+        # fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
+        fmt = '%Y-%m-%d %H:%M:%S.%f%z'
+        starttime = tz.localize(datetime.datetime.now())
+        return str(starttime.strftime(fmt))
+
+    def printInfo(self):
+        """ shows general info
+        """
+        print("")
+        print(self._title)
+        print("=" * len(self._title))
+        print("")
+        print(self._description)
+        print("")
+        print("**Date:** %s" % self._date)
+        print("")
+        print("Benchmark setup")
+        print("---------------")
+        print("")
+        for key in sorted(self._dictoptions.keys()):
+            print("%s = %s" % (key, self._dictoptions[key] or ""))
+        print("")
+        print("Results")
+        print("-------")
+        print("")
+
+    def printHeader(self, labels):
+        """ shows header
+        """
+        self._hsizes = [len(lb) for lb in labels]
+
+        print((" ").join(["=" * (2 + sz) for sz in self._hsizes]))
+        print(" " + ("   ").join(labels))
+        print((" ").join(["=" * (2 + sz) for sz in self._hsizes]))
+
+    def printLine(self, records):
+        """ shows header
+        """
+        lrecords = [str(rc) + " " * (self._hsizes[i] - len(str(rc)))
+                    for i, rc in enumerate(records)]
+        print(" " + ("   ").join(lrecords))
+
+    def printEnd(self):
+        """ shows header
+        """
+        print((" ").join(["=" * (2 + sz) for sz in self._hsizes]))
 
 
 class Benchmark(object):
@@ -28,8 +173,6 @@ class Benchmark(object):
     def __init__(self):
         """ constructor
 
-        :param options: commandline options
-        :type options: :class:`argparse.Namespace`
         """
 
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
@@ -47,7 +190,7 @@ class Benchmark(object):
         for wk in self._workers:
             wk.join()
 
-    def fetchresults(self, verbose):
+    def fetchResults(self, verbose):
         """ fetches the results from queue
 
         :param verbose: verbose mode
@@ -66,40 +209,55 @@ class Benchmark(object):
             except Exception:
                 pass
 
-    def output(self):
+    def output(self, show=False):
         """ shows a simple output
         """
 
         avg = Average(self._results)
+        nn = avg.size()
         mcnts = avg.counts()
         mtm = avg.ctime()
         mspd = avg.speed()
-        mspd = avg.speed()
         # mspd = avg.simplespeed()
+        scnts = [nn * vl for vl in mcnts]
+        sspd = [nn * vl for vl in mspd]
         prc = "%s"
-        prt = "%s"
         prs = "%s"
+        prsc = "%s"
+        prss = "%s"
+        prt = "%s"
         if mcnts[1]:
             prc = "%." + str(max(0, int(2 - np.log10(mcnts[1])))) + "f"
-        if mtm[1]:
-            prt = "%." + str(max(0, int(2 - np.log10(mtm[1])))) + "f"
         if mspd[1]:
             prs = "%." + str(max(0, int(2 - np.log10(mspd[1])))) + "f"
+        if scnts[1]:
+            prsc = "%." + str(max(0, int(2 - np.log10(scnts[1])))) + "f"
+        if sspd[1]:
+            prss = "%." + str(max(0, int(2 - np.log10(sspd[1])))) + "f"
+        if mtm[1]:
+            prt = "%." + str(max(0, int(2 - np.log10(mtm[1])))) + "f"
 
-        fmt = "nr_clients: %i,  counts: " + prc + " +/- " + prc + \
-              ",  speed: (" + prs + " +/- " + prs + ") counts/s" \
-              ",  time: (" + prt + " +/- " + prt + ") s "
-        print(fmt % (avg.size(),
-                     float(mcnts[0]), float(mcnts[1]),
-                     float(mspd[0]), float(mspd[1]),
-                     float(mtm[0]), float(mtm[1])))
-
-        # print("nr: %i, counts: %f +/- %f, time: (%f +/- %f) s, "
-        #       "speed: (%f +/- %f) counts/s" % (
-        #               avg.size(),
-        #               mcnts[0], mcnts[1],
-        #               mtm[0], mtm[1],
-        #               mspd[0], mspd[1]))
+        if show:
+            fmt = "no_clients: %i,  counts: " + prc + " +/- " + prc + \
+                  ",  speed: (" + prs + " +/- " + prs + ") counts/s" \
+                  ",  time: (" + prt + " +/- " + prt + ") s "
+            print(fmt % (nn,
+                         float(mcnts[0]), float(mcnts[1]),
+                         float(mspd[0]), float(mspd[1]),
+                         float(mtm[0]), float(mtm[1])))
+        res = {}
+        res["no_clients"] = str(nn)
+        res["counts"] = prc % float(mcnts[0])
+        res["err_counts"] = prc % float(mcnts[1])
+        res["speed"] = prs % float(mspd[0])
+        res["err_speed"] = prs % float(mspd[1])
+        res["sumcounts"] = prsc % float(scnts[0])
+        res["err_sumcounts"] = prsc % float(scnts[1])
+        res["sumspeed"] = prss % float(sspd[0])
+        res["err_sumspeed"] = prss % float(sspd[1])
+        res["time"] = prt % float(mtm[0])
+        res["err_time"] = prt % float(mtm[1])
+        return res
 
 
 class Result(object):
