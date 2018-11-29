@@ -85,7 +85,7 @@ class CSVOutput(object):
         self._writer.writerow([self._date])
         self._writer.writerow(
             [
-                ("%s = %s" % (key, self._dictoptions[key] or ""))
+                ("%s=%s" % (key, self._dictoptions[key] or ""))
                 for key in sorted(self._dictoptions.keys())])
 
     def printHeader(self, labels):
@@ -168,7 +168,7 @@ class RSTOutput(object):
         print("---------------")
         print("")
         for key in sorted(self._dictoptions.keys()):
-            print("%s = %s" % (key, self._dictoptions[key] or ""))
+            print("%s=%s" % (key, self._dictoptions[key] or ""))
         print("")
         print("Results")
         print("-------")
