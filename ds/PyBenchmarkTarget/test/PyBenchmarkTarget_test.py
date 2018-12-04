@@ -204,6 +204,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
 
         self.assertEqual(self.proxy.ReadAttributeHardwareCount, 2)
         self.assertEqual(self.proxy.AlwaysExecutedHookCount, 3)
+        self.assertEqual(self.proxy.PipeReadsCount, 0)
+        self.assertEqual(self.proxy.PipeWritesCount, 0)
         self.assertEqual(self.proxy.ScalarReadsCount, 0)
         self.assertEqual(self.proxy.ScalarWritesCount, 0)
         self.assertEqual(self.proxy.SpectrumReadsCount, 0)
@@ -212,7 +214,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertEqual(self.proxy.ImageWritesCount, 0)
         self.assertEqual(self.proxy.CommandCallsCount, 0)
         self.assertEqual(self.proxy.WriteAttributeCounterCount, 0)
-        self.assertEqual(self.proxy.ReadAttributeHardwareCount, 12)
+        self.assertEqual(self.proxy.ReadAttributeHardwareCount, 14)
         for i in range(3):
             self.proxy.BenchmarkScalarAttribute = float(i)
             self.proxy.BenchmarkScalarAttribute
@@ -233,7 +235,9 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertTrue(t2 > t3)
 
         self.assertEqual(self.proxy.AlwaysExecutedHookCount, 2)
-        self.assertEqual(self.proxy.ReadAttributeHardwareCount, 3)
+        self.assertEqual(self.proxy.ReadAttributeHardwareCount, 3) 
+        self.assertEqual(self.proxy.PipeReadsCount, 0)
+        self.assertEqual(self.proxy.PipeWritesCount, 0)
         self.assertEqual(self.proxy.ScalarReadsCount, 0)
         self.assertEqual(self.proxy.ScalarWritesCount, 0)
         self.assertEqual(self.proxy.SpectrumReadsCount, 0)
@@ -242,7 +246,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertEqual(self.proxy.ImageWritesCount, 0)
         self.assertEqual(self.proxy.CommandCallsCount, 0)
         self.assertEqual(self.proxy.WriteAttributeCounterCount, 0)
-        self.assertEqual(self.proxy.AlwaysExecutedHookCount, 12)
+        self.assertEqual(self.proxy.AlwaysExecutedHookCount, 14)
 
     def test_BenchmarkScalarAttribute(self):
         """Test for BenchmarkScalarAttribute"""
@@ -259,6 +263,38 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             rvl = self.proxy.BenchmarkScalarAttribute
             self.assertEqual(self.proxy.ScalarReadsCount, i + 1)
             self.assertEqual(wvl, rvl)
+
+    def test_BenchmarkPipe(self):
+        """Test for BenchmarkScalarAttribute"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        self.proxy.ResetCounters()
+        self.assertEqual(self.proxy.PipeReadsCount, 0)
+        self.assertEqual(self.proxy.PipeWritesCount, 0)
+        wvl = (
+            'TestPipeBlob',[
+                {'dtype': PyTango._tango.CmdArgType.DevLong64,
+                 'name': 'DevLong64', 'value': 12},
+                {'dtype': PyTango._tango.CmdArgType.DevULong,
+                 'name': 'DevULong', 'value': 23},
+                {'dtype': PyTango._tango.CmdArgType.DevVarUShortArray,
+                 'name': 'DevVarUShortArray',
+                 'value': np.array([3, 4, 5, 6], dtype=np.uint16)},
+                {'dtype': PyTango._tango.CmdArgType.DevVarDoubleArray,
+                 'name': 'DevVarDoubleArray',
+                 'value': np.array([  1.12,   3.22,  54.3 ])},
+                {'dtype': PyTango._tango.CmdArgType.DevBoolean,
+                 'name': 'DevBoolean', 'value': False}])
+
+        for i in range(10):
+            self.proxy.BenchmarkPipe = wvl
+            self.assertEqual(self.proxy.PipeWritesCount, i + 1)
+            rvl = self.proxy.BenchmarkPipe
+            self.assertEqual(self.proxy.PipeReadsCount, i + 1)
+            self.assertEqual(wvl[0], rvl[0])
+            self.assertEqual(len(wvl[0]), len(rvl[0]))
+            for i in range(wvl):
+                self.assertEqual(wvl[1][i], rvl[1][i])
 
     def test_AlwaysExecutedHookCount(self):
         """Test for AlwaysExecutedHookCount"""
