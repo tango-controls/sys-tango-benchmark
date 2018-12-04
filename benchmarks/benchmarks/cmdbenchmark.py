@@ -30,27 +30,19 @@ from . import release
 from . import utils
 
 
-def cb_tango(*args):
-    """ tango callback
-    """
-    event_data = args[0]
-    if event_data.err:
-        print(event_data.errors)
-
-
 class Worker(Process):
     """ worker instance
     """
 
-    def __init__(self, wid, device, attribute, period, qresult):
+    def __init__(self, wid, device, command, period, qresult):
         """ constructor
 
         :param wid: worker id
         :type wid: :obj:`int`
         :param device: device name
         :type device: :obj:`str`
-        :param attribute: attribute name
-        :type attribute: :obj:`str`
+        :param command: command name
+        :type command: :obj:`str`
         :param period: time period
         :type period: :obj:`float`
         :param qresult: queue with result
@@ -65,39 +57,31 @@ class Worker(Process):
         self.__period = float(period)
         #: (:obj:`str`) device proxy
         self.__device = device
-        #: (:obj:`str`) device attribute name
-        self.__attribute = attribute
-        # : (:class:`PyTango.AttributeProxy`) attribute proxy
+        #: (:obj:`str`) device command name
+        self.__command = command
+        # : (:class:`PyTango.DeviceProxy`) device proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
         self.__qresult = qresult
         # : (:obj:`int`) counter
         self.__counter = 0
-
+ 
     def run(self):
         """ worker thread
         """
         self.__proxy = PyTango.DeviceProxy(self.__device)
         stime = time.time()
         etime = stime
-        ids = []
         while etime - stime < self.__period:
-            id_ = self.__proxy.subscribe_event(
-                self.__attribute,
-                PyTango.EventType.CHANGE_EVENT,
-                cb_tango)
-            ids.append(id_)
-
+            self.__proxy.command_inout(self.__command)
             etime = time.time()
             self.__counter += 1
-        for id_ in ids:
-            self.__proxy.unsubscribe_event(id_)
         self.__qresult.put(
             utils.Result(self.__wid, self.__counter, etime - stime))
 
 
-class EventBenchmark(utils.Benchmark):
-    """  master class for read benchmark
+class CmdBenchmark(utils.Benchmark):
+    """  master class for command call benchmark
     """
 
     def __init__(self, options):
@@ -106,12 +90,11 @@ class EventBenchmark(utils.Benchmark):
         :param options: commandline options
         :type options: :class:`argparse.Namespace`
         """
-
         utils.Benchmark.__init__(self)
         #: (:obj:`str`) device proxy
         self.__device = options.device
-        #: (:obj:`str`) device attribute name
-        self.__attribute = options.attribute
+        #: (:obj:`str`) device command name
+        self.__command = options.command
         #: (:obj:`float`) time period in seconds
         self.__period = float(options.period)
         #: (:obj:`int`) number of clients
@@ -120,7 +103,7 @@ class EventBenchmark(utils.Benchmark):
         self._qresults = [Queue() for i in range(self.__clients)]
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
-            Worker(i, self.__device, self.__attribute, self.__period,
+            Worker(i, self.__device, self.__command, self.__period,
                    self._qresults[i])
             for i in range(self.__clients)
         ]
@@ -131,8 +114,8 @@ def main():
     """
 
     parser = argparse.ArgumentParser(
-        description='perform check if and how number of parallel '
-        'subscribers affects subscription time',
+        description='perform check if and how a number of simultaneous '
+        'clients affect command calls speed',
         formatter_class=RawTextHelpFormatter)
     parser.add_argument(
         "-v", "--version",
@@ -152,22 +135,23 @@ def main():
         "-p", "--test-period", dest="period", default="10",
         help="time in seconds for which counting is preformed, default: 10")
     parser.add_argument(
-        "-a", "--attribute", dest="attribute",
-        default="BenchmarkScalarAttribute",
-        help="attribute which will be read, default: BenchmarkScalarAttribute")
+        "-c", "--command", dest="command",
+        default="BenchmarkCommand",
+        help="command which will be called, default: BenchmarkCommand")
     parser.add_argument(
         "-f", "--csv-file", dest="csvfile",
         help="write output in a CSV file")
     parser.add_argument(
         "-t", "--title", dest="title",
-        default="Event Benckmark",
+        default="Command Benckmark",
         help="benchmark title")
     parser.add_argument(
         "--description", dest="description",
         default="Speed test",
         help="benchmark description")
     parser.add_argument(
-        "--verbose", dest="verbose", action="store_true", default=False,
+        "--verbose", dest="verbose", action="store_true",
+        default=False,
         help="verbose mode")
 
     options = parser.parse_args()
@@ -211,15 +195,15 @@ def main():
             print("")
             sys.exit(255)
 
-    if not options.attribute:
-        options.attribute = "BenchmarkScalarAttribute"
+    if not options.command:
+        options.command = "BenchmarkCommand"
 
     headers = [
         "Run no.",
-        "Sum counts [event]", "error [event]",
-        "Sum Speed [event/s]", "error [event/s]",
-        "Counts [event]", "error [event]",
-        "Speed [event/s]", "error [event/s]",
+        "Sum counts [call]", "error [call]",
+        "Sum Speed [call/s]", "error [call/s]",
+        "Counts [call]", "error [call]",
+        "Speed [call/s]", "error [call/s]",
         "No. ", "  Time [s]  ", "error [s]"
     ]
 
@@ -234,7 +218,7 @@ def main():
 
     for i, cl in enumerate(clients):
         options.clients = cl
-        bm = EventBenchmark(options=options)
+        bm = CmdBenchmark(options=options)
         bm.start()
         bm.fetchResults(options.verbose)
         out = bm.output(False)
