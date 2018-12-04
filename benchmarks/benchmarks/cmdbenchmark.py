@@ -65,7 +65,7 @@ class Worker(Process):
         self.__qresult = qresult
         # : (:obj:`int`) counter
         self.__counter = 0
- 
+
     def run(self):
         """ worker thread
         """
