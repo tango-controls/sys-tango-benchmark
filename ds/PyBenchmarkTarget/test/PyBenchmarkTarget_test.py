@@ -235,7 +235,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertTrue(t2 > t3)
 
         self.assertEqual(self.proxy.AlwaysExecutedHookCount, 2)
-        self.assertEqual(self.proxy.ReadAttributeHardwareCount, 3) 
+        self.assertEqual(self.proxy.ReadAttributeHardwareCount, 3)
         self.assertEqual(self.proxy.PipeReadsCount, 0)
         self.assertEqual(self.proxy.PipeWritesCount, 0)
         self.assertEqual(self.proxy.ScalarReadsCount, 0)
@@ -272,19 +272,22 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertEqual(self.proxy.PipeReadsCount, 0)
         self.assertEqual(self.proxy.PipeWritesCount, 0)
         wvl = (
-            'TestPipeBlob',[
+            'TestPipeBlob',
+            [
                 {'dtype': PyTango._tango.CmdArgType.DevLong64,
                  'name': 'DevLong64', 'value': 12},
                 {'dtype': PyTango._tango.CmdArgType.DevULong,
                  'name': 'DevULong', 'value': 23},
                 {'dtype': PyTango._tango.CmdArgType.DevVarUShortArray,
                  'name': 'DevVarUShortArray',
-                 'value': np.array([3, 4, 5, 6], dtype=np.uint16)},
+                 'value': np.array([3, 3, 5, 16], dtype=np.uint16)},
                 {'dtype': PyTango._tango.CmdArgType.DevVarDoubleArray,
                  'name': 'DevVarDoubleArray',
-                 'value': np.array([  1.12,   3.22,  54.3 ])},
+                 'value': np.array([8.12, 3.22, 54.3])},
                 {'dtype': PyTango._tango.CmdArgType.DevBoolean,
-                 'name': 'DevBoolean', 'value': False}])
+                 'name': 'DevBoolean', 'value': False}
+            ]
+        )
 
         for i in range(10):
             self.proxy.BenchmarkPipe = wvl
@@ -293,7 +296,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             self.assertEqual(self.proxy.PipeReadsCount, i + 1)
             self.assertEqual(wvl[0], rvl[0])
             self.assertEqual(len(wvl[0]), len(rvl[0]))
-            for i in range(wvl):
+            for i in range(len(wvl)):
                 self.assertEqual(wvl[1][i], rvl[1][i])
 
     def test_AlwaysExecutedHookCount(self):
@@ -433,6 +436,17 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             self.proxy.BenchmarkScalarAttribute
             self.assertEqual(self.proxy.ScalarReadsCount, i + 1)
 
+    def test_PipeReadsCount(self):
+        """Test for ScalarReadsCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        self.proxy.ResetCounters()
+        self.assertEqual(self.proxy.PipeReadsCount, 0)
+
+        for i in range(10):
+            self.proxy.BenchmarkPipe
+            self.assertEqual(self.proxy.PipeReadsCount, i + 1)
+
     def test_SpectrumReadsCount(self):
         """Test for SpectrumReadsCount"""
         print("Run: %s.%s() " % (
@@ -465,6 +479,26 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         for i in range(10):
             self.proxy.BenchmarkScalarAttribute = float(i)
             self.assertEqual(self.proxy.ScalarWritesCount, i + 1)
+
+    def test_PipeWritesCount(self):
+        """Test for ScalarWritesCount"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        self.proxy.ResetCounters()
+        self.assertEqual(self.proxy.PipeWritesCount, 0)
+        vl = (
+            'TestBlob', [
+                {'dtype': PyTango._tango.CmdArgType.DevLong64,
+                 'name': 'DevLong64', 'value': 12},
+                {'dtype': PyTango._tango.CmdArgType.DevULong,
+                 'name': 'DevULong', 'value': 23},
+                {'dtype': PyTango._tango.CmdArgType.DevBoolean,
+                 'name': 'DevBoolean', 'value': False}]
+        )
+
+        for i in range(10):
+            self.proxy.BenchmarkPipe = vl
+            self.assertEqual(self.proxy.PipeWritesCount, i + 1)
 
     def test_SpectrumWritesCount(self):
         """Test for SpectrumWritesCount"""
