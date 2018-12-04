@@ -158,7 +158,7 @@ class WritePipeBenchmark(utils.Benchmark):
         #: (:obj:`float` or :class:`numpy.array`) pipe value to pipe
         self.__value = (
             'PipeBlob',
-            (
+            [
                 {'name': 'DevLong64', 'value': 123, },
                 {'name': 'DevULong', 'value': np.uint32(123)},
                 {'name': 'DevVarUShortArray',
@@ -166,15 +166,20 @@ class WritePipeBenchmark(utils.Benchmark):
                 {'name': 'DevVarDoubleArray',
                  'value': [1.11, 2.22], 'dtype': ('float64',)},
                 {'name': 'DevBoolean', 'value': True},
-            )
+            ]
         )
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
         self._qresults = [Queue() for i in range(self.__clients)]
 
         size = max(1, int(options.size))
-        self.__value = self.__value[0], tuple(
-            (list(self.__value[1]) *
-             (size / max(1, len(self.__value[1]) - 1) + 1))[:size])
+        value1 = (self.__value[1] *
+                  (size / max(1, len(self.__value[1]) - 1) + 1))[:size]
+
+        for i in range(len(value1)):
+            value1[i] = dict(value1[i])
+            value1[i]["name"] = str(i) + "_" + value1[i]["name"]
+
+        self.__value = self.__value[0], tuple(value1)
 
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
