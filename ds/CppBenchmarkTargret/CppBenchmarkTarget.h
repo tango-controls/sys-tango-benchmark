@@ -57,7 +57,8 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
 /*----- PROTECTED REGION ID(CppBenchmarkTarget::Data Members) ENABLED START -----*/
 
 //	Add your own data members
-
+  int attr_BenchmarkSpectrumAttribute_length = 4096;
+  int attr_BenchmarkImageAttribute_length = 4096*4096;
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
 

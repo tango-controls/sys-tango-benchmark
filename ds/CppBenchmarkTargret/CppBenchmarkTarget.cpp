@@ -12,20 +12,20 @@
 // project :     Benchmark device
 //
 // This file is part of Tango device class.
-// 
+//
 // Tango is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Tango is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with Tango.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 //
 //
 //=============================================================================
@@ -99,7 +99,7 @@ CppBenchmarkTarget::CppBenchmarkTarget(Tango::DeviceClass *cl, string &s)
 {
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::constructor_1) ENABLED START -----*/
 	init_device();
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::constructor_1
 }
 //--------------------------------------------------------
@@ -108,7 +108,7 @@ CppBenchmarkTarget::CppBenchmarkTarget(Tango::DeviceClass *cl, const char *s)
 {
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::constructor_2) ENABLED START -----*/
 	init_device();
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::constructor_2
 }
 //--------------------------------------------------------
@@ -117,7 +117,7 @@ CppBenchmarkTarget::CppBenchmarkTarget(Tango::DeviceClass *cl, const char *s, co
 {
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::constructor_3) ENABLED START -----*/
 	init_device();
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::constructor_3
 }
 
@@ -131,9 +131,9 @@ void CppBenchmarkTarget::delete_device()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::delete_device() " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::delete_device) ENABLED START -----*/
-	
+
 	//	Delete device allocated objects
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::delete_device
 	delete[] attr_BenchmarkScalarAttribute_read;
 	delete[] attr_AlwaysExecutedHookCount_read;
@@ -163,13 +163,13 @@ void CppBenchmarkTarget::init_device()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::init_device() create device " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::init_device_before) ENABLED START -----*/
-	
+
 	//	Initialization before get_device_property() call
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::init_device_before
-	
+
 	//	No device property to be read from database
-	
+
 	attr_BenchmarkScalarAttribute_read = new Tango::DevDouble[1];
 	attr_AlwaysExecutedHookCount_read = new Tango::DevLong[1];
 	attr_ReadAttributeHardwareCount_read = new Tango::DevLong[1];
@@ -187,9 +187,9 @@ void CppBenchmarkTarget::init_device()
 	attr_BenchmarkSpectrumAttribute_read = new Tango::DevDouble[4096];
 	attr_BenchmarkImageAttribute_read = new Tango::DevDouble[4096*4096];
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::init_device) ENABLED START -----*/
-	
+
 	//	Initialize device
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::init_device
 }
 
@@ -204,9 +204,9 @@ void CppBenchmarkTarget::always_executed_hook()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::always_executed_hook()  " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::always_executed_hook) ENABLED START -----*/
-	
+
 	//	code always executed before all requests
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::always_executed_hook
 }
 
@@ -220,9 +220,9 @@ void CppBenchmarkTarget::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_attr_hardware) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_attr_hardware
 }
 //--------------------------------------------------------
@@ -235,9 +235,9 @@ void CppBenchmarkTarget::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_lis
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_attr_hardware) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_attr_hardware
 }
 
@@ -256,7 +256,7 @@ void CppBenchmarkTarget::read_BenchmarkScalarAttribute(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_BenchmarkScalarAttribute) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_BenchmarkScalarAttribute_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkScalarAttribute
 }
 //--------------------------------------------------------
@@ -275,8 +275,8 @@ void CppBenchmarkTarget::write_BenchmarkScalarAttribute(Tango::WAttribute &attr)
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_BenchmarkScalarAttribute) ENABLED START -----*/
-	
-	
+	*attr_BenchmarkScalarAttribute_read = w_val;
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_BenchmarkScalarAttribute
 }
 //--------------------------------------------------------
@@ -294,7 +294,7 @@ void CppBenchmarkTarget::read_AlwaysExecutedHookCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_AlwaysExecutedHookCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_AlwaysExecutedHookCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_AlwaysExecutedHookCount
 }
 //--------------------------------------------------------
@@ -312,7 +312,7 @@ void CppBenchmarkTarget::read_ReadAttributeHardwareCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_ReadAttributeHardwareCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_ReadAttributeHardwareCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_ReadAttributeHardwareCount
 }
 //--------------------------------------------------------
@@ -330,7 +330,7 @@ void CppBenchmarkTarget::read_WriteAttributeCounterCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_WriteAttributeCounterCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_WriteAttributeCounterCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_WriteAttributeCounterCount
 }
 //--------------------------------------------------------
@@ -348,7 +348,7 @@ void CppBenchmarkTarget::read_ScalarReadsCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_ScalarReadsCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_ScalarReadsCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_ScalarReadsCount
 }
 //--------------------------------------------------------
@@ -366,7 +366,7 @@ void CppBenchmarkTarget::read_SpectrumReadsCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_SpectrumReadsCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_SpectrumReadsCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_SpectrumReadsCount
 }
 //--------------------------------------------------------
@@ -384,7 +384,7 @@ void CppBenchmarkTarget::read_ImageReadsCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_ImageReadsCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_ImageReadsCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_ImageReadsCount
 }
 //--------------------------------------------------------
@@ -402,7 +402,7 @@ void CppBenchmarkTarget::read_ScalarWritesCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_ScalarWritesCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_ScalarWritesCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_ScalarWritesCount
 }
 //--------------------------------------------------------
@@ -420,7 +420,7 @@ void CppBenchmarkTarget::read_SpectrumWritesCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_SpectrumWritesCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_SpectrumWritesCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_SpectrumWritesCount
 }
 //--------------------------------------------------------
@@ -438,7 +438,7 @@ void CppBenchmarkTarget::read_ImageWritesCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_ImageWritesCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_ImageWritesCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_ImageWritesCount
 }
 //--------------------------------------------------------
@@ -456,7 +456,7 @@ void CppBenchmarkTarget::read_CommandCallsCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_CommandCallsCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_CommandCallsCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_CommandCallsCount
 }
 //--------------------------------------------------------
@@ -474,7 +474,7 @@ void CppBenchmarkTarget::read_TimeSinceReset(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_TimeSinceReset) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_TimeSinceReset_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_TimeSinceReset
 }
 //--------------------------------------------------------
@@ -492,7 +492,7 @@ void CppBenchmarkTarget::read_PipeReadsCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_PipeReadsCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_PipeReadsCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_PipeReadsCount
 }
 //--------------------------------------------------------
@@ -510,7 +510,7 @@ void CppBenchmarkTarget::read_PipeWritesCount(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_PipeWritesCount) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_PipeWritesCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_PipeWritesCount
 }
 //--------------------------------------------------------
@@ -527,8 +527,9 @@ void CppBenchmarkTarget::read_BenchmarkSpectrumAttribute(Tango::Attribute &attr)
 	DEBUG_STREAM << "CppBenchmarkTarget::read_BenchmarkSpectrumAttribute(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_BenchmarkSpectrumAttribute) ENABLED START -----*/
 	//	Set the attribute value
-	attr.set_value(attr_BenchmarkSpectrumAttribute_read, 4096);
-	
+	attr.set_value(attr_BenchmarkSpectrumAttribute_read,
+		       attr_BenchmarkSpectrumAttribute_length);
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkSpectrumAttribute
 }
 //--------------------------------------------------------
@@ -550,8 +551,11 @@ void CppBenchmarkTarget::write_BenchmarkSpectrumAttribute(Tango::WAttribute &att
 	const Tango::DevDouble	*w_val;
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_BenchmarkSpectrumAttribute) ENABLED START -----*/
-	
-	
+
+	attr_BenchmarkSpectrumAttribute_length = w_length;
+	for(int i = 0; i < w_length; i++)
+	  attr_BenchmarkSpectrumAttribute_read[i] = w_val[i];
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_BenchmarkSpectrumAttribute
 }
 //--------------------------------------------------------
@@ -568,8 +572,9 @@ void CppBenchmarkTarget::read_BenchmarkImageAttribute(Tango::Attribute &attr)
 	DEBUG_STREAM << "CppBenchmarkTarget::read_BenchmarkImageAttribute(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_BenchmarkImageAttribute) ENABLED START -----*/
 	//	Set the attribute value
-	attr.set_value(attr_BenchmarkImageAttribute_read, 4096, 4096);
-	
+	attr.set_value(attr_BenchmarkImageAttribute_read,
+		       4096, 4096);
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkImageAttribute
 }
 //--------------------------------------------------------
@@ -591,8 +596,11 @@ void CppBenchmarkTarget::write_BenchmarkImageAttribute(Tango::WAttribute &attr)
 	const Tango::DevDouble	*w_val;
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_BenchmarkImageAttribute) ENABLED START -----*/
-	
-	
+
+	attr_BenchmarkImageAttribute_length = w_length;
+	for(int i = 0; i < w_length; i++)
+	  attr_BenchmarkImageAttribute_read[i] = w_val[i];
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_BenchmarkImageAttribute
 }
 
@@ -606,9 +614,9 @@ void CppBenchmarkTarget::write_BenchmarkImageAttribute(Tango::WAttribute &attr)
 void CppBenchmarkTarget::add_dynamic_attributes()
 {
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::add_dynamic_attributes) ENABLED START -----*/
-	
+
 	//	Add your own code to create and add dynamic attributes if any
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::add_dynamic_attributes
 }
 
@@ -622,9 +630,9 @@ void CppBenchmarkTarget::read_BenchmarkPipe(Tango::Pipe &pipe)
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::read_BenchmarkPipe(Tango::Pipe &pipe) entering... " << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_BenchmarkPipe) ENABLED START -----*/
-	
+
 	//	Add your own code here
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkPipe
 }
 //--------------------------------------------------------
@@ -637,9 +645,9 @@ void CppBenchmarkTarget::write_BenchmarkPipe(Tango::WPipe &pipe)
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::write_BenchmarkPipe(Tango::WPipe &pipe) entering... " << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_BenchmarkPipe) ENABLED START -----*/
-	
+
 	//	Add your own code here
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_BenchmarkPipe
 }
 //--------------------------------------------------------
@@ -654,10 +662,10 @@ Tango::DevState CppBenchmarkTarget::dev_state()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::State()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::dev_state) ENABLED START -----*/
-	
+
 	Tango::DevState	argout = Tango::UNKNOWN; // replace by your own algorithm
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::dev_state
 	set_state(argout);    // Give the state to Tango.
 	if (argout!=Tango::ALARM)
@@ -676,10 +684,10 @@ Tango::ConstDevString CppBenchmarkTarget::dev_status()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::Status()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::dev_status) ENABLED START -----*/
-	
+
 	string	status = "Device is OK";
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::dev_status
 	set_status(status);               // Give the status to Tango.
 	return Tango::DeviceImpl::dev_status();  // Return it.
@@ -695,9 +703,9 @@ void CppBenchmarkTarget::benchmark_command()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::BenchmarkCommand()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::benchmark_command) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::benchmark_command
 }
 //--------------------------------------------------------
@@ -712,9 +720,9 @@ void CppBenchmarkTarget::set_spectrum_size(Tango::DevLong argin)
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::SetSpectrumSize()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::set_spectrum_size) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::set_spectrum_size
 }
 //--------------------------------------------------------
@@ -729,9 +737,9 @@ void CppBenchmarkTarget::set_image_size(const Tango::DevVarLongArray *argin)
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::SetImageSize()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::set_image_size) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::set_image_size
 }
 //--------------------------------------------------------
@@ -745,9 +753,9 @@ void CppBenchmarkTarget::reset_counters()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::ResetCounters()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::reset_counters) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::reset_counters
 }
 //--------------------------------------------------------
@@ -760,9 +768,9 @@ void CppBenchmarkTarget::reset_counters()
 void CppBenchmarkTarget::add_dynamic_commands()
 {
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::add_dynamic_commands) ENABLED START -----*/
-	
+
 	//	Add your own code to create and add dynamic commands if any
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::add_dynamic_commands
 }
 
