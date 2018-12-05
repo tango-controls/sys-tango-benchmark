@@ -34,7 +34,7 @@
 #define CppBenchmarkTarget_H
 
 #include <tango.h>
-
+#include <sys/time.h>
 
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget.h
 
@@ -59,6 +59,25 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
 //	Add your own data members
   int attr_BenchmarkSpectrumAttribute_length = 4096;
   int attr_BenchmarkImageAttribute_length = 4096*4096;
+  int attr_BenchmarkImageAttribute_x = 4096;
+  int attr_BenchmarkImageAttribute_y = 4096;
+
+  int always_executed_hook_count = 0;
+  int read_attribute_hardware_count = 0;
+  int write_attribute_counter_count = 0;
+  
+  int scalar_reads_count = 0;
+  int spectrum_reads_count = 0;
+  int image_reads_count = 0;
+  int pipe_reads_count = 0;
+  
+  int scalar_writes_count = 0;
+  int spectrum_writes_count = 0;
+  int image_writes_count = 0;
+  int pipe_writes_count = 0;
+  
+  int command_calls_count = 0;
+  struct timeval reset_time;
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
 
