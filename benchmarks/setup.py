@@ -53,9 +53,11 @@ SETUPDATA = dict(
     zip_safe=False,
     entry_points={
         'console_scripts': [
+            'pipebenchmark = benchmarks.pipebenchmark:main',
             'readbenchmark = benchmarks.readbenchmark:main',
             'writebenchmark = benchmarks.writebenchmark:main',
             'eventbenchmark = benchmarks.eventbenchmark:main',
+            'cmdbenchmark = benchmarks.cmdbenchmark:main',
         ]},
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',

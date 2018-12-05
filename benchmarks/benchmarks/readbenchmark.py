@@ -43,8 +43,8 @@ class Worker(Process):
         :type device: :obj:`str`
         :param attribute: attribute name
         :type attribute: :obj:`str`
-        :param attribute: time period
-        :type attribute: :obj:`float`
+        :param period: time period
+        :type period: :obj:`float`
         :param qresult: queue with result
         :type qresult: :class:`Queue.Queue` or `queue.queue`
 
@@ -140,7 +140,7 @@ def main():
         default="BenchmarkScalarAttribute",
         help="attribute which will be read, default: BenchmarkScalarAttribute")
     parser.add_argument(
-        "-c", "--csv-file", dest="csvfile",
+        "-f", "--csv-file", dest="csvfile",
         help="write output in a CSV file")
     parser.add_argument(
         "-t", "--title", dest="title",

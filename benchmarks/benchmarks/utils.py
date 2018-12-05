@@ -200,6 +200,7 @@ class RSTOutput(object):
         """ shows header
         """
         print((" ").join(["=" * (2 + sz) for sz in self._hsizes]))
+        print("")
 
 
 class Benchmark(object):
