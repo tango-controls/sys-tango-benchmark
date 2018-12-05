@@ -44,8 +44,8 @@ class Worker(Process):
         :type device: :obj:`str`
         :param attribute: attribute name
         :type attribute: :obj:`str`
-        :param attribute: time period
-        :type attribute: :obj:`float`
+        :param period: time period
+        :type period: :obj:`float`
         :param value:  attribute value
         :type value: :class:`numpy.ndarray`
         :param qresult: queue with result
@@ -185,7 +185,7 @@ def main():
         help="value to be written, default: 0, "
         "e.g. -w '12.28,12.234,m123.3' where m123.3 means -123.3")
     parser.add_argument(
-        "-c", "--csv-file", dest="csvfile",
+        "-f", "--csv-file", dest="csvfile",
         help="write output in a CSV file")
     parser.add_argument(
         "-t", "--title", dest="title",
