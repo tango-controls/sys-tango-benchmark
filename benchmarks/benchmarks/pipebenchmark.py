@@ -31,22 +31,22 @@ from . import release
 from . import utils
 
 
-class Worker(Process):
-    """ worker instance
+class WriteWorker(Process):
+    """ write worker instance
     """
 
-    def __init__(self, wid, device, attribute, period, value, qresult):
+    def __init__(self, wid, device, pipe, period, value, qresult):
         """ constructor
 
         :param wid: worker id
         :type wid: :obj:`int`
         :param device: device name
         :type device: :obj:`str`
-        :param attribute: attribute name
-        :type attribute: :obj:`str`
+        :param pipe: pipe name
+        :type pipe: :obj:`str`
         :param period: time period
         :type period: :obj:`float`
-        :param value:  attribute value
+        :param value:  pipe value
         :type value: :class:`numpy.ndarray`
         :param qresult: queue with result
         :type qresult: :class:`Queue.Queue` or `queue.queue`
@@ -60,11 +60,11 @@ class Worker(Process):
         self.__period = float(period)
         #: (:obj:`str`) device proxy
         self.__device = device
-        #: (:obj:`str`) device attribute name
-        self.__attribute = attribute
-        #: (:obj:`float` or :class:`np.array`) device attribute value
+        #: (:obj:`str`) device pipe name
+        self.__pipe = pipe
+        #: (:obj:`float` or :class:`np.array`) device pipe value
         self.__value = value
-        # : (:class:`PyTango.AttributeProxy`) attribute proxy
+        # : (:class:`PyTango.PipeProxy`) pipe proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
         self.__qresult = qresult
@@ -74,20 +74,69 @@ class Worker(Process):
     def run(self):
         """ worker thread
         """
-        self.__proxy = PyTango.AttributeProxy(
-            "%s/%s" % (self.__device, self.__attribute))
+        self.__proxy = PyTango.DeviceProxy(self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
-            self.__proxy.write(self.__value)
+            self.__proxy.write_pipe(self.__pipe, self.__value)
             etime = time.time()
             self.__counter += 1
         self.__qresult.put(
             utils.Result(self.__wid, self.__counter, etime - stime))
 
 
-class WriteBenchmark(utils.Benchmark):
-    """  master class for write benchmark
+class ReadWorker(Process):
+    """ read worker instance
+    """
+
+    def __init__(self, wid, device, pipe, period, qresult):
+        """ constructor
+
+        :param wid: worker id
+        :type wid: :obj:`int`
+        :param device: device name
+        :type device: :obj:`str`
+        :param pipe: pipe name
+        :type pipe: :obj:`str`
+        :param period: time period
+        :type period: :obj:`float`
+        :param qresult: queue with result
+        :type qresult: :class:`Queue.Queue` or `queue.queue`
+
+        """
+        Process.__init__(self)
+
+        # : (:obj:`int`) worker id
+        self.__wid = wid
+        # : (:obj:`float`) time period in seconds
+        self.__period = float(period)
+        #: (:obj:`str`) device proxy
+        self.__device = device
+        #: (:obj:`str`) device pipe name
+        self.__pipe = pipe
+        # : (:class:`PyTango.PipeProxy`) pipe proxy
+        self.__proxy = None
+        # : (:class:`Queue.Queue`) result queue
+        self.__qresult = qresult
+        # : (:obj:`int`) counter
+        self.__counter = 0
+
+    def run(self):
+        """ worker thread
+        """
+        self.__proxy = PyTango.DeviceProxy(self.__device)
+        stime = time.time()
+        etime = stime
+        while etime - stime < self.__period:
+            self.__proxy.read_pipe(self.__pipe)
+            etime = time.time()
+            self.__counter += 1
+        self.__qresult.put(
+            utils.Result(self.__wid, self.__counter, etime - stime))
+
+
+class WritePipeBenchmark(utils.Benchmark):
+    """  master class for pipe benchmark
     """
 
     def __init__(self, options):
@@ -100,47 +149,73 @@ class WriteBenchmark(utils.Benchmark):
         utils.Benchmark.__init__(self)
         #: (:obj:`str`) device proxy
         self.__device = options.device
-        #: (:obj:`str`) device attribute name
-        self.__attribute = options.attribute
+        #: (:obj:`str`) device pipe name
+        self.__pipe = options.pipe
         #: (:obj:`float`) time period in seconds
         self.__period = float(options.period)
         #: (:obj:`int`) number of clients
         self.__clients = int(options.clients)
-        #: (:obj:`float` or :class:`numpy.array`) attribute value to write
-        self.__value = 0
+        #: (:obj:`float` or :class:`numpy.array`) pipe value to pipe
+        self.__value = (
+            'PipeBlob',
+            [
+                {'name': 'DevLong64', 'value': 123, },
+                {'name': 'DevULong', 'value': np.uint32(123)},
+                {'name': 'DevVarUShortArray',
+                 'value': range(5), 'dtype': ('uint16',)},
+                {'name': 'DevVarDoubleArray',
+                 'value': [1.11, 2.22], 'dtype': ('float64',)},
+                {'name': 'DevBoolean', 'value': True},
+            ]
+        )
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
         self._qresults = [Queue() for i in range(self.__clients)]
 
-        try:
-            shape = list(map(int, options.shape.split(',')))
-        except Exception:
-            shape = None
+        size = max(1, int(options.size))
+        value1 = (self.__value[1] *
+                  (size / max(1, len(self.__value[1]) - 1) + 1))[:size]
 
-        try:
-            value = list(
-                map(float, options.value.replace('m', '-').split(',')))
-        except Exception:
-            value = [0]
-        if shape is None:
-            if len(value) == 1:
-                self.__value = value[0]
-            elif len(value) > 1:
-                self.__value = np.array(value)
-        elif len(shape) == 1:
-            self.__value = np.array(
-                (value * (shape[0] / max(1, len(value) - 1) + 1))[:shape[0]]
-            ).reshape(shape)
-        elif len(shape) == 2:
-            self.__value = np.array(
-                (
-                    value * (shape[0] * shape[1] / max(1, len(value) - 1) + 1)
-                )[:shape[0] * shape[1]]
-            ).reshape(shape)
+        for i in range(len(value1)):
+            value1[i] = dict(value1[i])
+            value1[i]["name"] = str(i) + "_" + value1[i]["name"]
+
+        self.__value = self.__value[0], tuple(value1)
 
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
-            Worker(i, self.__device, self.__attribute, self.__period,
-                   self.__value, self._qresults[i])
+            WriteWorker(i, self.__device, self.__pipe, self.__period,
+                        self.__value, self._qresults[i])
+            for i in range(self.__clients)
+        ]
+
+
+class ReadPipeBenchmark(utils.Benchmark):
+    """  master class for pipe benchmark
+    """
+
+    def __init__(self, options):
+        """ constructor
+
+        :param options: commandline options
+        :type options: :class:`argparse.Namespace`
+        """
+
+        utils.Benchmark.__init__(self)
+        #: (:obj:`str`) device proxy
+        self.__device = options.device
+        #: (:obj:`str`) device pipe name
+        self.__pipe = options.pipe
+        #: (:obj:`float`) time period in seconds
+        self.__period = float(options.period)
+        #: (:obj:`int`) number of clients
+        self.__clients = int(options.clients)
+        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
+        self._qresults = [Queue() for i in range(self.__clients)]
+
+        #: (:obj:`list` < :class:`Worker` >) process worker
+        self._workers = [
+            ReadWorker(i, self.__device, self.__pipe, self.__period,
+                       self._qresults[i])
             for i in range(self.__clients)
         ]
 
@@ -151,7 +226,7 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='perform check if and how a number of simultaneous '
-        'clients affect attributes write speed',
+        'clients affect pipes pipe speed',
         formatter_class=RawTextHelpFormatter)
     parser.add_argument(
         "-v", "--version",
@@ -171,25 +246,19 @@ def main():
         "-p", "--test-period", dest="period", default="10",
         help="time in seconds for which counting is preformed, default: 10")
     parser.add_argument(
-        "-a", "--attribute", dest="attribute",
-        default="BenchmarkScalarAttribute",
-        help="attribute which will be read, default: BenchmarkScalarAttribute")
+        "-i", "--pipe", dest="pipe",
+        default="BenchmarkPipe",
+        help="pipe which will be read/write, default: BenchmarkPipe")
     parser.add_argument(
-        "-s", "--attribute-shape", dest="shape",
-        default="",
-        help="attribute which will be read, default: '', "
-        "e.g. -s '128,64' ")
-    parser.add_argument(
-        "-w", "--attribute-value", dest="value",
-        default="0",
-        help="value to be written, default: 0, "
-        "e.g. -w '12.28,12.234,m123.3' where m123.3 means -123.3")
+        "-s", "--size", dest="size",
+        default="1",
+        help="pipe size, default: 1, e.g. -s 134 ")
     parser.add_argument(
         "-f", "--csv-file", dest="csvfile",
-        help="write output in a CSV file")
+        help="pipe output in a CSV file")
     parser.add_argument(
         "-t", "--title", dest="title",
-        default="Write Benckmark",
+        default="Pipe Benckmark",
         help="benchmark title")
     parser.add_argument(
         "--description", dest="description",
@@ -240,8 +309,8 @@ def main():
             print("")
             sys.exit(255)
 
-    if not options.attribute:
-        options.attribute = "BenchmarkScalarAttribute"
+    if not options.pipe:
+        options.pipe = "BenchmarkPipe"
 
     headers = [
         "Run no.",
@@ -263,7 +332,7 @@ def main():
 
     for i, cl in enumerate(clients):
         options.clients = cl
-        bm = WriteBenchmark(options=options)
+        bm = WritePipeBenchmark(options=options)
         bm.start()
         bm.fetchResults(options.verbose)
         out = bm.output(False)
@@ -281,6 +350,42 @@ def main():
             csvo.printLine(record)
 
     rst.printEnd()
+
+    headers = [
+        "Run no.",
+        "Sum counts [read]", "error [read]",
+        "Sum Speed [read/s]", "error [read/s]",
+        "Counts [read]", "error [read]",
+        "Speed [read/s]", "error [read/s]",
+        "No. ", "  Time [s]  ", "error [s]"
+    ]
+
+    if options.csvfile:
+        csvo.printHeader(headers)
+
+    rst.printHeader(headers)
+
+    for i, cl in enumerate(clients):
+        options.clients = cl
+        bm = ReadPipeBenchmark(options=options)
+        bm.start()
+        bm.fetchResults(options.verbose)
+        out = bm.output(False)
+        record = [
+            str(i),
+            out["sumcounts"], out["err_sumcounts"],
+            out["sumspeed"], out["err_sumspeed"],
+            out["counts"], out["err_counts"],
+            out["speed"], out["err_speed"],
+            cl,
+            out["time"], out["err_time"]
+        ]
+        rst.printLine(record)
+        if options.csvfile:
+            csvo.printLine(record)
+
+    rst.printEnd()
+
     if options.csvfile:
         csvo.printEnd()
 

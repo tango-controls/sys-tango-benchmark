@@ -31,7 +31,7 @@ from PyTango import DebugIt
 from PyTango.server import run
 from PyTango.server import Device, DeviceMeta
 from PyTango.server import attribute, command, pipe
-from PyTango import AttrWriteType
+from PyTango import AttrWriteType, PipeWriteType
 import numpy as np
 import time
 
@@ -113,6 +113,16 @@ class PyBenchmarkTarget(Device):
         doc="time since reset",
     )
 
+    PipeReadsCount = attribute(
+        dtype='int',
+        doc="pipe reads count",
+    )
+
+    PipeWritesCount = attribute(
+        dtype='int',
+        doc="pipe writes count",
+    )
+
     BenchmarkSpectrumAttribute = attribute(
         dtype=('double',),
         access=AttrWriteType.READ_WRITE,
@@ -133,6 +143,7 @@ class PyBenchmarkTarget(Device):
 
     BenchmarkPipe = pipe(
         doc="benchmark pipe",
+        access=PipeWriteType.PIPE_READ_WRITE
     )
 
     # ---------------
@@ -148,10 +159,12 @@ class PyBenchmarkTarget(Device):
         self.__scalar_reads_count = 0
         self.__spectrum_reads_count = 0
         self.__image_reads_count = 0
+        self.__pipe_reads_count = 0
 
         self.__scalar_writes_count = 0
         self.__spectrum_writes_count = 0
         self.__image_writes_count = 0
+        self.__pipe_writes_count = 0
 
         self.__command_calls_count = 0
 
@@ -162,6 +175,20 @@ class PyBenchmarkTarget(Device):
             shape=[1024], dtype=float)
         self.__benchmark_image_attribute = np.zeros(
             shape=[1024, 2048], dtype=float)
+
+        self.__benchmark_pipe = (
+            'PipeBlob',
+            (
+                {'name': 'DevLong64', 'value': 123, },
+                {'name': 'DevULong', 'value': np.uint32(123)},
+                {'name': 'DevVarUShortArray',
+                 'value': range(5), 'dtype': ('uint16',)},
+                {'name': 'DevVarDoubleArray',
+                 'value': [1.11, 2.22], 'dtype': ('float64',)},
+                {'name': 'DevBoolean', 'value': True},
+            )
+        )
+
         self.set_change_event("BenchmarkScalarAttribute", True, False)
         self.set_change_event("BenchmarkSpectrumAttribute", True, False)
         self.set_change_event("BenchmarkImageAttribute", True, False)
@@ -220,6 +247,9 @@ class PyBenchmarkTarget(Device):
     def read_ImageReadsCount(self):
         return self.__image_reads_count
 
+    def read_PipeReadsCount(self):
+        return self.__pipe_reads_count
+
     def read_ScalarWritesCount(self):
         return self.__scalar_writes_count
 
@@ -228,6 +258,9 @@ class PyBenchmarkTarget(Device):
 
     def read_ImageWritesCount(self):
         return self.__image_writes_count
+
+    def read_PipeWritesCount(self):
+        return self.__pipe_writes_count
 
     def read_CommandCallsCount(self):
         return self.__command_calls_count
@@ -256,7 +289,12 @@ class PyBenchmarkTarget(Device):
     # -------------
 
     def read_BenchmarkPipe(self):
-        return dict(x=0, y=0)
+        self.__pipe_reads_count += 1
+        return self.__benchmark_pipe
+
+    def write_BenchmarkPipe(self, value):
+        self.__pipe_writes_count += 1
+        self.__benchmark_pipe = value
 
     # --------
     # Commands
@@ -297,10 +335,12 @@ class PyBenchmarkTarget(Device):
         self.__scalar_reads_count = 0
         self.__spectrum_reads_count = 0
         self.__image_reads_count = 0
+        self.__pipe_reads_count = 0
 
         self.__scalar_writes_count = 0
         self.__spectrum_writes_count = 0
         self.__image_writes_count = 0
+        self.__pipe_writes_count = 0
 
         self.__command_calls_count = 0
         self.__reset_time = time.time()

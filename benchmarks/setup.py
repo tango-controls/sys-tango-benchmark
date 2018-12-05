@@ -53,6 +53,7 @@ SETUPDATA = dict(
     zip_safe=False,
     entry_points={
         'console_scripts': [
+            'pipebenchmark = benchmarks.pipebenchmark:main',
             'readbenchmark = benchmarks.readbenchmark:main',
             'writebenchmark = benchmarks.writebenchmark:main',
             'eventbenchmark = benchmarks.eventbenchmark:main',
