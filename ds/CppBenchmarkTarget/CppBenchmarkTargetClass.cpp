@@ -421,6 +421,7 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Polled
 	benchmarkscalarattribute->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
+	benchmarkscalarattribute->set_change_event(true, false);
 	att_list.push_back(benchmarkscalarattribute);
 
 	//	Attribute : AlwaysExecutedHookCount
@@ -757,6 +758,7 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Polled
 	benchmarkspectrumattribute->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
+	benchmarkspectrumattribute->set_change_event(true, false);
 	att_list.push_back(benchmarkspectrumattribute);
 
 	//	Attribute : BenchmarkImageAttribute
@@ -781,6 +783,7 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Polled
 	benchmarkimageattribute->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
+	benchmarkimageattribute->set_change_event(true, false);
 	att_list.push_back(benchmarkimageattribute);
 
 

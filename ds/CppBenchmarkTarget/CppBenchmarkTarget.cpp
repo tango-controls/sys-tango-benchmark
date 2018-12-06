@@ -168,9 +168,9 @@ void CppBenchmarkTarget::init_device()
 	//	Initialization before get_device_property() call
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::init_device_before
-
+	
 	//	No device property to be read from database
-
+	
 	attr_BenchmarkScalarAttribute_read = new Tango::DevDouble[1];
 	attr_AlwaysExecutedHookCount_read = new Tango::DevLong[1];
 	attr_ReadAttributeHardwareCount_read = new Tango::DevLong[1];

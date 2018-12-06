@@ -23,7 +23,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1843728894" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
 								<option id="gnu.cpp.compiler.option.include.paths.1220787058" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="$TANGO_ROOT/include"/>
-									<listOptionValue builtIn="false" value="&quot;${w orkspace_loc:/home/jkotan/sources/sys-tango-benchmark/ds/CppBenchmarkTargret}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${w orkspace_loc:/home/jkotan/sources/sys-tango-benchmark/ds/CppBenchmarkTarget}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1579867133" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
