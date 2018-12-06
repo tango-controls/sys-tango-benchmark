@@ -207,9 +207,19 @@ void CppBenchmarkTarget::init_device()
 	command_calls_count = 0;
 	
 	gettimeofday(&reset_time, NULL);
-	//self.set_change_event("BenchmarkScalarAttribute", True, False)
-        //self.set_change_event("BenchmarkSpectrumAttribute", True, False)
-        //self.set_change_event("BenchmarkImageAttribute", True, False)
+	//   self.__benchmark_pipe = (
+        //     'PipeBlob',
+        //     (
+        //         {'name': 'DevLong64', 'value': 123, },
+        //         {'name': 'DevULong', 'value': np.uint32(123)},
+        //         {'name': 'DevVarUShortArray',
+        //          'value': range(5), 'dtype': ('uint16',)},
+        //         {'name': 'DevVarDoubleArray',
+        //          'value': [1.11, 2.22], 'dtype': ('float64',)},
+        //         {'name': 'DevBoolean', 'value': True},
+        //     )
+        // )
+
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::init_device
 }
@@ -681,6 +691,18 @@ void CppBenchmarkTarget::read_BenchmarkPipe(Tango::Pipe &pipe)
 
 	//	Add your own code here
 	pipe_reads_count++;
+	pipe.set_root_blob_name("BlobCaseEven");
+
+	vector<string> de_names {"EvenFirstDE","EvenSecondDE"};
+	pipe.set_data_elt_names(de_names);
+	
+	int dl = 666;
+	vector<double> v_db;
+	v_db.clear();
+	v_db.push_back(1.11);
+	v_db.push_back(2.22);
+	
+	pipe << dl << v_db;
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkPipe
 }
 //--------------------------------------------------------
