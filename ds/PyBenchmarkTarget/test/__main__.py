@@ -23,7 +23,10 @@
 
 import PyBenchmarkTarget_test
 from PyBenchmarkTarget_test import PyBenchmarkTargetDeviceTest
+import CppBenchmarkTarget_test
+from CppBenchmarkTarget_test import CppBenchmarkTargetDeviceTest
 
-__all__ = [PyBenchmarkTargetDeviceTest]
+__all__ = [PyBenchmarkTargetDeviceTest, CppBenchmarkTargetDeviceTest]
 
 PyBenchmarkTarget_test.main()
+CppBenchmarkTarget_test.main()

@@ -207,6 +207,9 @@ void CppBenchmarkTarget::init_device()
 	command_calls_count = 0;
 	
 	gettimeofday(&reset_time, NULL);
+	//self.set_change_event("BenchmarkScalarAttribute", True, False)
+        //self.set_change_event("BenchmarkSpectrumAttribute", True, False)
+        //self.set_change_event("BenchmarkImageAttribute", True, False)
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::init_device
 }
@@ -730,7 +733,7 @@ Tango::ConstDevString CppBenchmarkTarget::dev_status()
 	DEBUG_STREAM << "CppBenchmarkTarget::Status()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::dev_status) ENABLED START -----*/
 
-	string	status = "Device is OK";
+	string	status = "State is ON";
 	//	Add your own code
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::dev_status

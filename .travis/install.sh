@@ -46,3 +46,10 @@ if [ "$?" -ne "0" ]
 then
     exit -1
 fi
+
+echo "install CppBenchmarkTarget"
+docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make'
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
