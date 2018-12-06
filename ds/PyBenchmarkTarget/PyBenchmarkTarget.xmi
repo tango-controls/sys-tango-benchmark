@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
   <classes name="PyBenchmarkTarget" pogoRevision="9.4">
-    <description description="Benchmark device for counting attribute, command and pipe calls" title="Benchmark device" sourcePath="/home/jkotan/sources/sys-tango-benchmark/ds/PyBenchmarkTarget" language="PythonHL" filestogenerate="XMI   file,Code files,Sphinx,html Pages" license="GPL" copyright="" hasMandatoryProperty="false" hasConcreteProperty="false" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
+    <description description="Benchmark device for counting attribute, command and pipe calls" title="Benchmark device" sourcePath="/home/jkotan/sources/sys-tango-benchmark/ds/PyBenchmarkTarget" language="PythonHL" filestogenerate="XMI   file,Code files,Protected Regions,Sphinx,html Pages" license="GPL" copyright="" hasMandatoryProperty="false" hasConcreteProperty="false" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at gmail.com - jankotan" author="jankotan" emailDomain="gmail.com" classFamily="Simulators" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="" reference=""/>
     </description>
@@ -61,7 +61,7 @@
     </commands>
     <attributes name="BenchmarkScalarAttribute" attType="Scalar" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:DoubleType"/>
-      <changeEvent fire="false" libCheckCriteria="false"/>
+      <changeEvent fire="true" libCheckCriteria="false"/>
       <archiveEvent fire="false" libCheckCriteria="false"/>
       <dataReadyEvent fire="false" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
@@ -173,15 +173,15 @@
     </attributes>
     <attributes name="BenchmarkSpectrumAttribute" attType="Spectrum" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="4096" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:DoubleType"/>
-      <changeEvent fire="false" libCheckCriteria="false"/>
+      <changeEvent fire="true" libCheckCriteria="false"/>
       <archiveEvent fire="false" libCheckCriteria="false"/>
-      <dataReadyEvent fire="false" libCheckCriteria="true"/>
+      <dataReadyEvent fire="true" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="benchmark spectrum attribute" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
     </attributes>
     <attributes name="BenchmarkImageAttribute" attType="Image" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="4096" maxY="4096" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:DoubleType"/>
-      <changeEvent fire="false" libCheckCriteria="false"/>
+      <changeEvent fire="true" libCheckCriteria="false"/>
       <archiveEvent fire="false" libCheckCriteria="false"/>
       <dataReadyEvent fire="false" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
