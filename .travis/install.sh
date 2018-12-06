@@ -35,21 +35,22 @@ then
     exit -1
 fi
 
-if [ "$2" = "2" ]; then
-    echo "install PyBenchmarkTarget"
-    docker exec -it --user root s2i /bin/sh -c 'cd ds/PyBenchmarkTarget; python setup.py -q install'
-else
-    echo "install PyBenchmarkTarget"
-    docker exec -it --user root s2i /bin/sh -c 'cd ds/PyBenchmarkTarget; python3 setup.py -q install'
-fi
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
-
 echo "install CppBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make'
 if [ "$?" -ne "0" ]
 then
     exit -1
 fi
+
+if [ "$2" = "2" ]; then
+    echo "install PyBenchmarkTarget"
+    docker exec -it --user root s2i /bin/sh -c 'cd ../PyBenchmarkTarget; python setup.py -q install'
+else
+    echo "install PyBenchmarkTarget"
+    docker exec -it --user root s2i /bin/sh -c 'cd ../PyBenchmarkTarget; python3 setup.py -q install'
+fi
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+
