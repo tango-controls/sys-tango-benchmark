@@ -78,6 +78,12 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   
   int command_calls_count = 0;
   struct timeval reset_time;
+
+  std::string pipe_name = "";
+  std::string pipe_blob_name = "BlobCaseEven";
+  std::vector<std::string> pipe_element_names {"EvenFirstDE","EvenSecondDE"};
+  size_t pipe_size = 2;
+
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
 

@@ -290,13 +290,12 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         for i in range(10):
             self.proxy.BenchmarkPipe = wvl
             self.assertEqual(self.proxy.PipeWritesCount, i + 1)
-            # rvl =
-            self.proxy.BenchmarkPipe
+            rvl = self.proxy.BenchmarkPipe
             self.assertEqual(self.proxy.PipeReadsCount, i + 1)
+            self.assertEqual(wvl[0], rvl[0])
+            self.assertEqual(len(wvl[1]), len(rvl[1]))
             #: can be uncommented when pipe implemention required
-            # self.assertEqual(wvl[0], rvl[0])
-            # self.assertEqual(len(wvl[0]), len(rvl[0]))
-            # for i in range(len(wvl)):
+            # for i in range(len(wvl[1])):
             #     self.assertEqual(wvl[1][i], rvl[1][i])
 
     def test_AlwaysExecutedHookCount(self):
