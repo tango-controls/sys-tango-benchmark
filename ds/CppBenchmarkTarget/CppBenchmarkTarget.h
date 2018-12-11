@@ -58,9 +58,9 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
 
 //	Add your own data members
   int attr_BenchmarkSpectrumAttribute_length = 4096;
-  int attr_BenchmarkImageAttribute_length = 4096*4096;
-  int attr_BenchmarkImageAttribute_x = 4096;
-  int attr_BenchmarkImageAttribute_y = 4096;
+  int attr_BenchmarkImageAttribute_length = 256*512;
+  int attr_BenchmarkImageAttribute_x = 256;
+  int attr_BenchmarkImageAttribute_y = 512;
 
   int always_executed_hook_count = 0;
   int read_attribute_hardware_count = 0;
