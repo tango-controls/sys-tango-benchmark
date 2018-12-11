@@ -42,7 +42,7 @@ if [ "$?" -ne "0" ]
 then
     exit -1
 fi
-echo "install CppBenchmarkTarget"
+echo "install JavaBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'cd ds/JavaBenchmarkTarget; mvn clean install'
 if [ "$?" -ne "0" ]
 then
