@@ -1,6 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <groupId>org.tango.server</groupId>
     <artifactId>JavaBenchmarkTarget</artifactId>
     <version>1.0</version>
@@ -44,8 +46,24 @@
     <build>
         <plugins>
             <plugin>
+	      <groupId>org.codehaus.mojo</groupId>
+	      <artifactId>exec-maven-plugin</artifactId>
+	      <version>1.2.1</version>
+	      <executions>
+		<execution>
+		  <goals>
+                    <goal>java</goal>
+		  </goals>
+		</execution>
+	      </executions>
+	      <configuration>
+		<mainClass>org.tango.javabenchmarktarget.JavaBenchmarkTarget</mainClass>
+	      </configuration>
+	    </plugin>
+	    <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -64,6 +82,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
