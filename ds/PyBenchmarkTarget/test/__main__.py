@@ -38,7 +38,8 @@ else:
     CPPSERVER = False
 
 if os.path.isfile(
-        "%s/.m2/repository/org/tango/server/JavaBenchmarkTarget/1.0/JavaBenchmarkTarget-1.0.jar"
+        "%s/.m2/repository/org/tango/server/JavaBenchmarkTarget/" \
+        "1.0/JavaBenchmarkTarget-1.0.jar"
         % expanduser("~")):
     JAVASERVER = True
 else:
