@@ -14,7 +14,7 @@ then
     exit -1
 fi
 echo "install tango servers"
-docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive;  apt-get -qq update; apt-get -qq install -y tango-starter tango-test liblog4j1.2-java'
+docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive;  apt-get -qq update; apt-get -qq install -y tango-starter tango-test liblog4j1.2-java g++ default-jre  libtango-dev liblog4tango-dev'
 if [ "$?" -ne "0" ]
 then
     exit -1
@@ -25,11 +25,19 @@ docker exec -it --user root s2i service tango-starter restart
 
 if [ "$2" = "2" ]; then
     echo "install python-pytango"
-    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python-pytango python-tz python-setuptools python-sphinx'
+    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python-pytango python-tz python-setuptools python-sphinx python-whichcraft'
 else
     echo "install python3-pytango"
-    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango python3-tz python3-setuptools python3-sphinx'
+    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango python3-tz python3-setuptools python3-sphinx python3-whichcraft'
 fi
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+
+echo "install CppBenchmarkTarget"
+docker exec -it --user root s2i /bin/sh -c 'curl -O https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb; dpkg -i ./libtango-java_9.2.5a-1_all.deb'
+docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make'
 if [ "$?" -ne "0" ]
 then
     exit -1
@@ -46,3 +54,4 @@ if [ "$?" -ne "0" ]
 then
     exit -1
 fi
+
