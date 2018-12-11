@@ -736,7 +736,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getState) ENABLED START -----*/
 		
 		//	Put state code here
-		
+	    state = DevState.ON;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getState
 		return state;
 	}
@@ -763,7 +763,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getStatus) ENABLED START -----*/
 		
 		//	Put status code here
-		
+	    status = "State is ON";
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getStatus
 		return status;
 	}
