@@ -27,7 +27,7 @@ import sys
 import os
 import unittest
 import PyTango
-from os.path import expanduser
+# from os.path import expanduser
 from PyBenchmarkTarget_test import PyBenchmarkTargetDeviceTest
 
 # Path
@@ -58,7 +58,7 @@ class JavaBenchmarkTargetDeviceTest(PyBenchmarkTargetDeviceTest):
         self.new_device_info_benchmark.name = self.device
         self.proxy = None
 
-        home = expanduser("~")
+        # home = expanduser("~")
         # serverfile = "%s/DeviceServers/JavaBenchmarkTarget" % home
         # if os.path.isfile(serverfile):
         self._startserver = "cd ../JavaBenchmarkTarget;. /etc/tangorc; " \
