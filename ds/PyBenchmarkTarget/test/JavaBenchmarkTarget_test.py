@@ -61,15 +61,18 @@ class JavaBenchmarkTargetDeviceTest(PyBenchmarkTargetDeviceTest):
         # home = expanduser("~")
         # serverfile = "%s/DeviceServers/JavaBenchmarkTarget" % home
         # if os.path.isfile(serverfile):
-        self._startserver = "cd ../JavaBenchmarkTarget;. /etc/tangorc; " \
-                            "export TANGO_HOST; " \
-                            "mvn exec:java -Dexec.args=%s &" % (self.instance)
+        self._startserver = \
+            "cd ../JavaBenchmarkTarget; " \
+            "CLASSPATH=/usr/share/java/JTango.jar:" \
+            "./target/JavaBenchmarkTarget-1.0.jar:$CLASSPATH ; " \
+            "export CLASSPATH; . /etc/tangorc; export TANGO_HOST; " \
+            "java  org.tango.javabenchmarktarget.JavaBenchmarkTarget %s &" % \
+            (self.instance)
         # else:
         #     self._startserver = "JavaBenchmarkTarget %s &" % self.instance
         self._grepserver = \
             "ps -ef | " \
-            "grep 'JavaBenchmarkTarget " \
-            "org.codehaus.plexus.classworlds.launcher.Launcher' | grep -v grep"
+            "grep 'JavaBenchmarkTarget %s' | grep -v grep" % (self.instance)
 
 
 def main():
