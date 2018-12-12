@@ -37,15 +37,32 @@ else:
     print("Warning: CppBenchmarkTarget cannot be found")
     CPPSERVER = False
 
+if os.path.isfile(
+        "../JavaBenchmarkTarget/target/JavaBenchmarkTarget-1.0.jar"):
+    JAVASERVER = True
+else:
+    print("Warning: JavaBenchmarkTarget cannot be found")
+    JAVASERVER = False
+
+
 if CPPSERVER:
     import CppBenchmarkTarget_test
     from CppBenchmarkTarget_test import CppBenchmarkTargetDeviceTest
+
+if JAVASERVER:
+    import JavaBenchmarkTarget_test
+    from JavaBenchmarkTarget_test import JavaBenchmarkTargetDeviceTest
 
 __all__ = [PyBenchmarkTargetDeviceTest]
 
 if CPPSERVER:
     __all__.append(CppBenchmarkTargetDeviceTest)
 
+if JAVASERVER:
+    __all__.append(JavaBenchmarkTargetDeviceTest)
+
 PyBenchmarkTarget_test.main()
 if CPPSERVER:
     CppBenchmarkTarget_test.main()
+if JAVASERVER:
+    JavaBenchmarkTarget_test.main()
