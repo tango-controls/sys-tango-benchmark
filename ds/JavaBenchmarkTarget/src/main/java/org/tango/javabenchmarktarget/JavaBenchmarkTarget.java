@@ -74,6 +74,7 @@ import fr.esrf.TangoDs.Except;
 import fr.esrf.TangoApi.PipeBlob;
 import fr.esrf.TangoApi.PipeDataElement;
 
+import java.lang.System;
 /*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.imports
 
 /**
@@ -97,7 +98,21 @@ public class JavaBenchmarkTarget {
 	/*----- PROTECTED REGION ID(JavaBenchmarkTarget.private) ENABLED START -----*/
 	
 	//	Put private variables here
-	
+    private long resetTime = 0;
+    
+        // self.__benchmark_pipe = (
+        //     'PipeBlob',
+        //     (
+        //         {'name': 'DevLong64', 'value': 123, },
+        //         {'name': 'DevULong', 'value': np.uint32(123)},
+        //         {'name': 'DevVarUShortArray',
+        //          'value': range(5), 'dtype': ('uint16',)},
+        //         {'name': 'DevVarDoubleArray',
+        //          'value': [1.11, 2.22], 'dtype': ('float64',)},
+        //         {'name': 'DevBoolean', 'value': True},
+        //     )
+        // )
+    
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.private
 
 	//========================================================
@@ -120,7 +135,12 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.initDevice) ENABLED START -----*/
 		
 		//	Put your device initialization code here
-		
+		resetTime = System.currentTimeMillis();
+
+		PipeBlob myPipeBlob = new PipeBlob("A");
+		myPipeBlob.add(new PipeDataElement("C", "B"));
+		benchmarkPipe = new PipeValue(myPipeBlob);
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.initDevice
 		xlogger.exit();
 	}
@@ -152,7 +172,6 @@ public class JavaBenchmarkTarget {
 			/*----- PROTECTED REGION ID(JavaBenchmarkTarget.aroundInvoke) ENABLED START -----*/
 			
 			//	Put aroundInvoke code here
-			
 			/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.aroundInvoke
 		xlogger.exit();
 	}
@@ -210,7 +229,9 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkScalarAttribute) ENABLED START -----*/
 		
 		//	Put read attribute code here
-		
+		alwaysExecutedHookCount++;
+		scalarReadsCount++;
+		readAttributeHardwareCount++;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getBenchmarkScalarAttribute
 		attributeValue.setValue(benchmarkScalarAttribute);
 		xlogger.exit();
@@ -225,6 +246,8 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setBenchmarkScalarAttribute) ENABLED START -----*/
 		this.benchmarkScalarAttribute = benchmarkScalarAttribute;
+		alwaysExecutedHookCount++;
+		scalarWritesCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkScalarAttribute
 		xlogger.exit();
@@ -251,6 +274,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getAlwaysExecutedHookCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getAlwaysExecutedHookCount
 		attributeValue.setValue(alwaysExecutedHookCount);
@@ -279,6 +304,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getReadAttributeHardwareCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getReadAttributeHardwareCount
 		attributeValue.setValue(readAttributeHardwareCount);
@@ -307,7 +334,10 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getWriteAttributeCounterCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
-		
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
+		writeAttributeCounterCount = scalarWritesCount +
+		    spectrumWritesCount + imageWritesCount;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getWriteAttributeCounterCount
 		attributeValue.setValue(writeAttributeCounterCount);
 		xlogger.exit();
@@ -335,6 +365,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getScalarReadsCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getScalarReadsCount
 		attributeValue.setValue(scalarReadsCount);
@@ -363,6 +395,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getSpectrumReadsCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getSpectrumReadsCount
 		attributeValue.setValue(spectrumReadsCount);
@@ -391,6 +425,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getImageReadsCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getImageReadsCount
 		attributeValue.setValue(imageReadsCount);
@@ -419,6 +455,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getScalarWritesCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getScalarWritesCount
 		attributeValue.setValue(scalarWritesCount);
@@ -447,6 +485,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getSpectrumWritesCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getSpectrumWritesCount
 		attributeValue.setValue(spectrumWritesCount);
@@ -475,6 +515,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getImageWritesCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getImageWritesCount
 		attributeValue.setValue(imageWritesCount);
@@ -503,7 +545,9 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getCommandCallsCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
-		
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getCommandCallsCount
 		attributeValue.setValue(commandCallsCount);
 		xlogger.exit();
@@ -532,7 +576,10 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getTimeSinceReset) ENABLED START -----*/
 		
 		//	Put read attribute code here
-		
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
+		long endTime = System.currentTimeMillis();
+		timeSinceReset = (double)(endTime - resetTime) / 1000.;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getTimeSinceReset
 		attributeValue.setValue(timeSinceReset);
 		xlogger.exit();
@@ -560,6 +607,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getPipeReadsCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getPipeReadsCount
 		attributeValue.setValue(pipeReadsCount);
@@ -588,6 +637,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getPipeWritesCount) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getPipeWritesCount
 		attributeValue.setValue(pipeWritesCount);
@@ -616,6 +667,9 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkSpectrumAttribute) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		spectrumReadsCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getBenchmarkSpectrumAttribute
 		attributeValue.setValue(benchmarkSpectrumAttribute);
@@ -631,6 +685,8 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setBenchmarkSpectrumAttribute) ENABLED START -----*/
 		this.benchmarkSpectrumAttribute = benchmarkSpectrumAttribute;
+		alwaysExecutedHookCount++;
+		spectrumWritesCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkSpectrumAttribute
 		xlogger.exit();
@@ -643,7 +699,7 @@ public class JavaBenchmarkTarget {
 	 */
 	@Attribute(name="BenchmarkImageAttribute", pushChangeEvent=true, checkChangeEvent=false)
 	@AttributeProperties(description="benchmark image attribute")
-	private double[][] benchmarkImageAttribute = new double[4096][4096];
+	private double[][] benchmarkImageAttribute = new double[512][256];
 	/**
 	 * Read attribute BenchmarkImageAttribute
 	 * 
@@ -657,6 +713,9 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkImageAttribute) ENABLED START -----*/
 		
 		//	Put read attribute code here
+		alwaysExecutedHookCount++;
+		imageReadsCount++;
+		readAttributeHardwareCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getBenchmarkImageAttribute
 		attributeValue.setValue(benchmarkImageAttribute);
@@ -672,6 +731,8 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setBenchmarkImageAttribute) ENABLED START -----*/
 		this.benchmarkImageAttribute = benchmarkImageAttribute;
+		alwaysExecutedHookCount++;
+		imageWritesCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkImageAttribute
 		xlogger.exit();
@@ -699,7 +760,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkPipe) ENABLED START -----*/
 		
 		//	Put read pipe code here
-		
+ 		pipeReadsCount++;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getBenchmarkPipe
 		xlogger.exit();
 		return benchmarkPipe;
@@ -713,6 +774,8 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setBenchmarkPipe) ENABLED START -----*/
 		this.benchmarkPipe = pipeValue;
+		// alwaysExecutedHookCount++;
+		pipeWritesCount++;
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkPipe
 		xlogger.exit();
@@ -736,7 +799,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getState) ENABLED START -----*/
 		
 		//	Put state code here
-	    state = DevState.ON;
+		state = DevState.ON;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getState
 		return state;
 	}
@@ -763,7 +826,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getStatus) ENABLED START -----*/
 		
 		//	Put status code here
-	    status = "State is ON";
+		status = "State is ON";
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getStatus
 		return status;
 	}
@@ -786,7 +849,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.benchmarkCommand) ENABLED START -----*/
 		
 		//	Put command code here
-		
+		alwaysExecutedHookCount++;
+		commandCallsCount++;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.benchmarkCommand
 		xlogger.exit();
 	}
@@ -803,7 +867,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setSpectrumSize) ENABLED START -----*/
 		
 		//	Put command code here
-		
+		// alwaysExecutedHookCount++;
+		benchmarkSpectrumAttribute = new double[setSpectrumSizeIn];
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setSpectrumSize
 		xlogger.exit();
 	}
@@ -820,7 +885,8 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setImageSize) ENABLED START -----*/
 		
 		//	Put command code here
-		
+		// alwaysExecutedHookCount++;
+		benchmarkImageAttribute = new double[setImageSizeIn[0]][setImageSizeIn[1]];
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setImageSize
 		xlogger.exit();
 	}
@@ -836,7 +902,24 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.resetCounters) ENABLED START -----*/
 		
 		//	Put command code here
+		// alwaysExecutedHookCount++;
+		alwaysExecutedHookCount = 0;
+		readAttributeHardwareCount = 0;
+		writeAttributeCounterCount = 0;
 		
+		scalarReadsCount = 0;
+		spectrumReadsCount = 0;
+		imageReadsCount = 0;
+		pipeReadsCount = 0;
+		
+		scalarWritesCount = 0;
+		spectrumWritesCount = 0;
+		imageWritesCount = 0;
+		pipeWritesCount = 0;
+		
+		commandCallsCount = 0;
+		resetTime = System.currentTimeMillis();
+	    
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.resetCounters
 		xlogger.exit();
 	}
