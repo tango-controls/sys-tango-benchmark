@@ -43,9 +43,9 @@ then
     exit -1
 fi
 echo "install JavaBenchmarkTarget"
+docker exec -it --user root s2i /bin/sh -c 'cd ds/JavaBenchmarkTarget; mvn clean install'
 docker exec -it --user root s2i /bin/sh -c 'update-alternatives --list java'
 docker exec -it --user root s2i /bin/sh -c 'update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java'
-docker exec -it --user root s2i /bin/sh -c 'cd ds/JavaBenchmarkTarget; mvn clean package'
 if [ "$?" -ne "0" ]
 then
     exit -1
