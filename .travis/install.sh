@@ -35,6 +35,20 @@ then
     exit -1
 fi
 
+
+if [ "$2" = "2" ]; then
+    echo "install python-pytango"
+    docker exec -it --user root s2i /bin/sh -c '. /etc/tangorc; export TANGO_HOST;python -c "import PyTango;PyTango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"'
+else
+    echo "install python-pytango"
+    docker exec -it --user root s2i /bin/sh -c '. /etc/tangorc; export TANGO_HOST;python3 -c "import PyTango;PyTango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"'
+fi
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+
+
 echo "install CppBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'curl -O https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb; dpkg -i ./libtango-java_9.2.5a-1_all.deb'
 docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make'
@@ -44,7 +58,11 @@ then
 fi
 echo "install JavaBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'cd ds/JavaBenchmarkTarget; mvn clean install'
-docker exec -it --user root s2i /bin/sh -c 'update-alternatives --list java'
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+ocker exec -it --user root s2i /bin/sh -c 'update-alternatives --list java'
 docker exec -it --user root s2i /bin/sh -c 'update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java'
 if [ "$?" -ne "0" ]
 then
