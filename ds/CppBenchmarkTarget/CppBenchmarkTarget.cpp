@@ -135,6 +135,7 @@ void CppBenchmarkTarget::delete_device()
 
 	//	Delete device allocated objects
 
+	delete[] attr_BenchmarkPipe_read;
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::delete_device
 	delete[] attr_BenchmarkScalarAttribute_read;
 	delete[] attr_AlwaysExecutedHookCount_read;
@@ -190,6 +191,7 @@ void CppBenchmarkTarget::init_device()
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::init_device) ENABLED START -----*/
 
 	//	Initialize device
+	attr_BenchmarkPipe_read = new Tango::DevPipeData[1];
 	always_executed_hook_count = 0;
 	read_attribute_hardware_count = 0;
 	write_attribute_counter_count = 0;
@@ -699,6 +701,28 @@ void CppBenchmarkTarget::read_BenchmarkPipe(Tango::Pipe &pipe)
 	    int dl = 666;
 	    pipe << dl;
 	  }
+	
+	attr_BenchmarkPipe_read->name = Tango::string_dup(pipe_name.c_str());
+
+	Tango::DevicePipeBlob &  blob = pipe.get_blob();
+	Tango::DevPipeBlob & wblob = attr_BenchmarkPipe_read->data_blob;
+	Tango::DevVarPipeDataEltArray * tmp_ptr = &attr_BenchmarkPipe_read->data_blob.blob_data;
+	
+	pipe.set_root_blob_name(pipe_blob_name);
+
+	Tango::DevVarPipeDataEltArray *wtmp_ptr = blob.get_insert_data();
+	if (tmp_ptr != Tango_nullptr)
+	  {
+
+	    Tango::DevULong max,len;
+	    max = tmp_ptr->maximum();
+	    len = tmp_ptr->length();
+	    wtmp_ptr -> replace(max,
+	    			len,
+	    			tmp_ptr->get_buffer((Tango::DevBoolean)true),
+	    			true);
+	  }
+	
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkPipe
 }
 //--------------------------------------------------------
@@ -719,6 +743,32 @@ void CppBenchmarkTarget::write_BenchmarkPipe(Tango::WPipe &pipe)
 	pipe_element_names = pipe.get_data_elt_names();
 	pipe_size = pipe.get_data_elt_nb();
 
+	delete[] attr_BenchmarkPipe_read;
+	attr_BenchmarkPipe_read = new Tango::DevPipeData[1];
+	attr_BenchmarkPipe_read->name = Tango::string_dup(pipe_name.c_str());
+
+	Tango::DevicePipeBlob &  blob = pipe.get_blob();
+	
+	// ::memset(&(attr_BenchmarkPipe_read->time),0,sizeof(attr_BenchmarkPipe_read->time));
+	// attr_BenchmarkPipe_read->time.tv_sec = t.tv_sec;
+	// attr_BenchmarkPipe_read->time.tv_usec = t.tv_usec;
+
+	const string &bl_name = blob.get_name();
+	if (bl_name.size() != 0)
+	  attr_BenchmarkPipe_read->data_blob.name = bl_name.c_str();
+
+	Tango::DevVarPipeDataEltArray *tmp_ptr = blob.get_insert_data();
+	if (tmp_ptr != Tango_nullptr)
+	{
+
+	  Tango::DevULong max,len;
+	  max = tmp_ptr->maximum();
+	  len = tmp_ptr->length();
+	  attr_BenchmarkPipe_read->data_blob.blob_data.replace(max,
+							       len,
+							       tmp_ptr->get_buffer((Tango::DevBoolean)true),
+							       true);
+	}
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_BenchmarkPipe
 }
 //--------------------------------------------------------

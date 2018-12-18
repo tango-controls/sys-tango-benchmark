@@ -296,7 +296,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             self.assertEqual(len(wvl[1]), len(rvl[1]))
             #: can be uncommented when pipe implemention required
             # for i in range(len(wvl[1])):
-            #     self.assertEqual(wvl[1][i], rvl[1][i])
+            #      self.assertEqual(wvl[1][i], rvl[1][i])
 
     def test_AlwaysExecutedHookCount(self):
         """Test for AlwaysExecutedHookCount"""

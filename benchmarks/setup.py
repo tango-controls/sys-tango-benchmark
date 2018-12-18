@@ -58,6 +58,7 @@ SETUPDATA = dict(
             'writebenchmark = benchmarks.writebenchmark:main',
             'eventbenchmark = benchmarks.eventbenchmark:main',
             'cmdbenchmark = benchmarks.cmdbenchmark:main',
+            'benchmarkrunner = benchmarks.runner:main',
         ]},
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',

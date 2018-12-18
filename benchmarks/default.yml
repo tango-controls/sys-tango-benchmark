@@ -1,0 +1,25 @@
+- benchmark: readbenchmark
+  title: "python read benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+
+- benchmark: writebenchmark
+  title: "python write benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+
+- benchmark: eventbenchmark
+  title: "python event benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+
+- benchmark: pipebenchmark
+  title: "python pipe benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+
+
+- target_device: test/pybenchmarktarget/01
+  device_class: PyBenchmarkTarget
+  server_instance: TEST
+  # host: localhost:10000
