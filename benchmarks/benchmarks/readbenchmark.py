@@ -110,10 +110,34 @@ class ReadBenchmark(utils.Benchmark):
         ]
 
 
-def main():
+class Options(argparse.Namespace):
+    """ option object
+    """
+    def __init__(self):
+        """ constructor """
+        #: (:obj:`bool`) device proxy
+        self.version = False
+        #: (:obj:`str`) device proxy
+        self.device = None
+        #: (:obj:`str`) client list separate by commans
+        self.clients = "1"
+        #: (:obj:`str`) device proxy
+        self.period = "10"
+        #: (:obj:`str`) attribute name
+        self.attribute = "BenchmarkScalarAttribute"
+        #: (:obj:`str`) csv file name
+        self.csvfile = None
+        #: (:obj:`str`) title
+        self.title = "Read Benchmark"
+        #: (:obj:`str`) description
+        self.description = "Speed test"
+        #: (:obj:`bool`) verbose
+        self.verbose = False
+
+
+def main(**kargs):
     """ the main function
     """
-
     parser = argparse.ArgumentParser(
         description='perform check if and how a number of simultaneous '
         'clients affect attributes reads speed',
@@ -129,16 +153,20 @@ def main():
         help="device on which the test will be performed")
     parser.add_argument(
         "-n", "--numbers-of-clients", dest="clients", default="1",
-        help="numbers of clients to be spawned separated by ',' .\n"
-        "The numbers can be given as python slices <start>:<stop>:<step> ,\n"
+        help="numbers of clients to be "
+        "spawned separated by ',' .\n"
+        "The numbers can be given as python "
+        "slices <start>:<stop>:<step> ,\n"
         "e.g. 1,23,45:50:2 , default: 1")
     parser.add_argument(
         "-p", "--test-period", dest="period", default="10",
-        help="time in seconds for which counting is preformed, default: 10")
+        help="time in seconds for which counting is preformed, "
+        "default: 10")
     parser.add_argument(
         "-a", "--attribute", dest="attribute",
         default="BenchmarkScalarAttribute",
-        help="attribute which will be read, default: BenchmarkScalarAttribute")
+        help="attribute which will be read, "
+        "default: BenchmarkScalarAttribute")
     parser.add_argument(
         "-f", "--csv-file", dest="csvfile",
         help="write output in a CSV file")
@@ -155,7 +183,13 @@ def main():
         default=False,
         help="verbose mode")
 
-    options = parser.parse_args()
+    if not kargs:
+        options = parser.parse_args()
+    else:
+        options = Options()
+
+        for ky, vl in kargs.items():
+            setattr(options, ky, vl)
 
     clients = []
 
@@ -179,8 +213,10 @@ def main():
                     clients.extend(list(range(*sld)))
                 else:
                     clients.append(int(sc))
-        except Exception:
+        except Exception as e:
             print("Error: number of clients is not an integer")
+            if options.verbose:
+                print(str(e))
             parser.print_help()
             print("")
             sys.exit(255)
@@ -190,8 +226,10 @@ def main():
     else:
         try:
             float(options.period)
-        except Exception:
+        except Exception as e:
             print("Error: test period is not a number")
+            if options.verbose:
+                print(str(e))
             parser.print_help()
             print("")
             sys.exit(255)

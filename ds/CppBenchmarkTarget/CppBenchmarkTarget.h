@@ -83,7 +83,6 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   std::string pipe_blob_name = "BlobCaseEven";
   std::vector<std::string> pipe_element_names {"EvenFirstDE","EvenSecondDE"};
   size_t pipe_size = 2;
-  Tango::DevPipeData	*attr_BenchmarkPipe_read;
 
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 

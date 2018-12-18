@@ -220,7 +220,34 @@ class ReadPipeBenchmark(utils.Benchmark):
         ]
 
 
-def main():
+class Options(argparse.Namespace):
+    """ option object
+    """
+    def __init__(self):
+        """ constructor """
+        #: (:obj:`bool`) device proxy
+        self.version = False
+        #: (:obj:`str`) device proxy
+        self.device = None
+        #: (:obj:`str`) client list separate by commans
+        self.clients = "1"
+        #: (:obj:`str`) device proxy
+        self.period = "10"
+        #: (:obj:`str`) attribute name
+        self.pipe = "BenchmarkPipe"
+        #: (:obj:`str`) pipe size
+        self.size = "1"
+        #: (:obj:`str`) csv file name
+        self.csvfile = None
+        #: (:obj:`str`) title
+        self.title = "Event Benchmark"
+        #: (:obj:`str`) description
+        self.description = "Speed test"
+        #: (:obj:`bool`) verbose
+        self.verbose = False
+
+
+def main(**kargs):
     """ the main function
     """
 
@@ -268,7 +295,12 @@ def main():
         "--verbose", dest="verbose", action="store_true", default=False,
         help="verbose mode")
 
-    options = parser.parse_args()
+    if not kargs:
+        options = parser.parse_args()
+    else:
+        options = Options()
+        for ky, vl in kargs.items():
+            setattr(options, ky, vl)
 
     clients = []
 

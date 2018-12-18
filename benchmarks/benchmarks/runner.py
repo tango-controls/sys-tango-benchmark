@@ -22,15 +22,16 @@ import argparse
 import json
 import yaml
 import sys
-import time
 import os
-import pprint
+# import pprint
 
 from argparse import RawTextHelpFormatter
 
 from . import release
-from . import utils
-
+from . import readbenchmark
+from . import writebenchmark
+from . import eventbenchmark
+from . import pipebenchmark
 
 
 def main():
@@ -61,10 +62,10 @@ def main():
     try:
         filename = options.config
         if not os.path.exists(filename):
-             home = os.path.expanduser("~")
-             hfilename = os.path.join(home, filename)
-             if not os.path.exists(hfilename):
-                 filename = hfilename
+            home = os.path.expanduser("~")
+            hfilename = os.path.join(home, filename)
+            if not os.path.exists(hfilename):
+                filename = hfilename
         options.config
     except Exception:
             print("Error: cannot find the configuration file: %s" % filename)
@@ -84,18 +85,33 @@ def main():
         for cfel in cflist:
             if "benchmark" in cfel.keys():
                 benchmarks.append(cfel)
-            if "devices" in cfel.keys():
-                
-    except Exception:
-            print("Error: cannot read the configuration file: %s" % filename)
-            parser.print_help()
-            print("")
-            sys.exit(255)
-            
-    pprint.pprint(cflist)
-    # with open("default.json", 'w') as stream:
-    #     json.dump(cflist, stream)
+            elif "target_device" in cfel.keys():
+                devices.append(cfel)
 
-    
+    except Exception:
+        print("Error: cannot read the configuration file: %s" % filename)
+        parser.print_help()
+        print("")
+        sys.exit(255)
+
+    scripts = {
+        "readbenchmark": readbenchmark,
+        "writebenchmark": writebenchmark,
+        "eventbenchmark": eventbenchmark,
+        "pipebenchmark": pipebenchmark,
+    }
+
+    # print("Devices:")
+    # pprint.pprint(devices)
+
+    # print("\nBenchmarks:")
+    # pprint.pprint(benchmarks)
+    for bmk in benchmarks:
+        script = bmk.pop("benchmark")
+        if script.lower() in scripts.keys():
+            print(bmk)
+            scripts[script].main(**bmk)
+
+
 if __name__ == "__main__":
     main()
