@@ -109,7 +109,7 @@ def main():
     for bmk in benchmarks:
         script = bmk.pop("benchmark")
         if script.lower() in scripts.keys():
-            print(bmk)
+            # print(bmk)
             scripts[script].main(**bmk)
 
 
