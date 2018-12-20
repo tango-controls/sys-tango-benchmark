@@ -428,7 +428,7 @@ class Starter(object):
             "Starter").value_string
         try:
             self.__starter = PyTango.DeviceProxy(starters[0])
-        except:
+        except Exception:
             self.__starter = None
 
     def register(self, device_class=None, server_instance=None,
@@ -506,7 +506,7 @@ class Starter(object):
                             target_device)):
                         raise Exception(
                             "Server %s start failed" % server_instance)
-            except Exception as e:
+            except Exception:
                 startcmd = ""
                 sev_ins = server_instance.split("/")
                 if whichcraft.which(sev_ins[0]) is not None:
@@ -592,7 +592,8 @@ class Starter(object):
                 if verbose:
                     print("%s: %s is working" % (cnt, device))
             except Exception as e:
-                print(str(e))
+                if verbose:
+                    print(str(e))
                 found = False
             cnt += 1
         return found
