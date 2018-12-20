@@ -60,16 +60,16 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.proxy = None
 
         if PY3:
-            if os.path.isdir("../PyBenchmarkTarget"):
+            if os.path.isdir("./PyBenchmarkTarget"):
                 self._startserver = \
-                    "cd ..; python3 ./PyBenchmarkTarget %s &" % self.instance
+                    "python3 ./PyBenchmarkTarget %s &" % self.instance
             else:
                 self._startserver = \
                     "python3 PyBenchmarkTarget %s &" % self.instance
         else:
-            if os.path.isdir("../PyBenchmarkTarget"):
+            if os.path.isdir("./PyBenchmarkTarget"):
                 self._startserver = \
-                    "cd ..; python2 ./PyBenchmarkTarget %s &" % self.instance
+                    "python2 ./PyBenchmarkTarget %s &" % self.instance
             else:
                 self._startserver = \
                     "python2 PyBenchmarkTarget %s &" % self.instance
