@@ -29,6 +29,8 @@ from multiprocessing import Process, Queue
 from . import release
 from . import utils
 
+TIMEOUTS = False
+
 
 class Worker(Process):
     """ worker instance
@@ -71,6 +73,11 @@ class Worker(Process):
         """
         self.__proxy = PyTango.AttributeProxy(
             "%s/%s" % (self.__device, self.__attribute))
+        if TIMEOUTS:
+            if not utils.Starter.checkDevice(self.__proxy):
+                raise Exception(
+                    "Device %s connection failed" % self.__device)
+
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
@@ -108,31 +115,6 @@ class ReadBenchmark(utils.Benchmark):
                    self._qresults[i])
             for i in range(self.__clients)
         ]
-
-
-class Options(argparse.Namespace):
-    """ option object
-    """
-    def __init__(self):
-        """ constructor """
-        #: (:obj:`bool`) device proxy
-        self.version = False
-        #: (:obj:`str`) device proxy
-        self.device = None
-        #: (:obj:`str`) client list separate by commans
-        self.clients = "1"
-        #: (:obj:`str`) device proxy
-        self.period = "10"
-        #: (:obj:`str`) attribute name
-        self.attribute = "BenchmarkScalarAttribute"
-        #: (:obj:`str`) csv file name
-        self.csvfile = None
-        #: (:obj:`str`) title
-        self.title = "Read Benchmark"
-        #: (:obj:`str`) description
-        self.description = "Speed test"
-        #: (:obj:`bool`) verbose
-        self.verbose = False
 
 
 def main(**kargs):
@@ -186,8 +168,7 @@ def main(**kargs):
     if not kargs:
         options = parser.parse_args()
     else:
-        options = Options()
-
+        options = parser.parse_args([])
         for ky, vl in kargs.items():
             setattr(options, ky, vl)
 
@@ -245,7 +226,6 @@ def main(**kargs):
         "Speed [read/s]", "error [read/s]",
         "No. ", "  Time [s]  ", "error [s]"
     ]
-
     if options.csvfile:
         csvo = utils.CSVOutput(options.csvfile, options)
         csvo.printInfo()

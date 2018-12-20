@@ -21,5 +21,5 @@
 
 - target_device: p00/pybenchmarktarget/01
   device_class: PyBenchmarkTarget
-  server_instance: TEST
+  server_instance: PyBenchmarkTarget/test1
   # host: localhost:10000

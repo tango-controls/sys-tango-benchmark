@@ -23,7 +23,7 @@ import json
 import yaml
 import sys
 import os
-# import pprint
+import time
 
 from argparse import RawTextHelpFormatter
 
@@ -32,6 +32,7 @@ from . import readbenchmark
 from . import writebenchmark
 from . import eventbenchmark
 from . import pipebenchmark
+from . import utils
 
 
 def main():
@@ -101,15 +102,19 @@ def main():
         "pipebenchmark": pipebenchmark,
     }
 
-    # print("Devices:")
-    # pprint.pprint(devices)
+    starter = utils.Starter()
+    for device in devices:
+        starter.register(**device)
+        starter.launch(**device)
 
-    # print("\nBenchmarks:")
-    # pprint.pprint(benchmarks)
+    # without it we gets Timeout errors
+    time.sleep(2)
+
     for bmk in benchmarks:
+        print(bmk)
         script = bmk.pop("benchmark")
         if script.lower() in scripts.keys():
-            # print(bmk)
+            print("main")
             scripts[script].main(**bmk)
 
 
