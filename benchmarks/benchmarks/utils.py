@@ -465,7 +465,7 @@ class Starter(object):
                 pass
 
     def launch(self, device_class=None, server_instance=None,
-               target_device=None, host=None):
+               target_device=None, host=None, verbose=False):
         """launch device
 
         :param device_class: device class
@@ -476,6 +476,8 @@ class Starter(object):
         :type target_device: :obj:`str`
         :param host: host name
         :type host: :obj:`str`
+        :param verbose: verbose mode
+        :type verbose: :obj:`bool`
         """
 
         server = self.__db.get_server_class_list(server_instance)
@@ -560,7 +562,8 @@ class Starter(object):
                     raise Exception(
                         "Server %s cannot be found" % server_instance)
                 pass
-        sys.stdout.write("waiting for server")
+        if verbose:
+            sys.stdout.write("waiting for server")
         if TIMEOUTS:
             if not self.checkDevice(PyTango.DeviceProxy(
                     target_device)):

@@ -111,7 +111,6 @@ def main():
     time.sleep(2)
 
     for bmk in benchmarks:
-        print(bmk)
         script = bmk.pop("benchmark")
         if script.lower() in scripts.keys():
             print("main")
