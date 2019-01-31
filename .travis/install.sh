@@ -49,8 +49,12 @@ then
 fi
 
 
-echo "install CppBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'curl -O https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb; dpkg -i ./libtango-java_9.2.5a-1_all.deb'
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+echo "install CppBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make'
 if [ "$?" -ne "0" ]
 then
@@ -69,12 +73,22 @@ then
     exit -1
 fi
 
+echo "install PyBenchmarkTarget"
 if [ "$2" = "2" ]; then
-    echo "install PyBenchmarkTarget"
     docker exec -it --user root s2i /bin/sh -c 'cd ds/PyBenchmarkTarget; python setup.py -q install'
 else
-    echo "install PyBenchmarkTarget"
     docker exec -it --user root s2i /bin/sh -c 'cd ds/PyBenchmarkTarget; python3 setup.py -q install'
+fi
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+
+echo "install benchmark runner"
+if [ "$2" = "2" ]; then
+    docker exec -it --user root s2i /bin/sh -c 'cd benchmarks; python setup.py -q install'
+else
+    docker exec -it --user root s2i /bin/sh -c 'cd benchmarks; python3 setup.py -q install'
 fi
 if [ "$?" -ne "0" ]
 then
