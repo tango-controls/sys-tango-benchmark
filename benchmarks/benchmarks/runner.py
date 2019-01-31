@@ -52,7 +52,8 @@ def main():
     parser.add_argument(
         "-c", "--config", dest="config",
         default="default.yml",
-        help="YAML or JSON file with configuration")
+        help="YAML or JSON file with configuration, default: default.yml\n"
+        "Its exmaples can be found in the 'config_examples' directory")
 
     options = parser.parse_args()
 
