@@ -22,7 +22,8 @@ services:
 before_install:
   - if [ "$TEST" == "flake8" ]; then sudo apt-get update -qq ; fi
   - if [ "$TEST" == "flake8" ]; then sudo pip install flake8; fi
-  - if [ "$TEST" != "flake8" ]; then chmod +x .travis/run.sh; fi
+  - if [ "$TEST" != "flake8" ]; then chmod +x .travis/testdevices.sh; fi
+  - if [ "$TEST" != "flake8" ]; then chmod +x .travis/testrunner.sh; fi
   - if [ "$TEST" != "flake8" ]; then chmod +x .travis/install.sh; fi
 
 before_script:
