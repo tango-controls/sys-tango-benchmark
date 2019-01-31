@@ -70,10 +70,10 @@ def main():
                 filename = hfilename
         options.config
     except Exception:
-            print("Error: cannot find the configuration file: %s" % filename)
-            parser.print_help()
-            print("")
-            sys.exit(255)
+        print("Error: cannot find the configuration file: %s" % filename)
+        parser.print_help()
+        print("")
+        sys.exit(255)
 
     try:
         with open(filename, 'r') as stream:
