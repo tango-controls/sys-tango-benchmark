@@ -179,7 +179,7 @@ class WritePipeBenchmark(utils.Benchmark):
 
         size = max(1, int(options.size))
         value1 = (self.__value[1] *
-                  (size / max(1, len(self.__value[1]) - 1) + 1))[:size]
+                  (size // max(1, len(self.__value[1]) - 1) + 1))[:size]
 
         for i in range(len(value1)):
             value1[i] = dict(value1[i])

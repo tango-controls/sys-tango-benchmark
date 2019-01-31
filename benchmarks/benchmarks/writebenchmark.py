@@ -134,12 +134,12 @@ class WriteBenchmark(utils.Benchmark):
                 self.__value = np.array(value)
         elif len(shape) == 1:
             self.__value = np.array(
-                (value * (shape[0] / max(1, len(value) - 1) + 1))[:shape[0]]
+                (value * (shape[0] // max(1, len(value) - 1) + 1))[:shape[0]]
             ).reshape(shape)
         elif len(shape) == 2:
             self.__value = np.array(
                 (
-                    value * (shape[0] * shape[1] / max(1, len(value) - 1) + 1)
+                    value * (shape[0] * shape[1] // max(1, len(value) - 1) + 1)
                 )[:shape[0] * shape[1]]
             ).reshape(shape)
 
