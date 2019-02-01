@@ -431,6 +431,10 @@ class Starter(object):
         except Exception:
             self.__starter = None
 
+        self.__launched = []
+        self.__registered_servers = []
+        self.__registered_devices = []
+
     def register(self, device_class=None, server_instance=None,
                  target_device=None, host=None):
         """create device
@@ -458,9 +462,12 @@ class Starter(object):
                     "Device %s exists in different server" % device_class)
             self.__db.add_device(new_device)
             self.__db.add_server(new_device.server, new_device)
+            self.__registered_servers.append(new_device.server)
+            self.__registered_devices.append(target_device)
         else:
             if target_device not in devices:
                 self.__db.add_device(new_device)
+                self.__registered_devices.append(target_device)
             else:
                 pass
 
@@ -568,6 +575,60 @@ class Starter(object):
             if not self.checkDevice(PyTango.DeviceProxy(
                     target_device)):
                 raise Exception("Server %s start failed" % server_instance)
+        self.__launched.append(server_instance)
+
+    def stopServers(self):
+        """ stop launched devices
+        """
+        for server_instance in self.__launched:
+            try:
+                self.__starter.DevStop(server_instance)
+                # self.__starter.HardKillServer(server_instance)
+            except Exception:
+                server, instance = server_instance.split("/")
+                grepserver = \
+                    "ps -ef | grep '%s %s' | grep -v grep" % \
+                    (server, instance)
+                if PY3:
+                    with subprocess.Popen(grepserver,
+                                          stdout=subprocess.PIPE,
+                                          shell=True) as proc:
+                        try:
+                            outs, errs = proc.communicate(timeout=15)
+                        except subprocess.TimeoutExpired:
+                            proc.kill()
+                            outs, errs = proc.communicate()
+                        res = str(outs, "utf8").split("\n")
+                        for r in res:
+                            sr = r.split()
+                            if len(sr) > 2:
+                                subprocess.call(
+                                    "kill -9 %s" % sr[1],
+                                    stderr=subprocess.PIPE,
+                                    shell=True)
+                else:
+                    pipe = subprocess.Popen(
+                        grepserver,
+                        stdout=subprocess.PIPE,
+                        shell=True).stdout
+
+                    res = str(pipe.read()).split("\n")
+                    for r in res:
+                        sr = r.split()
+                        if len(sr) > 2:
+                            subprocess.call(
+                                "kill -9 %s" % sr[1],
+                                stderr=subprocess.PIPE,
+                                shell=True)
+                    pipe.close()
+        self.__launched = []
+
+    def unregisterServers(self):
+        """ unregister registered devices
+        """
+        for server in self.__registered_servers:
+            self.__db.delete_server(server)
+        self.__registered_servers = []
 
     @classmethod
     def checkDevice(cls, device, maxtime=10, verbose=False):

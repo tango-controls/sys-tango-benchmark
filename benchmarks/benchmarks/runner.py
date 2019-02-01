@@ -116,6 +116,9 @@ def main():
         if script.lower() in scripts.keys():
             scripts[script].main(**bmk)
 
+    starter.stopServers()
+    starter.unregisterServers()
+
 
 if __name__ == "__main__":
     main()
