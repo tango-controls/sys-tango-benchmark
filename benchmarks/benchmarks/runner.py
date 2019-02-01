@@ -111,10 +111,10 @@ def main():
     # without it we gets Timeout errors
     time.sleep(2)
 
-    for bmk in benchmarks:
-        script = bmk.pop("benchmark")
-        if script.lower() in scripts.keys():
-            scripts[script].main(**bmk)
+    # for bmk in benchmarks:
+    #     script = bmk.pop("benchmark")
+    #     if script.lower() in scripts.keys():
+    #         scripts[script].main(**bmk)
 
 
 if __name__ == "__main__":
