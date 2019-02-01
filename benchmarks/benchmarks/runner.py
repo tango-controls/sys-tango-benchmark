@@ -106,7 +106,7 @@ def main():
     starter = utils.Starter()
     for device in devices:
         starter.register(**device)
-        starter.launch(**device)
+        # starter.launch(**device)
 
     # without it we gets Timeout errors
     time.sleep(2)
