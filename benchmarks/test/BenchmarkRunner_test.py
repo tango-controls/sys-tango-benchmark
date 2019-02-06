@@ -177,7 +177,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         )
         self.assertEqual(len(document[0][4][1][0][13]), 4)
         for i in range(4):
-            self.assertEqual(len(document[0][4][1][0][13][i][0][0][0]), i)
+            self.assertEqual(int(document[0][4][1][0][13][i][0][0][0]), i)
         self.assertEqual(len(document[0][4][1][0][13][0]), 12)
         for i in range(4):
             for j in range(14):
