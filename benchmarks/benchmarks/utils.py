@@ -282,15 +282,35 @@ class Benchmark(object):
         prss = "%s"
         prt = "%s"
         if mcnts[1]:
-            prc = "%." + str(max(0, int(2 - np.log10(mcnts[1])))) + "f"
+            prc = "%." + str(
+                max(0, int(2 - np.log10(
+                    mcnts[1] if mcnts[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if mspd[1]:
-            prs = "%." + str(max(0, int(2 - np.log10(mspd[1])))) + "f"
+            prs = "%." + str(
+                max(0, int(2 - np.log10(
+                    mspd[1] if mspd[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if scnts[1]:
-            prsc = "%." + str(max(0, int(2 - np.log10(scnts[1])))) + "f"
+            prsc = "%." + str(
+                max(0, int(2 - np.log10(
+                    scnts[1] if mcnts[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if sspd[1]:
-            prss = "%." + str(max(0, int(2 - np.log10(sspd[1])))) + "f"
+            prss = "%." + str(
+                max(0, int(2 - np.log10(
+                    sspd[1] if sspd[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if mtm[1]:
-            prt = "%." + str(max(0, int(2 - np.log10(mtm[1])))) + "f"
+            prt = "%." + str(
+                max(0, int(2 - np.log10(
+                    mtm[1] if mtm[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
 
         if show:
             fmt = "no_clients: %i,  counts: " + prc + " +/- " + prc + \

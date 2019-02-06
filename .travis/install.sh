@@ -25,10 +25,10 @@ docker exec -it --user root s2i service tango-starter restart
 
 if [ "$2" = "2" ]; then
     echo "install python-pytango"
-    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python-pytango python-tz python-setuptools python-sphinx python-whichcraft python-yaml'
+    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python-pytango python-tz python-setuptools python-sphinx python-whichcraft python-yaml python-docutils'
 else
     echo "install python3-pytango"
-    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango python3-tz python3-setuptools python3-sphinx python3-whichcraft python3-yaml'
+    docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango python3-tz python3-setuptools python3-sphinx python3-whichcraft python3-yaml python3-docutils'
 fi
 if [ "$?" -ne "0" ]
 then

@@ -30,6 +30,9 @@ import unittest
 # import numpy as np
 # import time
 # import PyTango
+import docutils.nodes
+import docutils.parsers.rst
+import docutils.utils
 
 from benchmarks import runner
 
@@ -90,7 +93,97 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
         self.assertEqual('', er)
         self.assertTrue(vl)
-        print(vl)
+        # print(vl)
+
+        parser = docutils.parsers.rst.Parser()
+        components = (docutils.parsers.rst.Parser,)
+        settings = docutils.frontend.OptionParser(
+            components=components).get_default_values()
+        document = docutils.utils.new_document(
+            '<rst-doc>', settings=settings)
+        parser.parse(vl, document)
+
+        self.assertEqual(len(document), 4)
+        self.assertEqual(len(document[0]), 5)
+
+        # python read benchmark
+        self.assertEqual(len(document[0][0]), 1)
+        self.assertEqual(
+            str(document[0][0]),
+            '<title>python read benchmark</title>')
+        self.assertEqual(len(document[0][1]), 1)
+        self.assertEqual(
+            str(document[0][1]),
+            '<paragraph>Speed test</paragraph>')
+        self.assertEqual(len(document[0][2]), 2)
+        self.assertEqual(len(document[0][2][0]), 1)
+        self.assertEqual(
+            str(document[0][2][0]),
+            '<strong>Date:</strong>')
+        self.assertTrue(str(document[0][3][1]))
+        self.assertEqual(len(document[0][3]), 2)
+        self.assertEqual(len(document[0][3][0]), 1)
+        self.assertEqual(
+            str(document[0][3][0]),
+            '<title>Benchmark setup</title>')
+        self.assertEqual(
+            str(document[0][3][1]),
+            '<paragraph>'
+            'attribute=BenchmarkScalarAttribute\n'
+            'clients=4 6 8 10\ncsvfile=\n'
+            'device=test/pybenchmarktarget/01\n'
+            'period=10'
+            '</paragraph>'
+        )
+        self.assertEqual(len(document[0][4]), 2)
+        self.assertEqual(len(document[0][4][0]), 1)
+        self.assertEqual(
+            str(document[0][4][0]),
+            '<title>Results</title>')
+        self.assertEqual(
+            document[0][4][1].tagname, 'table'
+        )
+        self.assertEqual(len(document[0][4][1]), 1)
+        self.assertEqual(
+            document[0][4][1][0].tagname, 'tgroup'
+        )
+        self.assertEqual(len(document[0][4][1][0]), 14)
+        for i in range(12):
+            self.assertEqual(
+                document[0][4][1][0][i].tagname, 'colspec'
+            )
+        self.assertEqual(
+            document[0][4][1][0][12].tagname, 'thead'
+        )
+        self.assertEqual(
+            str(document[0][4][1][0][12]),
+            '<thead><row>'
+            '<entry><paragraph>Run no.</paragraph></entry>'
+            '<entry><paragraph>Sum counts [read]</paragraph></entry>'
+            '<entry><paragraph>error [read]</paragraph></entry>'
+            '<entry><paragraph>Sum Speed [read/s]</paragraph></entry>'
+            '<entry><paragraph>error [read/s]</paragraph></entry>'
+            '<entry><paragraph>Counts [read]</paragraph></entry>'
+            '<entry><paragraph>error [read]</paragraph></entry>'
+            '<entry><paragraph>Speed [read/s]</paragraph></entry>'
+            '<entry><paragraph>error [read/s]</paragraph></entry>'
+            '<entry><paragraph>No.</paragraph></entry>'
+            '<entry><paragraph>Time [s]</paragraph></entry>'
+            '<entry><paragraph>error [s]</paragraph></entry>'
+            '</row></thead>'
+        )
+        self.assertEqual(
+            document[0][4][1][0][13].tagname, 'tbody'
+        )
+        self.assertEqual(len(document[0][4][1][0][13]), 4)
+        for i in range(4):
+            self.assertEqual(len(document[0][4][1][0][13][i][0][0][0]), i)
+        self.assertEqual(len(document[0][4][1][0][13][0]), 12)
+        for i in range(4):
+            for j in range(14):
+                self.assertTrue(isinstance(
+                    float(document[0][4][1][0][13][i][j][0][0]),
+                    float))
 
 
 def main():
