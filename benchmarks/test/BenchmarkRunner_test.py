@@ -130,7 +130,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             str(document[0][3][1]),
             '<paragraph>'
             'attribute=BenchmarkScalarAttribute\n'
-            'clients=4 6 8 10\ncsvfile=\n'
+            'clients=4,6,8,10\ncsvfile=\n'
             'device=test/pybenchmarktarget/01\n'
             'period=10'
             '</paragraph>'
