@@ -672,6 +672,7 @@ class Starter(object):
                     sys.stdout.write(".")
                 time.sleep(0.01)
                 device.ping()
+                device.state()
                 found = True
                 if verbose:
                     print("%s: %s is working" % (cnt, device))
