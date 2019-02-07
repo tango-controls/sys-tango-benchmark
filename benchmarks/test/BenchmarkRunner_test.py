@@ -95,15 +95,28 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
         self.assertEqual('', er)
         self.assertTrue(vl)
-        # print(vl)
+        self.check_default(vl)
 
+    def test_BenchmarkRunnerDefaultJSON(self):
+        """Test for BenchmarkRunner default"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        vl, er = self.runscript(
+            'benchmarkrunner -c config_examples/default.json'.split())
+
+        self.assertEqual('', er)
+        self.assertTrue(vl)
+        self.check_default(vl)
+
+    def check_default(self, text):
         parser = docutils.parsers.rst.Parser()
         components = (docutils.parsers.rst.Parser,)
         settings = docutils.frontend.OptionParser(
             components=components).get_default_values()
         document = docutils.utils.new_document(
             '<rst-doc>', settings=settings)
-        parser.parse(vl, document)
+        parser.parse(text, document)
 
         self.assertEqual(len(document), 4)
 
