@@ -362,7 +362,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
                     isinstance(float(tbody[i][j][0][0]), float))
 
         # python pipe benchmark
-        section = document[2]
+        section = document[3]
         self.assertEqual(section.tagname, 'section')
         self.assertEqual(len(section), 5)
         self.assertEqual(len(section[0]), 1)
