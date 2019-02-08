@@ -86,6 +86,25 @@ class BenchmarkRunnerTest(unittest.TestCase):
         er = mystderr.getvalue()
         return vl, er
 
+    def runscript2(self, argv):
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        mystdout = StringIO()
+        mystderr = StringIO()
+        # sys.stdout = mystdout = StringIO()
+        # sys.stderr = mystderr = StringIO()
+
+        old_argv = sys.argv
+        sys.argv = argv
+        runner.main()
+
+        sys.argv = old_argv
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+        vl = mystdout.getvalue()
+        er = mystderr.getvalue()
+        return vl, er
+
     def test_BenchmarkRunnerDefault(self):
         """Test for BenchmarkRunner default"""
         print("Run: %s.%s() " % (
@@ -148,7 +167,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             'attribute=BenchmarkScalarAttribute\n'
             'clients=4,6,8,10\ncsvfile=\n'
             'device=test/pybenchmarktarget/01\n'
-            'period=10'
+            'period=1'
             '</paragraph>'
         )
         self.assertEqual(len(section[4]), 2)
@@ -230,7 +249,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             'clients=4,6,8,10\n'
             'csvfile=\n'
             'device=test/pybenchmarktarget/01\n'
-            'period=10\n'
+            'period=1\n'
             'shape=\n'
             'value=0'
             '</paragraph>'
@@ -321,7 +340,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             'clients=4,6,8,10\n'
             'csvfile=\n'
             'device=test/pybenchmarktarget/01\n'
-            'period=10'
+            'period=1'
             '</paragraph>'
         )
         self.assertEqual(len(section[4]), 3)
@@ -409,7 +428,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             'clients=4,6,8,10\n'
             'csvfile=\n'
             'device=test/pybenchmarktarget/01\n'
-            'period=10\n'
+            'period=1\n'
             'pipe=BenchmarkPipe\n'
             'size=1'
             '</paragraph>'

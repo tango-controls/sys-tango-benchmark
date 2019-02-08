@@ -2,21 +2,25 @@
   title: "python read benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01
+  period: 1
 
 - benchmark: writebenchmark
   title: "python write benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01
+  period: 1
 
 - benchmark: eventbenchmark
   title: "python event benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01
+  period: 1
 
 - benchmark: pipebenchmark
   title: "python pipe benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01
+  period: 1
 
 
 - server_instance: PyBenchmarkTarget/test

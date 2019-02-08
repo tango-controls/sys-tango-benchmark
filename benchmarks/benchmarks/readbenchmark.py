@@ -67,6 +67,8 @@ class Worker(Process):
         self.__qresult = qresult
         # : (:obj:`int`) counter
         self.__counter = 0
+        # : (:obj:`int`) error counter
+        self.__error = 0
 
     def run(self):
         """ worker thread
@@ -81,9 +83,13 @@ class Worker(Process):
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
-            self.__proxy.read()
-            etime = time.time()
-            self.__counter += 1
+            try:
+                self.__proxy.read()
+            except Exception:
+                self.__error += 1
+            else:
+                etime = time.time()
+                self.__counter += 1
         self.__qresult.put(
             utils.Result(self.__wid, self.__counter, etime - stime))
 
