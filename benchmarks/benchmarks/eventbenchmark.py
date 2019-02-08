@@ -75,6 +75,8 @@ class Worker(Process):
         self.__qresult = qresult
         # : (:obj:`int`) counter
         self.__counter = 0
+        # : (:obj:`int`) error counter
+        self.__error = 0
 
     def run(self):
         """ worker thread
@@ -89,14 +91,17 @@ class Worker(Process):
         etime = stime
         ids = []
         while etime - stime < self.__period:
-            id_ = self.__proxy.subscribe_event(
-                self.__attribute,
-                PyTango.EventType.CHANGE_EVENT,
-                cb_tango)
-            ids.append(id_)
-
-            etime = time.time()
-            self.__counter += 1
+            try:
+                id_ = self.__proxy.subscribe_event(
+                    self.__attribute,
+                    PyTango.EventType.CHANGE_EVENT,
+                    cb_tango)
+                ids.append(id_)
+            except Exception:
+                self.__error += 1
+            else:
+                etime = time.time()
+                self.__counter += 1
         for id_ in ids:
             self.__proxy.unsubscribe_event(id_)
         self.__qresult.put(

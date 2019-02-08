@@ -31,7 +31,7 @@ import subprocess
 import os
 
 
-TIMEOUTS = False
+TIMEOUTS = True
 
 
 #: python3 running
@@ -506,7 +506,8 @@ class Starter(object):
         :param verbose: verbose mode
         :type verbose: :obj:`bool`
         """
-
+        startcmd = None
+        running = []
         server = self.__db.get_server_class_list(server_instance)
         if len(server) == 0:
             raise Exception('Server ' + server_instance.split('/')[0]
@@ -519,9 +520,9 @@ class Starter(object):
         sinfo.level = 1
         self.__db.put_server_info(sinfo)
 
-        if self.__starter:
-            self.__starter.UpdateServersInfo()
-            running = self.__starter.DevGetRunningServers(True)
+        # if self.__starter:
+        #     self.__starter.UpdateServersInfo()
+        #     running = self.__starter.DevGetRunningServers(True)
         found = False
         if TIMEOUTS:
             found = self.checkDevice(
@@ -583,11 +584,12 @@ class Starter(object):
                 else:
                     pass
                 if startcmd:
+                    # os.system(startcmd)
                     self._psub = subprocess.call(
                         startcmd, stdout=None, stderr=None, shell=True)
                 else:
                     raise Exception(
-                        "Server %s cannot be found" % server_instance)
+                        "Server %s cannot be found " % server_instance)
                 pass
         if verbose:
             sys.stdout.write("waiting for server")
@@ -595,7 +597,8 @@ class Starter(object):
             if not self.checkDevice(PyTango.DeviceProxy(
                     target_device)):
                 raise Exception("Server %s start failed" % server_instance)
-        self.__launched.append(server_instance)
+        if TIMEOUTS and not found:
+            self.__launched.append(server_instance)
 
     def stopServers(self):
         """ stop launched devices
@@ -624,7 +627,7 @@ class Starter(object):
                             if len(sr) > 2:
                                 subprocess.call(
                                     "kill -9 %s" % sr[1],
-                                    stderr=subprocess.PIPE,
+                                    stderr=None,
                                     shell=True)
                 else:
                     pipe = subprocess.Popen(
@@ -638,7 +641,7 @@ class Starter(object):
                         if len(sr) > 2:
                             subprocess.call(
                                 "kill -9 %s" % sr[1],
-                                stderr=subprocess.PIPE,
+                                stderr=None,
                                 shell=True)
                     pipe.close()
         self.__launched = []
@@ -646,6 +649,8 @@ class Starter(object):
     def unregisterServers(self):
         """ unregister registered devices
         """
+        for dv in self.__registered_devices:
+            self.__db.delete_device(dv)
         for server in self.__registered_servers:
             self.__db.delete_server(server)
         self.__registered_servers = []
@@ -672,6 +677,7 @@ class Starter(object):
                     sys.stdout.write(".")
                 time.sleep(0.01)
                 device.ping()
+                device.state()
                 found = True
                 if verbose:
                     print("%s: %s is working" % (cnt, device))
