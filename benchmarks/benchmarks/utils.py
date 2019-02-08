@@ -23,6 +23,19 @@ import time
 import pytz
 import datetime
 import csv
+import PyTango
+import socket
+import sys
+import whichcraft
+import subprocess
+import os
+
+
+TIMEOUTS = False
+
+
+#: python3 running
+PY3 = (sys.version_info > (3,))
 
 
 class CSVOutput(object):
@@ -269,15 +282,35 @@ class Benchmark(object):
         prss = "%s"
         prt = "%s"
         if mcnts[1]:
-            prc = "%." + str(max(0, int(2 - np.log10(mcnts[1])))) + "f"
+            prc = "%." + str(
+                max(0, int(2 - np.log10(
+                    mcnts[1] if mcnts[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if mspd[1]:
-            prs = "%." + str(max(0, int(2 - np.log10(mspd[1])))) + "f"
+            prs = "%." + str(
+                max(0, int(2 - np.log10(
+                    mspd[1] if mspd[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if scnts[1]:
-            prsc = "%." + str(max(0, int(2 - np.log10(scnts[1])))) + "f"
+            prsc = "%." + str(
+                max(0, int(2 - np.log10(
+                    scnts[1] if mcnts[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if sspd[1]:
-            prss = "%." + str(max(0, int(2 - np.log10(sspd[1])))) + "f"
+            prss = "%." + str(
+                max(0, int(2 - np.log10(
+                    sspd[1] if sspd[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
         if mtm[1]:
-            prt = "%." + str(max(0, int(2 - np.log10(mtm[1])))) + "f"
+            prt = "%." + str(
+                max(0, int(2 - np.log10(
+                    mtm[1] if mtm[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
 
         if show:
             fmt = "no_clients: %i,  counts: " + prc + " +/- " + prc + \
@@ -401,3 +434,250 @@ class Average(object):
         :returns: number of results
         """
         return len(self.__results)
+
+
+class Starter(object):
+    """ device starter
+    """
+
+    def __init__(self):
+        """ constructor"""
+
+        self.__db = PyTango.Database()
+        starters = self.__db.get_device_exported_for_class(
+            "Starter").value_string
+        try:
+            self.__starter = PyTango.DeviceProxy(starters[0])
+        except Exception:
+            self.__starter = None
+
+        self.__launched = []
+        self.__registered_servers = []
+        self.__registered_devices = []
+
+    def register(self, device_class=None, server_instance=None,
+                 target_device=None, host=None):
+        """create device
+
+        :param device_class: device class
+        :type device_class: :obj:`str`
+        :param server_instance: server instance
+        :type server_instance: :obj:`str`
+        :param target_device: target device
+        :type target_device: :obj:`str`
+        :param host: host name
+        :type host: :obj:`str`
+        """
+
+        servers = self.__db.get_server_list(server_instance).value_string
+        devices = self.__db.get_device_exported_for_class(
+            device_class).value_string
+        new_device = PyTango.DbDevInfo()
+        new_device._class = device_class
+        new_device.server = server_instance
+        new_device.name = target_device
+        if not servers:
+            if target_device in devices:
+                raise Exception(
+                    "Device %s exists in different server" % device_class)
+            self.__db.add_device(new_device)
+            self.__db.add_server(new_device.server, new_device)
+            self.__registered_servers.append(new_device.server)
+            self.__registered_devices.append(target_device)
+        else:
+            if target_device not in devices:
+                self.__db.add_device(new_device)
+                self.__registered_devices.append(target_device)
+            else:
+                pass
+
+    def launch(self, device_class=None, server_instance=None,
+               target_device=None, host=None, verbose=False):
+        """launch device
+
+        :param device_class: device class
+        :type device_class: :obj:`str`
+        :param server_instance: server instance
+        :type server_instance: :obj:`str`
+        :param target_device: target device
+        :type target_device: :obj:`str`
+        :param host: host name
+        :type host: :obj:`str`
+        :param verbose: verbose mode
+        :type verbose: :obj:`bool`
+        """
+
+        server = self.__db.get_server_class_list(server_instance)
+        if len(server) == 0:
+            raise Exception('Server ' + server_instance.split('/')[0]
+                            + ' not defined in database\n')
+
+        sinfo = self.__db.get_server_info(server_instance)
+        sinfo.name = server_instance
+        sinfo.host = host or socket.gethostname()
+        sinfo.mode = 1
+        sinfo.level = 1
+        self.__db.put_server_info(sinfo)
+
+        if self.__starter:
+            self.__starter.UpdateServersInfo()
+            running = self.__starter.DevGetRunningServers(True)
+        found = False
+        if TIMEOUTS:
+            found = self.checkDevice(
+                PyTango.DeviceProxy(target_device), 1)
+
+        if not found and server_instance not in running:
+            try:
+                self.__starter.DevStart(server_instance)
+                if TIMEOUTS:
+                    if not self.checkDevice(PyTango.DeviceProxy(
+                            target_device)):
+                        raise Exception(
+                            "Server %s start failed" % server_instance)
+            except Exception:
+                startcmd = ""
+                sev_ins = server_instance.split("/")
+                if whichcraft.which(sev_ins[0]) is not None:
+                    startcmd = "%s %s &" % (sev_ins[0], sev_ins[1])
+                elif server_instance.startswith("PyBenchmarkTarget/"):
+                    if PY3:
+                        if os.path.isdir(
+                                "../ds/PyBenchmarkTarget/PyBenchmarkTarget"):
+                            startcmd = \
+                                "cd ../ds/PyBenchmarkTarget/; " \
+                                "python3 ./PyBenchmarkTarget %s &" % \
+                                sev_ins[1]
+                    else:
+                        if os.path.isdir(
+                                "../ds/PyBenchmarkTarget/PyBenchmarkTarget"):
+                            startcmd = \
+                                "cd ../ds/PyBenchmarkTarget/; " \
+                                "python2 ./PyBenchmarkTarget %s &" % \
+                                sev_ins[1]
+
+                elif server_instance.startswith("JavaBenchmarkTarget/"):
+                    if os.path.isfile(
+                            "../ds/JavaBenchmarkTarget/target/"
+                            "JavaBenchmarkTarget-1.0.jar"
+                    ):
+
+                        startcmd = \
+                            "cd ../ds/JavaBenchmarkTarget; " \
+                            "CLASSPATH=/usr/share/java/JTango.jar:" \
+                            "./target/" \
+                            "JavaBenchmarkTarget-1.0.jar:$CLASSPATH;" \
+                            "export CLASSPATH; . /etc/tangorc; " \
+                            "export TANGO_HOST; " \
+                            "java  org.tango.javabenchmarktarget." \
+                            "JavaBenchmarkTarget %s &" % \
+                            (sev_ins[1])
+                        pass
+                elif server_instance.startswith("CppBenchmarkTarget/"):
+                    home = os.path.expanduser("~")
+                    if os.path.isfile(
+                            "%s/DeviceServers/CppBenchmarkTarget" % home):
+                        serverfile = "%s/DeviceServers/CppBenchmarkTarget" % \
+                                     home
+                        startcmd = "%s %s &" % (serverfile, sev_ins[1])
+                else:
+                    pass
+                if startcmd:
+                    self._psub = subprocess.call(
+                        startcmd, stdout=None, stderr=None, shell=True)
+                else:
+                    raise Exception(
+                        "Server %s cannot be found" % server_instance)
+                pass
+        if verbose:
+            sys.stdout.write("waiting for server")
+        if TIMEOUTS:
+            if not self.checkDevice(PyTango.DeviceProxy(
+                    target_device)):
+                raise Exception("Server %s start failed" % server_instance)
+        self.__launched.append(server_instance)
+
+    def stopServers(self):
+        """ stop launched devices
+        """
+        for server_instance in self.__launched:
+            try:
+                self.__starter.DevStop(server_instance)
+                # self.__starter.HardKillServer(server_instance)
+            except Exception:
+                server, instance = server_instance.split("/")
+                grepserver = \
+                    "ps -ef | grep '%s %s' | grep -v grep" % \
+                    (server, instance)
+                if PY3:
+                    with subprocess.Popen(grepserver,
+                                          stdout=subprocess.PIPE,
+                                          shell=True) as proc:
+                        try:
+                            outs, errs = proc.communicate(timeout=15)
+                        except subprocess.TimeoutExpired:
+                            proc.kill()
+                            outs, errs = proc.communicate()
+                        res = str(outs, "utf8").split("\n")
+                        for r in res:
+                            sr = r.split()
+                            if len(sr) > 2:
+                                subprocess.call(
+                                    "kill -9 %s" % sr[1],
+                                    stderr=subprocess.PIPE,
+                                    shell=True)
+                else:
+                    pipe = subprocess.Popen(
+                        grepserver,
+                        stdout=subprocess.PIPE,
+                        shell=True).stdout
+
+                    res = str(pipe.read()).split("\n")
+                    for r in res:
+                        sr = r.split()
+                        if len(sr) > 2:
+                            subprocess.call(
+                                "kill -9 %s" % sr[1],
+                                stderr=subprocess.PIPE,
+                                shell=True)
+                    pipe.close()
+        self.__launched = []
+
+    def unregisterServers(self):
+        """ unregister registered devices
+        """
+        for server in self.__registered_servers:
+            self.__db.delete_server(server)
+        self.__registered_servers = []
+
+    @classmethod
+    def checkDevice(cls, device, maxtime=10, verbose=False):
+        """ waits for tango device
+
+        :param device: tango device name
+        :type device: :class:`PyTango.DeviceProxy`
+        :param maxtime: maximal time in sec
+        :type maxtime: :obj:`float`
+        :param verbose: verbose mode
+        :type verbose: :obj:`bool`
+        :returns: if tango device ready
+        :rtype: :obj:`bool`
+        """
+        maxcnt = int(maxtime * 100)
+        found = False
+        cnt = 0
+        while not found and cnt < maxcnt:
+            try:
+                if verbose:
+                    sys.stdout.write(".")
+                time.sleep(0.01)
+                device.ping()
+                found = True
+                if verbose:
+                    print("%s: %s is working" % (cnt, device))
+            except Exception as e:
+                if verbose:
+                    print(str(e))
+                found = False
+            cnt += 1
+        return found

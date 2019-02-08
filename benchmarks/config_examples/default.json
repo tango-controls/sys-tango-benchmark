@@ -1,0 +1,22 @@
+[
+    {"device": "test/pybenchmarktarget/01",
+     "clients": "4,6,8,10",
+     "benchmark": "readbenchmark",
+     "title": "python read benchmark"},
+    {"device": "test/pybenchmarktarget/01",
+     "clients": "4,6,8,10", "benchmark":
+     "writebenchmark",
+     "title": "python write benchmark"},
+    {"device": "test/pybenchmarktarget/01",
+     "clients": "4,6,8,10", "benchmark":
+     "eventbenchmark", "title":
+     "python event benchmark"},
+    {"device": "test/pybenchmarktarget/01",
+     "clients": "4,6,8,10",
+     "benchmark": "pipebenchmark",
+     "title": "python pipe benchmark"},
+    
+    {"target_device": "test/pybenchmarktarget/01",
+     "server_instance": "PyBenchmarkTarget/test",
+     "device_class": "PyBenchmarkTarget"}
+]

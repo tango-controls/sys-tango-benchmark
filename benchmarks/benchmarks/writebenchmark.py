@@ -30,6 +30,8 @@ from multiprocessing import Process, Queue
 from . import release
 from . import utils
 
+TIMEOUTS = False
+
 
 class Worker(Process):
     """ worker instance
@@ -76,6 +78,10 @@ class Worker(Process):
         """
         self.__proxy = PyTango.AttributeProxy(
             "%s/%s" % (self.__device, self.__attribute))
+        if TIMEOUTS:
+            if not utils.Starter.checkDevice(self.__proxy):
+                raise Exception(
+                    "Device %s connection failed" % self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
@@ -128,12 +134,12 @@ class WriteBenchmark(utils.Benchmark):
                 self.__value = np.array(value)
         elif len(shape) == 1:
             self.__value = np.array(
-                (value * (shape[0] / max(1, len(value) - 1) + 1))[:shape[0]]
+                (value * (shape[0] // max(1, len(value) - 1) + 1))[:shape[0]]
             ).reshape(shape)
         elif len(shape) == 2:
             self.__value = np.array(
                 (
-                    value * (shape[0] * shape[1] / max(1, len(value) - 1) + 1)
+                    value * (shape[0] * shape[1] // max(1, len(value) - 1) + 1)
                 )[:shape[0] * shape[1]]
             ).reshape(shape)
 
@@ -145,7 +151,7 @@ class WriteBenchmark(utils.Benchmark):
         ]
 
 
-def main():
+def main(**kargs):
     """ the main function
     """
 
@@ -164,16 +170,20 @@ def main():
         help="device on which the test will be performed")
     parser.add_argument(
         "-n", "--numbers-of-clients", dest="clients", default="1",
-        help="numbers of clients to be spawned separated by ',' .\n"
-        "The numbers can be given as python slices <start>:<stop>:<step> ,\n"
+        help="numbers of clients to be spawned separated "
+        "by ',' .\n"
+        "The numbers can be given as python slices "
+        "<start>:<stop>:<step> ,\n"
         "e.g. 1,23,45:50:2 , default: 1")
     parser.add_argument(
         "-p", "--test-period", dest="period", default="10",
-        help="time in seconds for which counting is preformed, default: 10")
+        help="time in seconds for which counting is preformed, "
+        "default: 10")
     parser.add_argument(
         "-a", "--attribute", dest="attribute",
         default="BenchmarkScalarAttribute",
-        help="attribute which will be read, default: BenchmarkScalarAttribute")
+        help="attribute which will be read, "
+        "default: BenchmarkScalarAttribute")
     parser.add_argument(
         "-s", "--attribute-shape", dest="shape",
         default="",
@@ -199,7 +209,12 @@ def main():
         "--verbose", dest="verbose", action="store_true", default=False,
         help="verbose mode")
 
-    options = parser.parse_args()
+    if not kargs:
+        options = parser.parse_args()
+    else:
+        options = parser.parse_args([])
+        for ky, vl in kargs.items():
+            setattr(options, ky, vl)
 
     clients = []
 
@@ -223,8 +238,10 @@ def main():
                     clients.extend(list(range(*sld)))
                 else:
                     clients.append(int(sc))
-        except Exception:
+        except Exception as e:
             print("Error: number of clients is not an integer")
+            if options.verbose:
+                print(str(e))
             parser.print_help()
             print("")
             sys.exit(255)
@@ -234,8 +251,10 @@ def main():
     else:
         try:
             float(options.period)
-        except Exception:
+        except Exception as e:
             print("Error: test period is not a number")
+            if options.verbose:
+                print(str(e))
             parser.print_help()
             print("")
             sys.exit(255)

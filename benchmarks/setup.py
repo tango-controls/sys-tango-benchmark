@@ -23,9 +23,10 @@
 
 import os
 import sys
+import subprocess
 from setuptools import setup
-# from distutils.core import Command
-# from sphinx.setup_command import BuildDoc
+from distutils.core import Command
+from sphinx.setup_command import BuildDoc
 from benchmarks.release import name, version
 
 setup_dir = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +42,28 @@ release_filename = os.path.join(setup_dir, 'benchmarks', 'release.py')
 exec(open(release_filename).read())
 
 pack = ['benchmarks']
+
+
+class TestCommand(Command):
+    """ test command class
+    """
+
+    #: user options
+    user_options = []
+
+    #: initializes options
+    def initialize_options(self):
+        pass
+
+    #: finalizes options
+    def finalize_options(self):
+        pass
+
+    #: runs command
+    def run(self):
+        errno = subprocess.call([sys.executable, 'test'])
+        raise SystemExit(errno)
+
 
 #: metadata for distutils
 SETUPDATA = dict(
@@ -58,6 +81,7 @@ SETUPDATA = dict(
             'writebenchmark = benchmarks.writebenchmark:main',
             'eventbenchmark = benchmarks.eventbenchmark:main',
             'cmdbenchmark = benchmarks.cmdbenchmark:main',
+            'benchmarkrunner = benchmarks.runner:main',
         ]},
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',
@@ -65,7 +89,7 @@ SETUPDATA = dict(
     # long_description=long_description,
     url='www.tango-controls.org',
     platforms="All Platforms",
-    # cmdclass={'test': TestCommand, 'build_sphinx': BuildDoc},
+    cmdclass={'test': TestCommand, 'build_sphinx': BuildDoc},
 )
 
 

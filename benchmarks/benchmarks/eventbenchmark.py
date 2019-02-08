@@ -29,6 +29,8 @@ from multiprocessing import Process, Queue
 from . import release
 from . import utils
 
+TIMEOUTS = False
+
 
 def cb_tango(*args):
     """ tango callback
@@ -78,6 +80,11 @@ class Worker(Process):
         """ worker thread
         """
         self.__proxy = PyTango.DeviceProxy(self.__device)
+        if TIMEOUTS:
+            if not utils.Starter.checkDevice(self.__proxy):
+                raise Exception(
+                    "Device %s connection failed" % self.__device)
+
         stime = time.time()
         etime = stime
         ids = []
@@ -126,7 +133,7 @@ class EventBenchmark(utils.Benchmark):
         ]
 
 
-def main():
+def main(**kargs):
     """ the main function
     """
 
@@ -170,7 +177,12 @@ def main():
         "--verbose", dest="verbose", action="store_true", default=False,
         help="verbose mode")
 
-    options = parser.parse_args()
+    if not kargs:
+        options = parser.parse_args()
+    else:
+        options = parser.parse_args([])
+        for ky, vl in kargs.items():
+            setattr(options, ky, vl)
 
     clients = []
 
@@ -194,8 +206,10 @@ def main():
                     clients.extend(list(range(*sld)))
                 else:
                     clients.append(int(sc))
-        except Exception:
+        except Exception as e:
             print("Error: number of clients is not an integer")
+            if options.verbose:
+                print(str(e))
             parser.print_help()
             print("")
             sys.exit(255)
@@ -205,8 +219,10 @@ def main():
     else:
         try:
             float(options.period)
-        except Exception:
+        except Exception as e:
             print("Error: test period is not a number")
+            if options.verbose:
+                print(str(e))
             parser.print_help()
             print("")
             sys.exit(255)

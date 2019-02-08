@@ -30,6 +30,8 @@ from multiprocessing import Process, Queue
 from . import release
 from . import utils
 
+TIMEOUTS = False
+
 
 class WriteWorker(Process):
     """ write worker instance
@@ -75,6 +77,10 @@ class WriteWorker(Process):
         """ worker thread
         """
         self.__proxy = PyTango.DeviceProxy(self.__device)
+        if TIMEOUTS:
+            if not utils.Starter.checkDevice(self.__proxy):
+                raise Exception(
+                    "Device %s connection failed" % self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
@@ -173,7 +179,7 @@ class WritePipeBenchmark(utils.Benchmark):
 
         size = max(1, int(options.size))
         value1 = (self.__value[1] *
-                  (size / max(1, len(self.__value[1]) - 1) + 1))[:size]
+                  (size // max(1, len(self.__value[1]) - 1) + 1))[:size]
 
         for i in range(len(value1)):
             value1[i] = dict(value1[i])
@@ -220,7 +226,7 @@ class ReadPipeBenchmark(utils.Benchmark):
         ]
 
 
-def main():
+def main(**kargs):
     """ the main function
     """
 
@@ -268,7 +274,12 @@ def main():
         "--verbose", dest="verbose", action="store_true", default=False,
         help="verbose mode")
 
-    options = parser.parse_args()
+    if not kargs:
+        options = parser.parse_args()
+    else:
+        options = parser.parse_args([])
+        for ky, vl in kargs.items():
+            setattr(options, ky, vl)
 
     clients = []
 
