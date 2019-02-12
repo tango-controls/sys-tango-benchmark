@@ -44,6 +44,17 @@ exec(open(release_filename).read())
 pack = ['benchmarks']
 
 
+install_requires = [
+    'numpy>1.6.0',
+    'pyzmq',
+    'pyyaml',
+    'pytango',
+    'whichcraft',
+    'docutils',
+    'pytz',
+    ]
+
+
 class TestCommand(Command):
     """ test command class
     """
@@ -74,6 +85,7 @@ SETUPDATA = dict(
     packages=pack,
     include_package_data=True,
     zip_safe=False,
+    install_requires=install_requires,
     entry_points={
         'console_scripts': [
             'pipebenchmark = benchmarks.pipebenchmark:main',
