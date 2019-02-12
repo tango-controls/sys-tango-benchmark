@@ -273,6 +273,7 @@ class Benchmark(object):
         mcnts = avg.counts()
         mtm = avg.ctime()
         mspd = avg.speed()
+        errs = avg.errorsum()
         # mspd = avg.simplespeed()
         scnts = [nn * vl for vl in mcnts]
         sspd = [nn * vl for vl in mspd]
@@ -281,6 +282,7 @@ class Benchmark(object):
         prsc = "%s"
         prss = "%s"
         prt = "%s"
+        perrs = "%s"
         if mcnts[1]:
             prc = "%." + str(
                 max(0, int(2 - np.log10(
@@ -323,15 +325,16 @@ class Benchmark(object):
         res = {}
         res["no_clients"] = str(nn)
         res["counts"] = prc % float(mcnts[0])
-        res["err_counts"] = prc % float(mcnts[1])
+        res["sd_counts"] = prc % float(mcnts[1])
         res["speed"] = prs % float(mspd[0])
-        res["err_speed"] = prs % float(mspd[1])
+        res["sd_speed"] = prs % float(mspd[1])
         res["sumcounts"] = prsc % float(scnts[0])
-        res["err_sumcounts"] = prsc % float(scnts[1])
+        res["sd_sumcounts"] = prsc % float(scnts[1])
         res["sumspeed"] = prss % float(sspd[0])
-        res["err_sumspeed"] = prss % float(sspd[1])
+        res["sd_sumspeed"] = prss % float(sspd[1])
         res["time"] = prt % float(mtm[0])
-        res["err_time"] = prt % float(mtm[1])
+        res["sd_time"] = prt % float(mtm[1])
+        res["error_sum"] = perrs % int(errs)
         return res
 
 
@@ -339,7 +342,7 @@ class Result(object):
     """ benchmark result
     """
 
-    def __init__(self, wid, counts, ctime):
+    def __init__(self, wid, counts, ctime, errors=None):
         """ constructor
 
         :param wid: worker id
@@ -348,6 +351,8 @@ class Result(object):
         :type counts: :obj:`int`
         :param ctime: counting time in s
         :type ctime: :obj:`float`
+        :param counts: error counts
+        :type counts: :obj:`int`
         """
         #: (:obj:`int`) worker id
         self.wid = wid
@@ -355,6 +360,8 @@ class Result(object):
         self.counts = counts
         #: (:obj:`float`) counting time in s
         self.ctime = ctime
+        #: (:obj:`int`) benchmark error counts
+        self.errors = errors
 
     def speed(self):
         """ provides counting speed
@@ -434,6 +441,15 @@ class Average(object):
         :returns: number of results
         """
         return len(self.__results)
+
+    def errorsum(self):
+        """ provides sum of errors
+
+        :rtype: int
+        :returns: error sum
+        """
+        errs = [res.errors for res in self.__results]
+        return np.sum(errs)
 
 
 class Starter(object):

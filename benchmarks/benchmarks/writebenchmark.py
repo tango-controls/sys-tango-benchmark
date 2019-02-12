@@ -73,13 +73,12 @@ class Worker(Process):
         # : (:obj:`int`) counter
         self.__counter = 0
         # : (:obj:`int`) error counter
-        self.__error = 0
+        self.__errors = 0
 
     def run(self):
         """ worker thread
         """
-        self.__proxy = PyTango.AttributeProxy(
-            "%s/%s" % (self.__device, self.__attribute))
+        self.__proxy = PyTango.DeviceProxy(self.__device)
         if TIMEOUTS:
             if not utils.Starter.checkDevice(self.__proxy):
                 raise Exception(
@@ -88,14 +87,16 @@ class Worker(Process):
         etime = stime
         while etime - stime < self.__period:
             try:
-                self.__proxy.write(self.__value)
+                self.__proxy.write_attribute(
+                    self.__attribute, self.__value)
             except Exception:
-                self.__error += 1
+                self.__errors += 1
             else:
                 etime = time.time()
                 self.__counter += 1
         self.__qresult.put(
-            utils.Result(self.__wid, self.__counter, etime - stime))
+            utils.Result(self.__wid, self.__counter, etime - stime,
+                         self.__errors))
 
 
 class WriteBenchmark(utils.Benchmark):
@@ -270,11 +271,11 @@ def main(**kargs):
 
     headers = [
         "Run no.",
-        "Sum counts [write]", "error [write]",
-        "Sum Speed [write/s]", "error [write/s]",
-        "Counts [write]", "error [write]",
-        "Speed [write/s]", "error [write/s]",
-        "No. ", "  Time [s]  ", "error [s]"
+        "Sum counts [write]", "SD [write]",
+        "Sum Speed [write/s]", "SD [write/s]",
+        "Counts [write]", "SD [write]",
+        "Speed [write/s]", "SD [write/s]",
+        "No. ", "  Time [s]  ", "  SD [s]  ", " Errors "
     ]
 
     if options.csvfile:
@@ -294,12 +295,13 @@ def main(**kargs):
         out = bm.output(False)
         record = [
             str(i),
-            out["sumcounts"], out["err_sumcounts"],
-            out["sumspeed"], out["err_sumspeed"],
-            out["counts"], out["err_counts"],
-            out["speed"], out["err_speed"],
+            out["sumcounts"], out["sd_sumcounts"],
+            out["sumspeed"], out["sd_sumspeed"],
+            out["counts"], out["sd_counts"],
+            out["speed"], out["sd_speed"],
             cl,
-            out["time"], out["err_time"]
+            out["time"], out["sd_time"],
+            out["error_sum"]
         ]
         rst.printLine(record)
         if options.csvfile:

@@ -114,6 +114,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
         self.assertEqual('', er)
         self.assertTrue(vl)
+        print(vl)
         self.check_default(vl)
 
     def test_BenchmarkRunnerDefaultJSON(self):
@@ -126,9 +127,40 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
         self.assertEqual('', er)
         self.assertTrue(vl)
+        print(vl)
         self.check_default(vl)
 
-    def check_default(self, text):
+    def ttest_BenchmarkRunnerDefaultJava(self):
+        """Test for BenchmarkRunner default"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        vl, er = self.runscript(
+            'benchmarkrunner -c config_examples/java_test.yml'.split())
+
+        self.assertEqual('', er)
+        self.assertTrue(vl)
+        print(vl)
+        self.check_default(vl, "java")
+
+    def test_BenchmarkRunnerDefaultCPP(self):
+        """Test for BenchmarkRunner default"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        vl, er = self.runscript(
+            'benchmarkrunner -c config_examples/cpp_test.yml'.split())
+
+        self.assertEqual('', er)
+        self.assertTrue(vl)
+        print(vl)
+        self.check_default(vl, "cpp")
+
+    def check_default(self, text, lang="python"):
+        if lang == "python":
+            dvname = 'test/pybenchmarktarget/01'
+        else:
+            dvname = 'test/%sbenchmarktarget/01' % lang
         parser = docutils.parsers.rst.Parser()
         components = (docutils.parsers.rst.Parser,)
         settings = docutils.frontend.OptionParser(
@@ -145,7 +177,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(len(section), 5)
         self.assertEqual(len(section[0]), 1)
         self.assertEqual(
-            str(section[0]), '<title>python read benchmark</title>')
+            str(section[0]), '<title>%s read benchmark</title>' % lang)
         self.assertEqual(len(section[1]), 1)
         self.assertEqual(
             str(section[1]), '<paragraph>Speed test</paragraph>')
@@ -166,9 +198,9 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<paragraph>'
             'attribute=BenchmarkScalarAttribute\n'
             'clients=4,6,8,10\ncsvfile=\n'
-            'device=test/pybenchmarktarget/01\n'
+            'device=%s\n'
             'period=1'
-            '</paragraph>'
+            '</paragraph>' % dvname
         )
         self.assertEqual(len(section[4]), 2)
         self.assertEqual(len(section[4][0]), 1)
@@ -179,36 +211,37 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(table.tagname, 'table')
         self.assertEqual(len(table), 1)
         self.assertEqual(table[0].tagname, 'tgroup')
-        self.assertEqual(len(table[0]), 14)
-        for i in range(12):
+        self.assertEqual(len(table[0]), 15)
+        for i in range(13):
             self.assertEqual(table[0][i].tagname, 'colspec')
-        self.assertEqual(table[0][12].tagname, 'thead')
+        self.assertEqual(table[0][13].tagname, 'thead')
         self.assertEqual(
-            str(table[0][12]),
+            str(table[0][13]),
             '<thead><row>'
             '<entry><paragraph>Run no.</paragraph></entry>'
             '<entry><paragraph>Sum counts [read]</paragraph></entry>'
-            '<entry><paragraph>error [read]</paragraph></entry>'
+            '<entry><paragraph>SD [read]</paragraph></entry>'
             '<entry><paragraph>Sum Speed [read/s]</paragraph></entry>'
-            '<entry><paragraph>error [read/s]</paragraph></entry>'
+            '<entry><paragraph>SD [read/s]</paragraph></entry>'
             '<entry><paragraph>Counts [read]</paragraph></entry>'
-            '<entry><paragraph>error [read]</paragraph></entry>'
+            '<entry><paragraph>SD [read]</paragraph></entry>'
             '<entry><paragraph>Speed [read/s]</paragraph></entry>'
-            '<entry><paragraph>error [read/s]</paragraph></entry>'
+            '<entry><paragraph>SD [read/s]</paragraph></entry>'
             '<entry><paragraph>No.</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
-            '<entry><paragraph>error [s]</paragraph></entry>'
+            '<entry><paragraph>SD [s]</paragraph></entry>'
+            '<entry><paragraph>Errors</paragraph></entry>'
             '</row></thead>'
         )
-        tbody = table[0][13]
+        tbody = table[0][14]
         self.assertEqual(tbody.tagname, 'tbody')
         self.assertEqual(len(tbody), 4)
         for i in range(4):
             self.assertEqual(int(tbody[i][0][0][0]), i)
-        self.assertEqual(len(tbody[0]), 12)
+        self.assertEqual(len(tbody[0]), 13)
         for i in range(4):
             self.assertEqual(tbody[i].tagname, 'row')
-            for j in range(12):
+            for j in range(13):
                 self.assertEqual(tbody[i][j].tagname, 'entry')
                 self.assertEqual(tbody[i][j][0].tagname, 'paragraph')
                 self.assertEqual(tbody[i][j][0][0].tagname, '#text')
@@ -220,7 +253,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(len(section), 5)
         self.assertEqual(len(section[0]), 1)
         self.assertEqual(
-            str(section[0]), '<title>python write benchmark</title>')
+            str(section[0]), '<title>%s write benchmark</title>' % lang)
         self.assertEqual(len(section[1]), 1)
         self.assertEqual(
             str(section[1]), '<paragraph>Speed test</paragraph>')
@@ -248,11 +281,11 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<paragraph>attribute=BenchmarkScalarAttribute\n'
             'clients=4,6,8,10\n'
             'csvfile=\n'
-            'device=test/pybenchmarktarget/01\n'
+            'device=%s\n'
             'period=1\n'
             'shape=\n'
             'value=0'
-            '</paragraph>'
+            '</paragraph>' % dvname
         )
         self.assertEqual(len(section[4]), 3)
         self.assertEqual(len(section[4][0]), 1)
@@ -268,36 +301,37 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(table.tagname, 'table')
         self.assertEqual(len(table), 1)
         self.assertEqual(table[0].tagname, 'tgroup')
-        self.assertEqual(len(table[0]), 14)
-        for i in range(12):
+        self.assertEqual(len(table[0]), 15)
+        for i in range(13):
             self.assertEqual(table[0][i].tagname, 'colspec')
-        self.assertEqual(table[0][12].tagname, 'thead')
+        self.assertEqual(table[0][13].tagname, 'thead')
         self.assertEqual(
-            str(table[0][12]),
+            str(table[0][13]),
             '<thead><row>'
             '<entry><paragraph>Run no.</paragraph></entry>'
             '<entry><paragraph>Sum counts [write]</paragraph></entry>'
-            '<entry><paragraph>error [write]</paragraph></entry>'
+            '<entry><paragraph>SD [write]</paragraph></entry>'
             '<entry><paragraph>Sum Speed [write/s]</paragraph></entry>'
-            '<entry><paragraph>error [write/s]</paragraph></entry>'
+            '<entry><paragraph>SD [write/s]</paragraph></entry>'
             '<entry><paragraph>Counts [write]</paragraph></entry>'
-            '<entry><paragraph>error [write]</paragraph></entry>'
+            '<entry><paragraph>SD [write]</paragraph></entry>'
             '<entry><paragraph>Speed [write/s]</paragraph></entry>'
-            '<entry><paragraph>error [write/s]</paragraph></entry>'
+            '<entry><paragraph>SD [write/s]</paragraph></entry>'
             '<entry><paragraph>No.</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
-            '<entry><paragraph>error [s]</paragraph></entry>'
+            '<entry><paragraph>SD [s]</paragraph></entry>'
+            '<entry><paragraph>Errors</paragraph></entry>'
             '</row></thead>'
         )
-        tbody = table[0][13]
+        tbody = table[0][14]
         self.assertEqual(tbody.tagname, 'tbody')
         self.assertEqual(len(tbody), 4)
         for i in range(4):
             self.assertEqual(int(tbody[i][0][0][0]), i)
-        self.assertEqual(len(tbody[0]), 12)
+        self.assertEqual(len(tbody[0]), 13)
         for i in range(4):
             self.assertEqual(tbody[i].tagname, 'row')
-            for j in range(12):
+            for j in range(13):
                 self.assertEqual(tbody[i][j].tagname, 'entry')
                 self.assertEqual(tbody[i][j][0].tagname, 'paragraph')
                 self.assertEqual(tbody[i][j][0][0].tagname, '#text')
@@ -310,7 +344,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(len(section), 5)
         self.assertEqual(len(section[0]), 1)
         self.assertEqual(
-            str(section[0]), '<title>python event benchmark</title>')
+            str(section[0]), '<title>%s event benchmark</title>' % lang)
         self.assertEqual(len(section[1]), 1)
         self.assertEqual(
             str(section[1]), '<paragraph>Speed test</paragraph>')
@@ -339,9 +373,9 @@ class BenchmarkRunnerTest(unittest.TestCase):
             'attribute=BenchmarkScalarAttribute\n'
             'clients=4,6,8,10\n'
             'csvfile=\n'
-            'device=test/pybenchmarktarget/01\n'
+            'device=%s\n'
             'period=1'
-            '</paragraph>'
+            '</paragraph>' % dvname
         )
         self.assertEqual(len(section[4]), 3)
         self.assertEqual(len(section[4][0]), 1)
@@ -357,36 +391,37 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(table.tagname, 'table')
         self.assertEqual(len(table), 1)
         self.assertEqual(table[0].tagname, 'tgroup')
-        self.assertEqual(len(table[0]), 14)
-        for i in range(12):
+        self.assertEqual(len(table[0]), 15)
+        for i in range(13):
             self.assertEqual(table[0][i].tagname, 'colspec')
-        self.assertEqual(table[0][12].tagname, 'thead')
+        self.assertEqual(table[0][13].tagname, 'thead')
         self.assertEqual(
-            str(table[0][12]),
+            str(table[0][13]),
             '<thead><row>'
             '<entry><paragraph>Run no.</paragraph></entry>'
             '<entry><paragraph>Sum counts [event]</paragraph></entry>'
-            '<entry><paragraph>error [event]</paragraph></entry>'
+            '<entry><paragraph>SD [event]</paragraph></entry>'
             '<entry><paragraph>Sum Speed [event/s]</paragraph></entry>'
-            '<entry><paragraph>error [event/s]</paragraph></entry>'
+            '<entry><paragraph>SD [event/s]</paragraph></entry>'
             '<entry><paragraph>Counts [event]</paragraph></entry>'
-            '<entry><paragraph>error [event]</paragraph></entry>'
+            '<entry><paragraph>SD [event]</paragraph></entry>'
             '<entry><paragraph>Speed [event/s]</paragraph></entry>'
-            '<entry><paragraph>error [event/s]</paragraph></entry>'
+            '<entry><paragraph>SD [event/s]</paragraph></entry>'
             '<entry><paragraph>No.</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
-            '<entry><paragraph>error [s]</paragraph></entry>'
+            '<entry><paragraph>SD [s]</paragraph></entry>'
+            '<entry><paragraph>Errors</paragraph></entry>'
             '</row></thead>'
         )
-        tbody = table[0][13]
+        tbody = table[0][14]
         self.assertEqual(tbody.tagname, 'tbody')
         self.assertEqual(len(tbody), 4)
         for i in range(4):
             self.assertEqual(int(tbody[i][0][0][0]), i)
-        self.assertEqual(len(tbody[0]), 12)
+        self.assertEqual(len(tbody[0]), 13)
         for i in range(4):
             self.assertEqual(tbody[i].tagname, 'row')
-            for j in range(12):
+            for j in range(13):
                 self.assertEqual(tbody[i][j].tagname, 'entry')
                 self.assertEqual(tbody[i][j][0].tagname, 'paragraph')
                 self.assertEqual(tbody[i][j][0][0].tagname, '#text')
@@ -399,7 +434,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(len(section), 5)
         self.assertEqual(len(section[0]), 1)
         self.assertEqual(
-            str(section[0]), '<title>python pipe benchmark</title>')
+            str(section[0]), '<title>%s pipe benchmark</title>' % lang)
         self.assertEqual(len(section[1]), 1)
         self.assertEqual(
             str(section[1]), '<paragraph>Speed test</paragraph>')
@@ -427,11 +462,11 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<paragraph>'
             'clients=4,6,8,10\n'
             'csvfile=\n'
-            'device=test/pybenchmarktarget/01\n'
+            'device=%s\n'
             'period=1\n'
             'pipe=BenchmarkPipe\n'
             'size=1'
-            '</paragraph>'
+            '</paragraph>' % dvname
         )
         self.assertEqual(len(section[4]), 4)
         self.assertEqual(len(section[4][0]), 1)
@@ -447,36 +482,37 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(table.tagname, 'table')
         self.assertEqual(len(table), 1)
         self.assertEqual(table[0].tagname, 'tgroup')
-        self.assertEqual(len(table[0]), 14)
-        for i in range(12):
+        self.assertEqual(len(table[0]), 15)
+        for i in range(13):
             self.assertEqual(table[0][i].tagname, 'colspec')
-        self.assertEqual(table[0][12].tagname, 'thead')
+        self.assertEqual(table[0][13].tagname, 'thead')
         self.assertEqual(
-            str(table[0][12]),
+            str(table[0][13]),
             '<thead><row>'
             '<entry><paragraph>Run no.</paragraph></entry>'
             '<entry><paragraph>Sum counts [write]</paragraph></entry>'
-            '<entry><paragraph>error [write]</paragraph></entry>'
+            '<entry><paragraph>SD [write]</paragraph></entry>'
             '<entry><paragraph>Sum Speed [write/s]</paragraph></entry>'
-            '<entry><paragraph>error [write/s]</paragraph></entry>'
+            '<entry><paragraph>SD [write/s]</paragraph></entry>'
             '<entry><paragraph>Counts [write]</paragraph></entry>'
-            '<entry><paragraph>error [write]</paragraph></entry>'
+            '<entry><paragraph>SD [write]</paragraph></entry>'
             '<entry><paragraph>Speed [write/s]</paragraph></entry>'
-            '<entry><paragraph>error [write/s]</paragraph></entry>'
+            '<entry><paragraph>SD [write/s]</paragraph></entry>'
             '<entry><paragraph>No.</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
-            '<entry><paragraph>error [s]</paragraph></entry>'
+            '<entry><paragraph>SD [s]</paragraph></entry>'
+            '<entry><paragraph>Errors</paragraph></entry>'
             '</row></thead>'
         )
-        tbody = table[0][13]
+        tbody = table[0][14]
         self.assertEqual(tbody.tagname, 'tbody')
         self.assertEqual(len(tbody), 4)
         for i in range(4):
             self.assertEqual(int(tbody[i][0][0][0]), i)
-        self.assertEqual(len(tbody[0]), 12)
+        self.assertEqual(len(tbody[0]), 13)
         for i in range(4):
             self.assertEqual(tbody[i].tagname, 'row')
-            for j in range(12):
+            for j in range(13):
                 self.assertEqual(tbody[i][j].tagname, 'entry')
                 self.assertEqual(tbody[i][j][0].tagname, 'paragraph')
                 self.assertEqual(tbody[i][j][0][0].tagname, '#text')
@@ -487,36 +523,37 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(table.tagname, 'table')
         self.assertEqual(len(table), 1)
         self.assertEqual(table[0].tagname, 'tgroup')
-        self.assertEqual(len(table[0]), 14)
-        for i in range(12):
+        self.assertEqual(len(table[0]), 15)
+        for i in range(13):
             self.assertEqual(table[0][i].tagname, 'colspec')
-        self.assertEqual(table[0][12].tagname, 'thead')
+        self.assertEqual(table[0][13].tagname, 'thead')
         self.assertEqual(
-            str(table[0][12]),
+            str(table[0][13]),
             '<thead><row>'
             '<entry><paragraph>Run no.</paragraph></entry>'
             '<entry><paragraph>Sum counts [read]</paragraph></entry>'
-            '<entry><paragraph>error [read]</paragraph></entry>'
+            '<entry><paragraph>SD [read]</paragraph></entry>'
             '<entry><paragraph>Sum Speed [read/s]</paragraph></entry>'
-            '<entry><paragraph>error [read/s]</paragraph></entry>'
+            '<entry><paragraph>SD [read/s]</paragraph></entry>'
             '<entry><paragraph>Counts [read]</paragraph></entry>'
-            '<entry><paragraph>error [read]</paragraph></entry>'
+            '<entry><paragraph>SD [read]</paragraph></entry>'
             '<entry><paragraph>Speed [read/s]</paragraph></entry>'
-            '<entry><paragraph>error [read/s]</paragraph></entry>'
+            '<entry><paragraph>SD [read/s]</paragraph></entry>'
             '<entry><paragraph>No.</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
-            '<entry><paragraph>error [s]</paragraph></entry>'
+            '<entry><paragraph>SD [s]</paragraph></entry>'
+            '<entry><paragraph>Errors</paragraph></entry>'
             '</row></thead>'
         )
-        tbody = table[0][13]
+        tbody = table[0][14]
         self.assertEqual(tbody.tagname, 'tbody')
         self.assertEqual(len(tbody), 4)
         for i in range(4):
             self.assertEqual(int(tbody[i][0][0][0]), i)
-        self.assertEqual(len(tbody[0]), 12)
+        self.assertEqual(len(tbody[0]), 13)
         for i in range(4):
             self.assertEqual(tbody[i].tagname, 'row')
-            for j in range(12):
+            for j in range(13):
                 self.assertEqual(tbody[i][j].tagname, 'entry')
                 self.assertEqual(tbody[i][j][0].tagname, 'paragraph')
                 self.assertEqual(tbody[i][j][0][0].tagname, '#text')

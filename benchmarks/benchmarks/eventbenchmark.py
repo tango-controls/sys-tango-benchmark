@@ -76,7 +76,7 @@ class Worker(Process):
         # : (:obj:`int`) counter
         self.__counter = 0
         # : (:obj:`int`) error counter
-        self.__error = 0
+        self.__errors = 0
 
     def run(self):
         """ worker thread
@@ -98,14 +98,15 @@ class Worker(Process):
                     cb_tango)
                 ids.append(id_)
             except Exception:
-                self.__error += 1
+                self.__errors += 1
             else:
                 etime = time.time()
                 self.__counter += 1
         for id_ in ids:
             self.__proxy.unsubscribe_event(id_)
         self.__qresult.put(
-            utils.Result(self.__wid, self.__counter, etime - stime))
+            utils.Result(self.__wid, self.__counter, etime - stime,
+                         self.__errors))
 
 
 class EventBenchmark(utils.Benchmark):
@@ -237,11 +238,11 @@ def main(**kargs):
 
     headers = [
         "Run no.",
-        "Sum counts [event]", "error [event]",
-        "Sum Speed [event/s]", "error [event/s]",
-        "Counts [event]", "error [event]",
-        "Speed [event/s]", "error [event/s]",
-        "No. ", "  Time [s]  ", "error [s]"
+        "Sum counts [event]", "SD [event]",
+        "Sum Speed [event/s]", "SD [event/s]",
+        "Counts [event]", "SD [event]",
+        "Speed [event/s]", "SD [event/s]",
+        "No. ", "  Time [s]  ", "  SD [s]  ", " Errors "
     ]
 
     if options.csvfile:
@@ -261,12 +262,13 @@ def main(**kargs):
         out = bm.output(False)
         record = [
             str(i),
-            out["sumcounts"], out["err_sumcounts"],
-            out["sumspeed"], out["err_sumspeed"],
-            out["counts"], out["err_counts"],
-            out["speed"], out["err_speed"],
+            out["sumcounts"], out["sd_sumcounts"],
+            out["sumspeed"], out["sd_sumspeed"],
+            out["counts"], out["sd_counts"],
+            out["speed"], out["sd_speed"],
             cl,
-            out["time"], out["err_time"]
+            out["time"], out["sd_time"],
+            out["error_sum"]
         ]
         rst.printLine(record)
         if options.csvfile:
