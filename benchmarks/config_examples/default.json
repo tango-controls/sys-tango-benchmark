@@ -21,6 +21,6 @@
      "title": "python pipe benchmark"},
 
     {"target_device": "test/pybenchmarktarget/01",
-     "server_instance": "PyBenchmarkTarget/test",
+     "server_instance": "PyBenchmarkTarget/rtest",
      "device_class": "PyBenchmarkTarget"}
 ]

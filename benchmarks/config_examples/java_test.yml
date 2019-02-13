@@ -23,7 +23,7 @@
   period: 1
 
 
-- server_instance: JavaBenchmarkTarget/test
+- server_instance: JavaBenchmarkTarget/rtest
   device_class: JavaBenchmarkTarget
   target_device: test/javabenchmarktarget/01
   # host: localhost:10000
