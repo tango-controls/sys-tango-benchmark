@@ -130,7 +130,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print(vl)
         self.check_default(vl)
 
-    def ttest_BenchmarkRunnerDefaultJava(self):
+    def test_BenchmarkRunnerDefaultJava(self):
         """Test for BenchmarkRunner default"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))

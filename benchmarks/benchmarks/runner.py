@@ -33,7 +33,7 @@ from . import readbenchmark
 from . import writebenchmark
 from . import eventbenchmark
 from . import pipebenchmark
-from . import utils
+from . import servers
 
 
 def main():
@@ -105,13 +105,10 @@ def main():
     }
 
     stqueue = Queue()
-    starter = utils.Starter(devices, stqueue)
+    starter = servers.Starter(devices, stqueue)
     starter.start()
     starter.join()
     started = stqueue.get(block=False)
-    # for device in devices:
-    #     starter.register(**device)
-    #     starter.launch(**device)
 
     # without it we gets Timeout errors
     time.sleep(2)
@@ -122,7 +119,7 @@ def main():
             scripts[script].main(**bmk)
 
     if started:
-        stoper = utils.Stoper(*started)
+        stoper = servers.Stoper(*started)
         stoper.start()
         stoper.join()
 

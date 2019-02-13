@@ -26,9 +26,6 @@ import csv
 import sys
 
 
-TIMEOUTS = True
-
-
 #: python3 running
 PY3 = (sys.version_info > (3,))
 

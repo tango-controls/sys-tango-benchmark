@@ -30,8 +30,6 @@ from multiprocessing import Process, Queue
 from . import release
 from . import utils
 
-TIMEOUTS = False
-
 
 class WriteWorker(Process):
     """ write worker instance
@@ -79,10 +77,6 @@ class WriteWorker(Process):
         """ worker thread
         """
         self.__proxy = PyTango.DeviceProxy(self.__device)
-        if TIMEOUTS:
-            if not utils.Starter.checkDevice(self.__proxy):
-                raise Exception(
-                    "Device %s connection failed" % self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:

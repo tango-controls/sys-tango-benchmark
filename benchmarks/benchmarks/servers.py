@@ -28,9 +28,6 @@ import os
 from multiprocessing import Process
 
 
-TIMEOUTS = True
-
-
 #: python3 running
 PY3 = (sys.version_info > (3,))
 
@@ -137,18 +134,16 @@ class Starter(Process):
         #     self.__starter.UpdateServersInfo()
         #     running = self.__starter.DevGetRunningServers(True)
         found = False
-        if TIMEOUTS:
-            found = self.checkDevice(
-                PyTango.DeviceProxy(target_device), 1)
+        found = self.checkDevice(
+            PyTango.DeviceProxy(target_device), 1)
 
         if not found and server_instance not in running:
             try:
                 self.__starter.DevStart(server_instance)
-                if TIMEOUTS:
-                    if not self.checkDevice(PyTango.DeviceProxy(
-                            target_device)):
-                        raise Exception(
-                            "Server %s start failed" % server_instance)
+                if not self.checkDevice(PyTango.DeviceProxy(
+                        target_device)):
+                    raise Exception(
+                        "Server %s start failed" % server_instance)
             except Exception:
                 startcmd = ""
                 sev_ins = server_instance.split("/")
@@ -206,11 +201,10 @@ class Starter(Process):
                 pass
         if verbose:
             sys.stdout.write("waiting for server")
-        if TIMEOUTS:
-            if not self.checkDevice(PyTango.DeviceProxy(
-                    target_device)):
-                raise Exception("Server %s start failed" % server_instance)
-        if TIMEOUTS and not found:
+        if not self.checkDevice(PyTango.DeviceProxy(
+                target_device)):
+            raise Exception("Server %s start failed" % server_instance)
+        if not found:
             self.__launched.append(server_instance)
 
     @classmethod

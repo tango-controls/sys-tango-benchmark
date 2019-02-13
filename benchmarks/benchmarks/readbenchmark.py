@@ -29,8 +29,6 @@ from multiprocessing import Process, Queue
 from . import release
 from . import utils
 
-TIMEOUTS = False
-
 
 class Worker(Process):
     """ worker instance
@@ -74,10 +72,6 @@ class Worker(Process):
         """ worker thread
         """
         self.__proxy = PyTango.DeviceProxy(self.__device)
-        if TIMEOUTS:
-            if not utils.Starter.checkDevice(self.__proxy):
-                raise Exception(
-                    "Device %s connection failed" % self.__device)
 
         stime = time.time()
         etime = stime
