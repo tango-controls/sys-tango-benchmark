@@ -23,19 +23,133 @@ import time
 import pytz
 import datetime
 import csv
-import PyTango
-import socket
 import sys
-import whichcraft
-import subprocess
-import os
-
-
-TIMEOUTS = True
 
 
 #: python3 running
 PY3 = (sys.version_info > (3,))
+
+
+class Benchmark(object):
+    """  master class for read benchmark
+    """
+
+    def __init__(self):
+        """ constructor
+
+        """
+
+        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
+        self._qresults = []
+        #: (:obj:`list` < :class:`Result` >) result list
+        self._results = []
+        #: (:obj:`list` < :class:`Worker` >) process worker
+        self._workers = []
+
+    def start(self):
+        """ start benchmark
+        """
+        for wk in self._workers:
+            wk.start()
+        for wk in self._workers:
+            wk.join()
+
+    def fetchResults(self, verbose):
+        """ fetches the results from queue
+
+        :param verbose: verbose mode
+        :type verbose: :obj:`bool`
+        """
+        self._results = []
+        for qres in self._qresults:
+            try:
+                res = qres.get(block=False)
+                self._results.append(res)
+                if verbose:
+                    print("VERBOSE: id: %s,  counts: %s,  "
+                          "speed: %s counts/s,  time: %s s" %
+                          (res.wid, res.counts,
+                           res.speed(), res.ctime))
+            except Exception:
+                pass
+
+    def output(self, show=False):
+        """ shows a simple output
+
+        :param show: show output flag
+        :type show: :obj:`type`
+        :rtype: :obj:`dict` <:obj:`str`, :obj:`str`>
+        :returns: output dictionary
+        """
+
+        avg = Average(self._results)
+        nn = avg.size()
+        mcnts = avg.counts()
+        mtm = avg.ctime()
+        mspd = avg.speed()
+        errs = avg.errorsum()
+        # mspd = avg.simplespeed()
+        scnts = [nn * vl for vl in mcnts]
+        sspd = [nn * vl for vl in mspd]
+        prc = "%s"
+        prs = "%s"
+        prsc = "%s"
+        prss = "%s"
+        prt = "%s"
+        perrs = "%s"
+        if mcnts[1]:
+            prc = "%." + str(
+                max(0, int(2 - np.log10(
+                    mcnts[1] if mcnts[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
+        if mspd[1]:
+            prs = "%." + str(
+                max(0, int(2 - np.log10(
+                    mspd[1] if mspd[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
+        if scnts[1]:
+            prsc = "%." + str(
+                max(0, int(2 - np.log10(
+                    scnts[1] if mcnts[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
+        if sspd[1]:
+            prss = "%." + str(
+                max(0, int(2 - np.log10(
+                    sspd[1] if sspd[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
+        if mtm[1]:
+            prt = "%." + str(
+                max(0, int(2 - np.log10(
+                    mtm[1] if mtm[1] > 10e-16 else 10e-16
+                )))
+            ) + "f"
+
+        if show:
+            fmt = "no_clients: %i,  counts: " + prc + " +/- " + prc + \
+                  ",  speed: (" + prs + " +/- " + prs + ") counts/s" \
+                  ",  time: (" + prt + " +/- " + prt + ") s "
+            print(fmt % (nn,
+                         float(mcnts[0]), float(mcnts[1]),
+                         float(mspd[0]), float(mspd[1]),
+                         float(mtm[0]), float(mtm[1])))
+        res = {}
+        res["no_clients"] = str(nn)
+        res["counts"] = prc % float(mcnts[0])
+        res["sd_counts"] = prc % float(mcnts[1])
+        res["speed"] = prs % float(mspd[0])
+        res["sd_speed"] = prs % float(mspd[1])
+        res["sumcounts"] = prsc % float(scnts[0])
+        res["sd_sumcounts"] = prsc % float(scnts[1])
+        res["sumspeed"] = prss % float(sspd[0])
+        res["sd_sumspeed"] = prss % float(sspd[1])
+        res["time"] = prt % float(mtm[0])
+        res["sd_time"] = prt % float(mtm[1])
+        res["error_sum"] = perrs % int(errs)
+        return res
 
 
 class CSVOutput(object):
@@ -216,130 +330,11 @@ class RSTOutput(object):
         print("")
 
 
-class Benchmark(object):
-    """  master class for read benchmark
-    """
-
-    def __init__(self):
-        """ constructor
-
-        """
-
-        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._qresults = []
-        #: (:obj:`list` < :class:`Result` >) result list
-        self._results = []
-        #: (:obj:`list` < :class:`Worker` >) process worker
-        self._workers = []
-
-    def start(self):
-        """ start benchmark
-        """
-        for wk in self._workers:
-            wk.start()
-        for wk in self._workers:
-            wk.join()
-
-    def fetchResults(self, verbose):
-        """ fetches the results from queue
-
-        :param verbose: verbose mode
-        :type verbose: :obj:`bool`
-        """
-        self._results = []
-        for qres in self._qresults:
-            try:
-                res = qres.get(block=False)
-                self._results.append(res)
-                if verbose:
-                    print("VERBOSE: id: %s,  counts: %s,  "
-                          "speed: %s counts/s,  time: %s s" %
-                          (res.wid, res.counts,
-                           res.speed(), res.ctime))
-            except Exception:
-                pass
-
-    def output(self, show=False):
-        """ shows a simple output
-
-        :param show: show output flag
-        :type show: :obj:`type`
-        :rtype: :obj:`dict` <:obj:`str`, :obj:`str`>
-        :returns: output dictionary
-        """
-
-        avg = Average(self._results)
-        nn = avg.size()
-        mcnts = avg.counts()
-        mtm = avg.ctime()
-        mspd = avg.speed()
-        # mspd = avg.simplespeed()
-        scnts = [nn * vl for vl in mcnts]
-        sspd = [nn * vl for vl in mspd]
-        prc = "%s"
-        prs = "%s"
-        prsc = "%s"
-        prss = "%s"
-        prt = "%s"
-        if mcnts[1]:
-            prc = "%." + str(
-                max(0, int(2 - np.log10(
-                    mcnts[1] if mcnts[1] > 10e-16 else 10e-16
-                )))
-            ) + "f"
-        if mspd[1]:
-            prs = "%." + str(
-                max(0, int(2 - np.log10(
-                    mspd[1] if mspd[1] > 10e-16 else 10e-16
-                )))
-            ) + "f"
-        if scnts[1]:
-            prsc = "%." + str(
-                max(0, int(2 - np.log10(
-                    scnts[1] if mcnts[1] > 10e-16 else 10e-16
-                )))
-            ) + "f"
-        if sspd[1]:
-            prss = "%." + str(
-                max(0, int(2 - np.log10(
-                    sspd[1] if sspd[1] > 10e-16 else 10e-16
-                )))
-            ) + "f"
-        if mtm[1]:
-            prt = "%." + str(
-                max(0, int(2 - np.log10(
-                    mtm[1] if mtm[1] > 10e-16 else 10e-16
-                )))
-            ) + "f"
-
-        if show:
-            fmt = "no_clients: %i,  counts: " + prc + " +/- " + prc + \
-                  ",  speed: (" + prs + " +/- " + prs + ") counts/s" \
-                  ",  time: (" + prt + " +/- " + prt + ") s "
-            print(fmt % (nn,
-                         float(mcnts[0]), float(mcnts[1]),
-                         float(mspd[0]), float(mspd[1]),
-                         float(mtm[0]), float(mtm[1])))
-        res = {}
-        res["no_clients"] = str(nn)
-        res["counts"] = prc % float(mcnts[0])
-        res["err_counts"] = prc % float(mcnts[1])
-        res["speed"] = prs % float(mspd[0])
-        res["err_speed"] = prs % float(mspd[1])
-        res["sumcounts"] = prsc % float(scnts[0])
-        res["err_sumcounts"] = prsc % float(scnts[1])
-        res["sumspeed"] = prss % float(sspd[0])
-        res["err_sumspeed"] = prss % float(sspd[1])
-        res["time"] = prt % float(mtm[0])
-        res["err_time"] = prt % float(mtm[1])
-        return res
-
-
 class Result(object):
     """ benchmark result
     """
 
-    def __init__(self, wid, counts, ctime):
+    def __init__(self, wid, counts, ctime, errors=None):
         """ constructor
 
         :param wid: worker id
@@ -348,6 +343,8 @@ class Result(object):
         :type counts: :obj:`int`
         :param ctime: counting time in s
         :type ctime: :obj:`float`
+        :param counts: error counts
+        :type counts: :obj:`int`
         """
         #: (:obj:`int`) worker id
         self.wid = wid
@@ -355,6 +352,8 @@ class Result(object):
         self.counts = counts
         #: (:obj:`float`) counting time in s
         self.ctime = ctime
+        #: (:obj:`int`) benchmark error counts
+        self.errors = errors
 
     def speed(self):
         """ provides counting speed
@@ -435,255 +434,11 @@ class Average(object):
         """
         return len(self.__results)
 
+    def errorsum(self):
+        """ provides sum of errors
 
-class Starter(object):
-    """ device starter
-    """
-
-    def __init__(self):
-        """ constructor"""
-
-        self.__db = PyTango.Database()
-        starters = self.__db.get_device_exported_for_class(
-            "Starter").value_string
-        try:
-            self.__starter = PyTango.DeviceProxy(starters[0])
-        except Exception:
-            self.__starter = None
-
-        self.__launched = []
-        self.__registered_servers = []
-        self.__registered_devices = []
-
-    def register(self, device_class=None, server_instance=None,
-                 target_device=None, host=None):
-        """create device
-
-        :param device_class: device class
-        :type device_class: :obj:`str`
-        :param server_instance: server instance
-        :type server_instance: :obj:`str`
-        :param target_device: target device
-        :type target_device: :obj:`str`
-        :param host: host name
-        :type host: :obj:`str`
+        :rtype: int
+        :returns: error sum
         """
-
-        servers = self.__db.get_server_list(server_instance).value_string
-        devices = self.__db.get_device_exported_for_class(
-            device_class).value_string
-        new_device = PyTango.DbDevInfo()
-        new_device._class = device_class
-        new_device.server = server_instance
-        new_device.name = target_device
-        if not servers:
-            if target_device in devices:
-                raise Exception(
-                    "Device %s exists in different server" % device_class)
-            self.__db.add_device(new_device)
-            self.__db.add_server(new_device.server, new_device)
-            self.__registered_servers.append(new_device.server)
-            self.__registered_devices.append(target_device)
-        else:
-            if target_device not in devices:
-                self.__db.add_device(new_device)
-                self.__registered_devices.append(target_device)
-            else:
-                pass
-
-    def launch(self, device_class=None, server_instance=None,
-               target_device=None, host=None, verbose=False):
-        """launch device
-
-        :param device_class: device class
-        :type device_class: :obj:`str`
-        :param server_instance: server instance
-        :type server_instance: :obj:`str`
-        :param target_device: target device
-        :type target_device: :obj:`str`
-        :param host: host name
-        :type host: :obj:`str`
-        :param verbose: verbose mode
-        :type verbose: :obj:`bool`
-        """
-        startcmd = None
-        running = []
-        server = self.__db.get_server_class_list(server_instance)
-        if len(server) == 0:
-            raise Exception('Server ' + server_instance.split('/')[0]
-                            + ' not defined in database\n')
-
-        sinfo = self.__db.get_server_info(server_instance)
-        sinfo.name = server_instance
-        sinfo.host = host or socket.gethostname()
-        sinfo.mode = 1
-        sinfo.level = 1
-        self.__db.put_server_info(sinfo)
-
-        # if self.__starter:
-        #     self.__starter.UpdateServersInfo()
-        #     running = self.__starter.DevGetRunningServers(True)
-        found = False
-        if TIMEOUTS:
-            found = self.checkDevice(
-                PyTango.DeviceProxy(target_device), 1)
-
-        if not found and server_instance not in running:
-            try:
-                self.__starter.DevStart(server_instance)
-                if TIMEOUTS:
-                    if not self.checkDevice(PyTango.DeviceProxy(
-                            target_device)):
-                        raise Exception(
-                            "Server %s start failed" % server_instance)
-            except Exception:
-                startcmd = ""
-                sev_ins = server_instance.split("/")
-                if whichcraft.which(sev_ins[0]) is not None:
-                    startcmd = "%s %s &" % (sev_ins[0], sev_ins[1])
-                elif server_instance.startswith("PyBenchmarkTarget/"):
-                    if PY3:
-                        if os.path.isdir(
-                                "../ds/PyBenchmarkTarget/PyBenchmarkTarget"):
-                            startcmd = \
-                                "cd ../ds/PyBenchmarkTarget/; " \
-                                "python3 ./PyBenchmarkTarget %s &" % \
-                                sev_ins[1]
-                    else:
-                        if os.path.isdir(
-                                "../ds/PyBenchmarkTarget/PyBenchmarkTarget"):
-                            startcmd = \
-                                "cd ../ds/PyBenchmarkTarget/; " \
-                                "python2 ./PyBenchmarkTarget %s &" % \
-                                sev_ins[1]
-
-                elif server_instance.startswith("JavaBenchmarkTarget/"):
-                    if os.path.isfile(
-                            "../ds/JavaBenchmarkTarget/target/"
-                            "JavaBenchmarkTarget-1.0.jar"
-                    ):
-
-                        startcmd = \
-                            "cd ../ds/JavaBenchmarkTarget; " \
-                            "CLASSPATH=/usr/share/java/JTango.jar:" \
-                            "./target/" \
-                            "JavaBenchmarkTarget-1.0.jar:$CLASSPATH;" \
-                            "export CLASSPATH; . /etc/tangorc; " \
-                            "export TANGO_HOST; " \
-                            "java  org.tango.javabenchmarktarget." \
-                            "JavaBenchmarkTarget %s &" % \
-                            (sev_ins[1])
-                        pass
-                elif server_instance.startswith("CppBenchmarkTarget/"):
-                    home = os.path.expanduser("~")
-                    if os.path.isfile(
-                            "%s/DeviceServers/CppBenchmarkTarget" % home):
-                        serverfile = "%s/DeviceServers/CppBenchmarkTarget" % \
-                                     home
-                        startcmd = "%s %s &" % (serverfile, sev_ins[1])
-                else:
-                    pass
-                if startcmd:
-                    # os.system(startcmd)
-                    self._psub = subprocess.call(
-                        startcmd, stdout=None, stderr=None, shell=True)
-                else:
-                    raise Exception(
-                        "Server %s cannot be found " % server_instance)
-                pass
-        if verbose:
-            sys.stdout.write("waiting for server")
-        if TIMEOUTS:
-            if not self.checkDevice(PyTango.DeviceProxy(
-                    target_device)):
-                raise Exception("Server %s start failed" % server_instance)
-        if TIMEOUTS and not found:
-            self.__launched.append(server_instance)
-
-    def stopServers(self):
-        """ stop launched devices
-        """
-        for server_instance in self.__launched:
-            try:
-                self.__starter.DevStop(server_instance)
-                # self.__starter.HardKillServer(server_instance)
-            except Exception:
-                server, instance = server_instance.split("/")
-                grepserver = \
-                    "ps -ef | grep '%s %s' | grep -v grep" % \
-                    (server, instance)
-                if PY3:
-                    with subprocess.Popen(grepserver,
-                                          stdout=subprocess.PIPE,
-                                          shell=True) as proc:
-                        try:
-                            outs, errs = proc.communicate(timeout=15)
-                        except subprocess.TimeoutExpired:
-                            proc.kill()
-                            outs, errs = proc.communicate()
-                        res = str(outs, "utf8").split("\n")
-                        for r in res:
-                            sr = r.split()
-                            if len(sr) > 2:
-                                subprocess.call(
-                                    "kill -9 %s" % sr[1],
-                                    stderr=None,
-                                    shell=True)
-                else:
-                    pipe = subprocess.Popen(
-                        grepserver,
-                        stdout=subprocess.PIPE,
-                        shell=True).stdout
-
-                    res = str(pipe.read()).split("\n")
-                    for r in res:
-                        sr = r.split()
-                        if len(sr) > 2:
-                            subprocess.call(
-                                "kill -9 %s" % sr[1],
-                                stderr=None,
-                                shell=True)
-                    pipe.close()
-        self.__launched = []
-
-    def unregisterServers(self):
-        """ unregister registered devices
-        """
-        for dv in self.__registered_devices:
-            self.__db.delete_device(dv)
-        for server in self.__registered_servers:
-            self.__db.delete_server(server)
-        self.__registered_servers = []
-
-    @classmethod
-    def checkDevice(cls, device, maxtime=10, verbose=False):
-        """ waits for tango device
-
-        :param device: tango device name
-        :type device: :class:`PyTango.DeviceProxy`
-        :param maxtime: maximal time in sec
-        :type maxtime: :obj:`float`
-        :param verbose: verbose mode
-        :type verbose: :obj:`bool`
-        :returns: if tango device ready
-        :rtype: :obj:`bool`
-        """
-        maxcnt = int(maxtime * 100)
-        found = False
-        cnt = 0
-        while not found and cnt < maxcnt:
-            try:
-                if verbose:
-                    sys.stdout.write(".")
-                time.sleep(0.01)
-                device.ping()
-                device.state()
-                found = True
-                if verbose:
-                    print("%s: %s is working" % (cnt, device))
-            except Exception as e:
-                if verbose:
-                    print(str(e))
-                found = False
-            cnt += 1
-        return found
+        errs = [res.errors for res in self.__results]
+        return np.sum(errs)

@@ -200,11 +200,11 @@ def main():
 
     headers = [
         "Run no.",
-        "Sum counts [call]", "error [call]",
-        "Sum Speed [call/s]", "error [call/s]",
-        "Counts [call]", "error [call]",
-        "Speed [call/s]", "error [call/s]",
-        "No. ", "  Time [s]  ", "error [s]"
+        "Sum counts [call]", "SD [call]",
+        "Sum Speed [call/s]", "SD [call/s]",
+        "Counts [call]", "SD [call]",
+        "Speed [call/s]", "SD [call/s]",
+        "No. ", "  Time [s]  ", "SD [s]", " Errors "
     ]
 
     if options.csvfile:
@@ -224,12 +224,13 @@ def main():
         out = bm.output(False)
         record = [
             str(i),
-            out["sumcounts"], out["err_sumcounts"],
-            out["sumspeed"], out["err_sumspeed"],
-            out["counts"], out["err_counts"],
-            out["speed"], out["err_speed"],
+            out["sumcounts"], out["sd_sumcounts"],
+            out["sumspeed"], out["sd_sumspeed"],
+            out["counts"], out["sd_counts"],
+            out["speed"], out["sd_speed"],
             cl,
-            out["time"], out["err_time"]
+            out["time"], out["sd_time"],
+            out["error_sum"]
         ]
         rst.printLine(record)
         if options.csvfile:

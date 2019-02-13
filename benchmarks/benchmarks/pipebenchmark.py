@@ -30,8 +30,6 @@ from multiprocessing import Process, Queue
 from . import release
 from . import utils
 
-TIMEOUTS = False
-
 
 class WriteWorker(Process):
     """ write worker instance
@@ -73,28 +71,25 @@ class WriteWorker(Process):
         # : (:obj:`int`) counter
         self.__counter = 0
         # : (:obj:`int`) error counter
-        self.__error = 0
+        self.__errors = 0
 
     def run(self):
         """ worker thread
         """
         self.__proxy = PyTango.DeviceProxy(self.__device)
-        if TIMEOUTS:
-            if not utils.Starter.checkDevice(self.__proxy):
-                raise Exception(
-                    "Device %s connection failed" % self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
             try:
                 self.__proxy.write_pipe(self.__pipe, self.__value)
             except Exception:
-                self.__error += 1
+                self.__errors += 1
             else:
-                etime = time.time()
                 self.__counter += 1
+            etime = time.time()
         self.__qresult.put(
-            utils.Result(self.__wid, self.__counter, etime - stime))
+            utils.Result(self.__wid, self.__counter, etime - stime,
+                         self.__errors))
 
 
 class ReadWorker(Process):
@@ -133,7 +128,7 @@ class ReadWorker(Process):
         # : (:obj:`int`) counter
         self.__counter = 0
         # : (:obj:`int`) error counter
-        self.__error = 0
+        self.__errors = 0
 
     def run(self):
         """ worker thread
@@ -145,12 +140,13 @@ class ReadWorker(Process):
             try:
                 self.__proxy.read_pipe(self.__pipe)
             except Exception:
-                self.__error += 1
+                self.__errors += 1
             else:
-                etime = time.time()
                 self.__counter += 1
+            etime = time.time()
         self.__qresult.put(
-            utils.Result(self.__wid, self.__counter, etime - stime))
+            utils.Result(self.__wid, self.__counter, etime - stime,
+                         self.__errors))
 
 
 class WritePipeBenchmark(utils.Benchmark):
@@ -337,11 +333,11 @@ def main(**kargs):
 
     headers = [
         "Run no.",
-        "Sum counts [write]", "error [write]",
-        "Sum Speed [write/s]", "error [write/s]",
-        "Counts [write]", "error [write]",
-        "Speed [write/s]", "error [write/s]",
-        "No. ", "  Time [s]  ", "error [s]"
+        "Sum counts [write]", "SD [write]",
+        "Sum Speed [write/s]", "SD [write/s]",
+        "Counts [write]", "SD [write]",
+        "Speed [write/s]", "SD [write/s]",
+        "No. ", "  Time [s]  ", "  SD [s]  ", " Errors "
     ]
 
     if options.csvfile:
@@ -361,12 +357,13 @@ def main(**kargs):
         out = bm.output(False)
         record = [
             str(i),
-            out["sumcounts"], out["err_sumcounts"],
-            out["sumspeed"], out["err_sumspeed"],
-            out["counts"], out["err_counts"],
-            out["speed"], out["err_speed"],
+            out["sumcounts"], out["sd_sumcounts"],
+            out["sumspeed"], out["sd_sumspeed"],
+            out["counts"], out["sd_counts"],
+            out["speed"], out["sd_speed"],
             cl,
-            out["time"], out["err_time"]
+            out["time"], out["sd_time"],
+            out["error_sum"]
         ]
         rst.printLine(record)
         if options.csvfile:
@@ -376,11 +373,11 @@ def main(**kargs):
 
     headers = [
         "Run no.",
-        "Sum counts [read]", "error [read]",
-        "Sum Speed [read/s]", "error [read/s]",
-        "Counts [read]", "error [read]",
-        "Speed [read/s]", "error [read/s]",
-        "No. ", "  Time [s]  ", "error [s]"
+        "Sum counts [read]", "SD [read]",
+        "Sum Speed [read/s]", "SD [read/s]",
+        "Counts [read]", "SD [read]",
+        "Speed [read/s]", "SD [read/s]",
+        "No. ", "  Time [s]  ", "  SD [s]  ", " Errors "
     ]
 
     if options.csvfile:
@@ -396,12 +393,13 @@ def main(**kargs):
         out = bm.output(False)
         record = [
             str(i),
-            out["sumcounts"], out["err_sumcounts"],
-            out["sumspeed"], out["err_sumspeed"],
-            out["counts"], out["err_counts"],
-            out["speed"], out["err_speed"],
+            out["sumcounts"], out["sd_sumcounts"],
+            out["sumspeed"], out["sd_sumspeed"],
+            out["counts"], out["sd_counts"],
+            out["speed"], out["sd_speed"],
             cl,
-            out["time"], out["err_time"]
+            out["time"], out["sd_time"],
+            out["error_sum"]
         ]
         rst.printLine(record)
         if options.csvfile:
