@@ -578,8 +578,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         tbr2 = time.time()
         tsr = self.proxy.TimeSinceReset
         tar2 = time.time()
-        self.assertTrue(tbr2 - tar1 < tsr)
-        self.assertTrue(tar2 - tbr1 > tsr)
+        self.assertTrue(tbr2 - tar1 <= tsr)
+        self.assertTrue(tar2 - tbr1 >= tsr)
 
     def test_BenchmarkSpectrumAttribute(self):
         """Test for BenchmarkSpectrumAttribute"""
