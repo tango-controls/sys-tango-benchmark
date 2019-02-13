@@ -40,6 +40,14 @@ sys.path.insert(0, os.path.abspath(path))
 PY3 = (sys.version_info > (3,))
 
 
+def cb_tango(*args):
+    """ tango callback
+    """
+    event_data = args[0]
+    if event_data.err:
+        print(event_data.errors)
+
+
 # Device test case
 class PyBenchmarkTargetDeviceTest(unittest.TestCase):
     """Test case for packet generation."""
@@ -616,6 +624,48 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                 self.assertEqual(wvl.shape[1], len(rvl[0]))
                 for i in range(wvl.shape[0]):
                     self.assertEqual(list(wvl[i, :]), list(rvl[i]))
+
+    def test_BenchmarkScalarAttribute_event(self):
+        """Test for BenchmarkScalarAttribute event"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkScalarAttribute",
+            PyTango.EventType.CHANGE_EVENT,
+            cb_tango)
+
+        time.sleep(0.1)
+        self.assertTrue(isinstance(id_, int))
+        self.proxy.unsubscribe_event(id_)
+
+    def test_BenchmarkImageAttribute_event(self):
+        """Test for BenchmarkImageAttribute event"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkImageAttribute",
+            PyTango.EventType.CHANGE_EVENT,
+            cb_tango)
+
+        time.sleep(0.1)
+        self.assertTrue(isinstance(id_, int))
+        self.proxy.unsubscribe_event(id_)
+
+    def test_BenchmarkSpectrumAttribute_event(self):
+        """Test for BenchmarkSpectrumAttribute event"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkSpectrumAttribute",
+            PyTango.EventType.CHANGE_EVENT,
+            cb_tango)
+
+        time.sleep(0.1)
+        self.assertTrue(isinstance(id_, int))
+        self.proxy.unsubscribe_event(id_)
 
 
 def main():
