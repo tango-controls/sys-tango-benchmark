@@ -87,8 +87,8 @@ class Worker(Process):
             except Exception:
                 self.__errors += 1
             else:
-                etime = time.time()
                 self.__counter += 1
+            etime = time.time()
         self.__qresult.put(
             utils.Result(self.__wid, self.__counter, etime - stime,
                          self.__errors))

@@ -100,8 +100,8 @@ class Worker(Process):
             except Exception:
                 self.__errors += 1
             else:
-                etime = time.time()
                 self.__counter += 1
+            etime = time.time()
         for id_ in ids:
             self.__proxy.unsubscribe_event(id_)
         self.__qresult.put(

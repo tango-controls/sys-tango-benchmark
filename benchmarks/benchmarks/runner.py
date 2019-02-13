@@ -24,6 +24,7 @@ import yaml
 import sys
 import os
 import time
+from multiprocessing import Queue
 
 from argparse import RawTextHelpFormatter
 
@@ -103,10 +104,14 @@ def main():
         "pipebenchmark": pipebenchmark,
     }
 
-    starter = utils.Starter()
-    for device in devices:
-        starter.register(**device)
-        starter.launch(**device)
+    stqueue = Queue()
+    starter = utils.Starter(devices, stqueue)
+    starter.start()
+    starter.join()
+    started = stqueue.get(block=False)
+    # for device in devices:
+    #     starter.register(**device)
+    #     starter.launch(**device)
 
     # without it we gets Timeout errors
     time.sleep(2)
@@ -116,8 +121,10 @@ def main():
         if script.lower() in scripts.keys():
             scripts[script].main(**bmk)
 
-    starter.stopServers()
-    starter.unregisterServers()
+    if started:
+        stoper = utils.Stoper(*started)
+        stoper.start()
+        stoper.join()
 
 
 if __name__ == "__main__":
