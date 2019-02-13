@@ -1,13 +1,13 @@
 - target_device: test/pybenchmarktarget/01
   device_class: PyBenchmarkTarget
-  server_instance: PyBenchmarkTarget/test
+  server_instance: PyBenchmarkTarget/rtest
   # host: localhost
 - target_device: test/cppbenchmarktarget/01
   device_class: CppBenchmarkTarget
-  server_instance: CppBenchmarkTarget/test
+  server_instance: CppBenchmarkTarget/rtest
   # host: localhost
 - target_device: test/javabenchmarktarget/01
   device_class: JavaBenchmarkTarget
-  server_instance: JavaBenchmarkTarget/test
+  server_instance: JavaBenchmarkTarget/rtest
   # host: localhost
 

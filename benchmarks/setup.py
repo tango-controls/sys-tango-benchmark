@@ -88,12 +88,12 @@ SETUPDATA = dict(
     install_requires=install_requires,
     entry_points={
         'console_scripts': [
-            'pipebenchmark = benchmarks.pipebenchmark:main',
-            'readbenchmark = benchmarks.readbenchmark:main',
-            'writebenchmark = benchmarks.writebenchmark:main',
-            'eventbenchmark = benchmarks.eventbenchmark:main',
-            'cmdbenchmark = benchmarks.cmdbenchmark:main',
-            'benchmarkrunner = benchmarks.runner:main',
+            'tg_pipebenchmark = benchmarks.pipebenchmark:main',
+            'tg_readbenchmark = benchmarks.readbenchmark:main',
+            'tg_writebenchmark = benchmarks.writebenchmark:main',
+            'tg_eventbenchmark = benchmarks.eventbenchmark:main',
+            'tg_cmdbenchmark = benchmarks.cmdbenchmark:main',
+            'tg_benchmarkrunner = benchmarks.runner:main',
         ]},
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',

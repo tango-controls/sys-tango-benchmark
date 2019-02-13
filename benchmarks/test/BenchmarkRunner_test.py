@@ -110,7 +110,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
 
-        vl, er = self.runscript(['benchmarkrunner'])
+        vl, er = self.runscript(['tg_benchmarkrunner'])
 
         self.assertEqual('', er)
         self.assertTrue(vl)

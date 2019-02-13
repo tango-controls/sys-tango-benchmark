@@ -23,7 +23,7 @@
   period: 1
 
 
-- server_instance: CppBenchmarkTarget/test
+- server_instance: CppBenchmarkTarget/rtest
   device_class: CppBenchmarkTarget
   target_device: test/cppbenchmarktarget/01
   # host: localhost:10000
