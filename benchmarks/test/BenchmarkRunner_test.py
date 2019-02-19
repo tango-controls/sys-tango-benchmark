@@ -27,11 +27,6 @@ import sys
 import os
 import unittest
 import datetime
-# import subprocess
-# import numpy as np
-# import time
-# import PyTango
-# import docutils.nodes
 import docutils.parsers.rst
 import docutils.utils
 import dateutil.parser

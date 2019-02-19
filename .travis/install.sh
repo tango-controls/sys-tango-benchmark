@@ -38,10 +38,10 @@ fi
 
 if [ "$2" = "2" ]; then
     echo "install python-pytango"
-    docker exec -it --user root s2i /bin/sh -c '. /etc/tangorc; export TANGO_HOST;python -c "import PyTango;PyTango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"'
+    docker exec -it --user root s2i /bin/sh -c '. /etc/tangorc; export TANGO_HOST;python -c "import tango;tango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"'
 else
     echo "install python-pytango"
-    docker exec -it --user root s2i /bin/sh -c '. /etc/tangorc; export TANGO_HOST;python3 -c "import PyTango;PyTango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"'
+    docker exec -it --user root s2i /bin/sh -c '. /etc/tangorc; export TANGO_HOST;python3 -c "import tango;tango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"'
 fi
 if [ "$?" -ne "0" ]
 then
