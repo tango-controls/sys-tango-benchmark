@@ -29,7 +29,7 @@ import subprocess
 import numpy as np
 import time
 import unittest
-import PyTango
+import tango
 
 
 # Path
@@ -60,7 +60,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         unittest.TestCase.__init__(self, methodName)
         self.instance = 'TEST'
         self.device = 'test/pybenchmarktarget/000'
-        self.new_device_info_benchmark = PyTango.DbDevInfo()
+        self.new_device_info_benchmark = tango.DbDevInfo()
         self.new_device_info_benchmark._class = "PyBenchmarkTarget"
         self.new_device_info_benchmark.server = "PyBenchmarkTarget/%s" % \
                                                 self.instance
@@ -87,7 +87,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
 
     def setUp(self):
         print("\nsetting up ...")
-        db = PyTango.Database()
+        db = tango.Database()
         db.add_device(self.new_device_info_benchmark)
         db.add_server(
             self.new_device_info_benchmark.server,
@@ -103,9 +103,9 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         while not found and cnt < 1000:
             try:
                 sys.stdout.write(".")
-                dp = PyTango.DeviceProxy(self.new_device_info_benchmark.name)
+                dp = tango.DeviceProxy(self.new_device_info_benchmark.name)
                 time.sleep(0.1)
-                if dp.state() == PyTango.DevState.ON:
+                if dp.state() == tango.DevState.ON:
                     found = True
             except Exception:
                 found = False
@@ -115,7 +115,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
 
     def tearDown(self):
         print("tearing down ...")
-        db = PyTango.Database()
+        db = tango.Database()
         db.delete_server(self.new_device_info_benchmark.server)
 
         if PY3:
@@ -154,7 +154,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         """Test for State"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
-        self.assertEqual(self.proxy.State(), PyTango.DevState.ON)
+        self.assertEqual(self.proxy.State(), tango.DevState.ON)
 
     def test_Status(self):
         """Test for Status"""
@@ -280,17 +280,17 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         wvl = (
             'TestPipeBlob',
             [
-                {'dtype': PyTango._tango.CmdArgType.DevLong64,
+                {'dtype': tango._tango.CmdArgType.DevLong64,
                  'name': 'DevLong64', 'value': 12},
-                {'dtype': PyTango._tango.CmdArgType.DevULong,
+                {'dtype': tango._tango.CmdArgType.DevULong,
                  'name': 'DevULong', 'value': 23},
-                {'dtype': PyTango._tango.CmdArgType.DevVarUShortArray,
+                {'dtype': tango._tango.CmdArgType.DevVarUShortArray,
                  'name': 'DevVarUShortArray',
                  'value': np.array([3, 3, 5, 16], dtype=np.uint16)},
-                {'dtype': PyTango._tango.CmdArgType.DevVarDoubleArray,
+                {'dtype': tango._tango.CmdArgType.DevVarDoubleArray,
                  'name': 'DevVarDoubleArray',
                  'value': np.array([8.12, 3.22, 54.3])},
-                {'dtype': PyTango._tango.CmdArgType.DevBoolean,
+                {'dtype': tango._tango.CmdArgType.DevBoolean,
                  'name': 'DevBoolean', 'value': False}
             ]
         )
@@ -495,11 +495,11 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertEqual(self.proxy.PipeWritesCount, 0)
         vl = (
             'TestBlob', [
-                {'dtype': PyTango._tango.CmdArgType.DevLong64,
+                {'dtype': tango._tango.CmdArgType.DevLong64,
                  'name': 'DevLong64', 'value': 12},
-                {'dtype': PyTango._tango.CmdArgType.DevULong,
+                {'dtype': tango._tango.CmdArgType.DevULong,
                  'name': 'DevULong', 'value': 23},
-                {'dtype': PyTango._tango.CmdArgType.DevBoolean,
+                {'dtype': tango._tango.CmdArgType.DevBoolean,
                  'name': 'DevBoolean', 'value': False}]
         )
 
@@ -632,7 +632,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
 
         id_ = self.proxy.subscribe_event(
             "BenchmarkScalarAttribute",
-            PyTango.EventType.CHANGE_EVENT,
+            tango.EventType.CHANGE_EVENT,
             cb_tango)
 
         time.sleep(0.1)
@@ -646,7 +646,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
 
         id_ = self.proxy.subscribe_event(
             "BenchmarkImageAttribute",
-            PyTango.EventType.CHANGE_EVENT,
+            tango.EventType.CHANGE_EVENT,
             cb_tango)
 
         time.sleep(0.1)
@@ -660,7 +660,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
 
         id_ = self.proxy.subscribe_event(
             "BenchmarkSpectrumAttribute",
-            PyTango.EventType.CHANGE_EVENT,
+            tango.EventType.CHANGE_EVENT,
             cb_tango)
 
         time.sleep(0.1)

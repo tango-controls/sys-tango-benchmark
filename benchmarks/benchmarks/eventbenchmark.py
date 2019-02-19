@@ -20,7 +20,7 @@
 
 import argparse
 import sys
-import PyTango
+import tango
 import time
 
 from argparse import RawTextHelpFormatter
@@ -67,7 +67,7 @@ class Worker(Process):
         self.__device = device
         #: (:obj:`str`) device attribute name
         self.__attribute = attribute
-        # : (:class:`PyTango.AttributeProxy`) attribute proxy
+        # : (:class:`tango.AttributeProxy`) attribute proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
         self.__qresult = qresult
@@ -79,7 +79,9 @@ class Worker(Process):
     def run(self):
         """ worker thread
         """
-        self.__proxy = PyTango.DeviceProxy(self.__device)
+        if hasattr(tango.ApiUtil, 'cleanup'):
+            tango.ApiUtil.cleanup()
+        self.__proxy = tango.DeviceProxy(self.__device)
 
         stime = time.time()
         etime = stime
@@ -88,7 +90,7 @@ class Worker(Process):
             try:
                 id_ = self.__proxy.subscribe_event(
                     self.__attribute,
-                    PyTango.EventType.CHANGE_EVENT,
+                    tango.EventType.CHANGE_EVENT,
                     cb_tango)
                 ids.append(id_)
             except Exception:

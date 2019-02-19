@@ -26,7 +26,7 @@
 import sys
 import os
 import unittest
-import PyTango
+import tango
 # from os.path import expanduser
 from PyBenchmarkTarget_test import PyBenchmarkTargetDeviceTest
 
@@ -51,7 +51,7 @@ class JavaBenchmarkTargetDeviceTest(PyBenchmarkTargetDeviceTest):
         PyBenchmarkTargetDeviceTest.__init__(self, methodName)
         self.instance = 'TEST'
         self.device = 'test/javabenchmarktarget/000'
-        self.new_device_info_benchmark = PyTango.DbDevInfo()
+        self.new_device_info_benchmark = tango.DbDevInfo()
         self.new_device_info_benchmark._class = "JavaBenchmarkTarget"
         self.new_device_info_benchmark.server = "JavaBenchmarkTarget/%s" % \
                                                 self.instance

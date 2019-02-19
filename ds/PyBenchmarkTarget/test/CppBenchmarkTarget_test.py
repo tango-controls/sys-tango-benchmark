@@ -26,7 +26,7 @@
 import sys
 import os
 import unittest
-import PyTango
+import tango
 from os.path import expanduser
 from PyBenchmarkTarget_test import PyBenchmarkTargetDeviceTest
 
@@ -51,7 +51,7 @@ class CppBenchmarkTargetDeviceTest(PyBenchmarkTargetDeviceTest):
         PyBenchmarkTargetDeviceTest.__init__(self, methodName)
         self.instance = 'TEST'
         self.device = 'test/cppbenchmarktarget/000'
-        self.new_device_info_benchmark = PyTango.DbDevInfo()
+        self.new_device_info_benchmark = tango.DbDevInfo()
         self.new_device_info_benchmark._class = "CppBenchmarkTarget"
         self.new_device_info_benchmark.server = "CppBenchmarkTarget/%s" % \
                                                 self.instance

@@ -19,7 +19,7 @@
 #
 
 import time
-import PyTango
+import tango
 import socket
 import sys
 import whichcraft
@@ -49,11 +49,13 @@ class Starter(Process):
     def run(self):
         """ worker thread
         """
-        self.__db = PyTango.Database()
+        if hasattr(tango.ApiUtil, 'cleanup'):
+            tango.ApiUtil.cleanup()
+        self.__db = tango.Database()
         starters = self.__db.get_device_exported_for_class(
             "Starter").value_string
         try:
-            self.__starter = PyTango.DeviceProxy(starters[0])
+            self.__starter = tango.DeviceProxy(starters[0])
         except Exception:
             self.__starter = None
 
@@ -82,7 +84,7 @@ class Starter(Process):
         servers = self.__db.get_server_list(server_instance).value_string
         devices = self.__db.get_device_exported_for_class(
             device_class).value_string
-        new_device = PyTango.DbDevInfo()
+        new_device = tango.DbDevInfo()
         new_device._class = device_class
         new_device.server = server_instance
         new_device.name = target_device
@@ -135,12 +137,12 @@ class Starter(Process):
         #     running = self.__starter.DevGetRunningServers(True)
         found = False
         found = self.checkDevice(
-            PyTango.DeviceProxy(target_device), 1)
+            tango.DeviceProxy(target_device), 1)
 
         if not found and server_instance not in running:
             try:
                 self.__starter.DevStart(server_instance)
-                if not self.checkDevice(PyTango.DeviceProxy(
+                if not self.checkDevice(tango.DeviceProxy(
                         target_device)):
                     raise Exception(
                         "Server %s start failed" % server_instance)
@@ -201,7 +203,7 @@ class Starter(Process):
                 pass
         if verbose:
             sys.stdout.write("waiting for server")
-        if not self.checkDevice(PyTango.DeviceProxy(
+        if not self.checkDevice(tango.DeviceProxy(
                 target_device)):
             raise Exception("Server %s start failed" % server_instance)
         if not found:
@@ -212,7 +214,7 @@ class Starter(Process):
         """ waits for tango device
 
         :param device: tango device name
-        :type device: :class:`PyTango.DeviceProxy`
+        :type device: :class:`tango.DeviceProxy`
         :param maxtime: maximal time in sec
         :type maxtime: :obj:`float`
         :param verbose: verbose mode
@@ -256,11 +258,13 @@ class Stoper(Process):
     def run(self):
         """ worker thread
         """
-        self.__db = PyTango.Database()
+        if hasattr(tango.ApiUtil, 'cleanup'):
+            tango.ApiUtil.cleanup()
+        self.__db = tango.Database()
         starters = self.__db.get_device_exported_for_class(
             "Starter").value_string
         try:
-            self.__starter = PyTango.DeviceProxy(starters[0])
+            self.__starter = tango.DeviceProxy(starters[0])
         except Exception:
             self.__starter = None
         self.stopServers()

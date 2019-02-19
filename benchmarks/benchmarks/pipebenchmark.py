@@ -20,7 +20,7 @@
 
 import argparse
 import sys
-import PyTango
+import tango
 import time
 import numpy as np
 
@@ -64,7 +64,7 @@ class WriteWorker(Process):
         self.__pipe = pipe
         #: (:obj:`float` or :class:`np.array`) device pipe value
         self.__value = value
-        # : (:class:`PyTango.PipeProxy`) pipe proxy
+        # : (:class:`tango.PipeProxy`) pipe proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
         self.__qresult = qresult
@@ -76,7 +76,9 @@ class WriteWorker(Process):
     def run(self):
         """ worker thread
         """
-        self.__proxy = PyTango.DeviceProxy(self.__device)
+        if hasattr(tango.ApiUtil, 'cleanup'):
+            tango.ApiUtil.cleanup()
+        self.__proxy = tango.DeviceProxy(self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
@@ -121,7 +123,7 @@ class ReadWorker(Process):
         self.__device = device
         #: (:obj:`str`) device pipe name
         self.__pipe = pipe
-        # : (:class:`PyTango.PipeProxy`) pipe proxy
+        # : (:class:`tango.PipeProxy`) pipe proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
         self.__qresult = qresult
@@ -133,7 +135,9 @@ class ReadWorker(Process):
     def run(self):
         """ worker thread
         """
-        self.__proxy = PyTango.DeviceProxy(self.__device)
+        if hasattr(tango.ApiUtil, 'cleanup'):
+            tango.ApiUtil.cleanup()
+        self.__proxy = tango.DeviceProxy(self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:

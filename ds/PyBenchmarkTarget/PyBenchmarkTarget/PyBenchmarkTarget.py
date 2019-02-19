@@ -26,12 +26,12 @@
 Benchmark device for counting attribute, command and pipe calls
 """
 
-import PyTango
-from PyTango import DebugIt
-from PyTango.server import run
-from PyTango.server import Device, DeviceMeta
-from PyTango.server import attribute, command, pipe
-from PyTango import AttrWriteType, PipeWriteType
+import tango
+from tango import DebugIt
+from tango.server import run
+from tango.server import Device, DeviceMeta
+from tango.server import attribute, command, pipe
+from tango import AttrWriteType, PipeWriteType
 import numpy as np
 import time
 
@@ -201,7 +201,7 @@ class PyBenchmarkTarget(Device):
 
     @DebugIt()
     def dev_state(self):
-        argout = PyTango.DevState.ON
+        argout = tango.DevState.ON
         return argout
 
     @DebugIt()

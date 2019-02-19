@@ -20,7 +20,7 @@
 
 import argparse
 import sys
-import PyTango
+import tango
 import time
 import numpy as np
 
@@ -64,7 +64,7 @@ class Worker(Process):
         self.__attribute = attribute
         #: (:obj:`float` or :class:`np.array`) device attribute value
         self.__value = value
-        # : (:class:`PyTango.AttributeProxy`) attribute proxy
+        # : (:class:`tango.AttributeProxy`) attribute proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
         self.__qresult = qresult
@@ -76,7 +76,9 @@ class Worker(Process):
     def run(self):
         """ worker thread
         """
-        self.__proxy = PyTango.DeviceProxy(self.__device)
+        if hasattr(tango.ApiUtil, 'cleanup'):
+            tango.ApiUtil.cleanup()
+        self.__proxy = tango.DeviceProxy(self.__device)
         stime = time.time()
         etime = stime
         while etime - stime < self.__period:
