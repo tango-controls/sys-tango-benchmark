@@ -1,20 +1,18 @@
 language: python
-sudo: required
-dist: trusty
-group: deprecated-2017Q2
+dist: xenial
 
 env:
   - TEST="flake8"
-  - OS=debian10 PY=3 TEST="devices"
-  - OS=debian10 PY=2 TEST="devices"
-  - OS=ubuntu18.04 PY=2 TEST="devices"
-  - OS=ubuntu18.04 PY=3 TEST="devices"
-  - OS=debian10 PY=3 TEST="runner"
-  - OS=debian10 PY=2 TEST="runner"
-  - OS=ubuntu18.04 PY=2 TEST="runner"
-  - OS=ubuntu18.04 PY=3 TEST="runner"
-#   - OS=debian9 PY=3 TEST="devices"
-#   - OS=debian9 PY=2 TEST="devices"
+  - OS=debian10 PY=3 TEST=devices
+  - OS=debian10 PY=2 TEST=devices
+  - OS=ubuntu18.04 PY=2 TEST=devices
+  - OS=ubuntu18.04 PY=3 TEST=devices
+  - OS=debian10 PY=3 TEST=runner
+  - OS=debian10 PY=2 TEST=runner
+  - OS=ubuntu18.04 PY=2 TEST=runner
+  - OS=ubuntu18.04 PY=3 TEST=runner
+#   - OS=debian9 PY=3 TEST=devices
+#   - OS=debian9 PY=2 TEST=devices
 
 services:
   - docker

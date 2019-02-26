@@ -84,6 +84,19 @@ then
     exit -1
 fi
 
+docker exec -it --user root s2i chown -R tango:tango .
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+
+docker exec -it --user root s2i chown -R tango:tango benchmarks
+if [ "$?" -ne "0" ]
+then
+    exit -1
+fi
+
+
 echo "install benchmark runner"
 if [ "$2" = "2" ]; then
     docker exec -it --user root s2i /bin/sh -c 'cd benchmarks; python setup.py -q install'
@@ -94,4 +107,3 @@ if [ "$?" -ne "0" ]
 then
     exit -1
 fi
-
