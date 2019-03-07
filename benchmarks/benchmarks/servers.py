@@ -136,14 +136,12 @@ class Starter(Process):
         #     self.__starter.UpdateServersInfo()
         #     running = self.__starter.DevGetRunningServers(True)
         found = False
-        found = self.checkDevice(
-            tango.DeviceProxy(target_device), 1)
+        found = self.checkDevice(target_device, 1)
 
         if not found and server_instance not in running:
             try:
                 self.__starter.DevStart(server_instance)
-                if not self.checkDevice(tango.DeviceProxy(
-                        target_device)):
+                if not self.checkDevice(target_device):
                     raise Exception(
                         "Server %s start failed" % server_instance)
             except Exception:
@@ -203,18 +201,16 @@ class Starter(Process):
                 pass
         if verbose:
             sys.stdout.write("waiting for server")
-        if not self.checkDevice(tango.DeviceProxy(
-                target_device)):
+        if not self.checkDevice(target_device):
             raise Exception("Server %s start failed" % server_instance)
         if not found:
             self.__launched.append(server_instance)
 
-    @classmethod
-    def checkDevice(cls, device, maxtime=10, verbose=False):
+    def checkDevice(self, dvname, maxtime=10, verbose=False):
         """ waits for tango device
 
-        :param device: tango device name
-        :type device: :class:`tango.DeviceProxy`
+        :param dvname: tango device name
+        :type dvname: :obj:`str`
         :param maxtime: maximal time in sec
         :type maxtime: :obj:`float`
         :param verbose: verbose mode
@@ -229,6 +225,13 @@ class Starter(Process):
             try:
                 if verbose:
                     sys.stdout.write(".")
+                    sys.stdout.flush()
+                exl = self.__db.get_device_exported(dvname)
+                if dvname not in exl.value_string:
+                    time.sleep(0.01)
+                    cnt += 1
+                    continue
+                device = tango.DeviceProxy(dvname)
                 time.sleep(0.01)
                 device.ping()
                 device.state()

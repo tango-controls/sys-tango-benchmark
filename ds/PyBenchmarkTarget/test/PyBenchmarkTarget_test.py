@@ -100,14 +100,22 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
 
         found = False
         cnt = 0
+        dvname = self.new_device_info_benchmark.name
         while not found and cnt < 1000:
             try:
                 sys.stdout.write(".")
-                dp = tango.DeviceProxy(self.new_device_info_benchmark.name)
+                sys.stdout.flush()
+                exl = db.get_device_exported(dvname)
+                if dvname not in exl.value_string:
+                    time.sleep(0.1)
+                    cnt += 1
+                    continue
+                dp = tango.DeviceProxy(dvname)
                 time.sleep(0.1)
                 if dp.state() == tango.DevState.ON:
                     found = True
-            except Exception:
+            except Exception as e:
+                print(str(e))
                 found = False
             cnt += 1
         print("")
