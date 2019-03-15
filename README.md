@@ -6,9 +6,9 @@
 This is a set of tools to test impact of various deployment qualities (like number of concurrent connections) 
 on a tango system efficiency. 
 
-The suit consists of the following components:
+The suite consists of the following components:
 
-1. Target device servers providing C++, Java and Python device classes. These device classes provide 
+1. Target device servers, which are providing C++, Java and Python device classes. These device classes provide 
    mocking interface along with counting facility (to measure operations).
 
 2. Set of benchmark scripts. These scripts run specific benchmark tests and produce 
@@ -56,7 +56,7 @@ For client side (benchmark runners):
         - `make all`
 
 4. Make sure that the installed device servers are in *Starter* paths (if you use Starter) or in *PATH*. 
-   The benchmark runner with try to either run the servers with the *Starter* service or as command line processes.
+   The benchmark runner will try to either run the servers with the *Starter* service or as command line processes.
       
 5. Install benchmarks from `benchmarks` folder. 
     - Go to this folder: `cd benchmarks`
@@ -64,7 +64,7 @@ For client side (benchmark runners):
  
 ### Running a default benchmark
 
-The benchmark runner (`tg_benchmarkrunner`) uses a configuration scripts provided with `-c` command line options. 
+The benchmark runner (`tg_benchmarkrunner`) uses a configuration script provided with `-c` command line options. 
 The suite comes with set of preconfigured tests (see the *benchmarks/config_examples* folder). 
 - Go to the examples folder: `cd benchmarks/config_examples`
 - Run the benchmark: `tg_benchmarkrunner -c default.json`
@@ -73,8 +73,8 @@ The suite comes with set of preconfigured tests (see the *benchmarks/config_exam
 
 ### Available benchmarks
 
-You may run an individual benchmarks from a command line. Each benchmark accepts set of command-line parameters
-defining scope of tests. Please use `--help` option to list them. Below is the list of available benchmarks. 
+You may run an individual benchmark from a command line. Each benchmark accepts set of command-line parameters
+to define a scope of tests. Please use `--help` option to list them. Below is a list of available benchmarks. 
 
 - `tg_commandbenchmark` performs check if and how a number of simultaneous clients affects command calls speed,
 - `tg_readbenchmark` checks how the number of clients affects attributes read speed. One may chose whether 
@@ -85,25 +85,25 @@ defining scope of tests. Please use `--help` option to list them. Below is the l
   also impact of data size,
 - `tg_eventbanchmark` checks how event subscription time is affected by number of clients.   
 
-Please note, new ones will be provided soon.
+Please note, new ones will be provided soon :).
 
 ### Target devices
 
-However set of target devices is provided, each of benchmark may be run against any device providing suitable
-interface (if means, for example, if benchmark is using an attribute the device should expose at least one attribute). 
+However a set of target devices is provided, a benchmarks may be run against any device providing suitable
+interface (for example, benchmark using an attribute needs a device exposing at least one attribute). 
 The target device name and a subject *attribute* or *command* or *pipe* is configured either in 
-a *configuration file* for the runner or as a command-line for individual benchmark scripts.
+a *configuration file* for the runner or as a command-line options for individual benchmark scripts.
 
 ### The benchmark runner
 
-It is a script which reads a configuration file and run set of benchmarks defined in it. 
+The benchmark runner reads a configuration file and run set of benchmarks defined in it. 
 
 To simplify performing of tests an auto-setup is implemented. The runner first checks if target devices are on-line.
-If these are not running it makes attempt to configure missing devices in the tango database.
-Then, it tries to run them with a *Starter* or from a command line. 
+If these are not running it makes attempt to configure the missing devices in the tango database.
+Then it tries to run them with the *Starter* or from the command line. 
 
 The configuration file allows to define a machine (`host` parameter) on which the certain target device should be run. 
-For remote machines, the auto-setup feature requires them to run a *Starter* device. Of course the target device servers
+For remote machines, the auto-setup feature requires them to run a *Starter* device. Of course, the target device servers
 should be installed on that machine and available to the *Starter*.  
 
 #### Configuration file
@@ -121,6 +121,7 @@ The file is a list of items corresponding to benchmarks to be run as the followi
 }
 ```
 And optionally spec for environment setup (target devices):
+
 ```json
 {
   target_device: name_of_device
@@ -130,7 +131,8 @@ And optionally spec for environment setup (target devices):
 }
 ```
 
-Or YAML example:
+See, a YAML example:
+
 ```yaml
 - benchmark: readbenchmark
   title: "java read benchmark"
