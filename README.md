@@ -50,10 +50,16 @@ For client side (benchmark runners):
         - `pip install .`
     - the C++ target
         - `cd ../CppBenchmarkTarget`
-        - `make all`
+        - `make`
+        - `sudo make install`
     - the Java target
-        - `cd ../JavaBenchmarkTarget/src/main/java`
-        - `make all`
+        - `cd ../JavaBenchmarkTarget`
+        - `mvn clean install`
+        - Copy the startup script to where it can be found by the Starter:
+            - `sudo cp src/scripts/JavaBenchmarkTarget /usr/local/bin/`
+        - Copy the compiled jar file to `$TANGO_ROOT/share/java/`:
+            - `sudo cp target/JavaBenchmarkTarget-1.0.jar /usr/local/share/java/`
+
 
 4. Make sure that the installed device servers are in *Starter* paths (if you use Starter) or in *PATH*. 
    The benchmark runner will try to either run the servers with the *Starter* service or as command line processes.

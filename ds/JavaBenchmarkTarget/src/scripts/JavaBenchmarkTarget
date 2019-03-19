@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [ ! $TANGO_HOST ] && [ -f /etc/tangorc ]; then
+   . /etc/tangorc
+fi
+
+if [ ! $TANGO_ROOT ]; then
+   export TANGO_ROOT=/usr/local
+fi
+
+JAVALIB=$TANGO_ROOT/share/java
+
+JAVA_BENCHMARK_TARGET_SERVER=$JAVALIB/JavaBenchmarkTarget-1.0.jar
+
+CLASSPATH=$JAVALIB/JTango.jar:$JAVALIB/log4j.jar:$JAVALIB/zmq.jar:$JAVA_BENCHMARK_TARGET_SERVER
+export CLASSPATH
+echo "CLASSPATH=$CLASSPATH"
+
+# JAVA_OPTS="-Xmx2G -server -Xshare:off -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow"
+
+java -cp $CLASSPATH -DTANGO_HOST=$TANGO_HOST org.tango.javabenchmarktarget.JavaBenchmarkTarget $1 $2
