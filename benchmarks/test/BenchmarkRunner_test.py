@@ -61,7 +61,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
     def setUp(self):
         print("\nsetting up ...")
-        shutil.copy('test/assets/default.yml','./')
+        shutil.copy('test/assets/default.yml', './')
 
     def tearDown(self):
         print("tearing down ...")
@@ -225,7 +225,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<entry><paragraph>SD [read]</paragraph></entry>'
             '<entry><paragraph>Speed [read/s]</paragraph></entry>'
             '<entry><paragraph>SD [read/s]</paragraph></entry>'
-            '<entry><paragraph>No.</paragraph></entry>'
+            '<entry><paragraph>No. clients</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
             '<entry><paragraph>SD [s]</paragraph></entry>'
             '<entry><paragraph>Errors</paragraph></entry>'
