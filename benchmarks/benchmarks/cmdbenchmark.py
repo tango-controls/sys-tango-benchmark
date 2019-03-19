@@ -206,7 +206,7 @@ def main():
         "Sum Speed [call/s]", "SD [call/s]",
         "Counts [call]", "SD [call]",
         "Speed [call/s]", "SD [call/s]",
-        "No. ", "  Time [s]  ", "SD [s]", " Errors "
+        "No. clients", "  Time [s]  ", "SD [s]", " Errors "
     ]
 
     if options.csvfile:

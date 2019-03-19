@@ -225,8 +225,8 @@ def main(**kargs):
         "Sum counts [read]", "SD [read]",
         "Sum Speed [read/s]", "SD [read/s]",
         "Counts [read]", "SD [read]",
-        "Speed [read/s]", "SD [read/s]",
-        "No. ", "  Time [s]  ", " SD [s]  ", " Errors "
+        "Speed [read]", "SD [read/s]",
+        "No. clients", "  Time [s]  ", " SD [s]  ", " Errors "
     ]
     if options.csvfile:
         csvo = utils.CSVOutput(options.csvfile, options)

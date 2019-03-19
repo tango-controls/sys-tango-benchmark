@@ -1,26 +1,26 @@
 - benchmark: readbenchmark
   title: "java read benchmark"
-  clients: 4,6,8,10
+  clients: 20:201:20
   device: test/javabenchmarktarget/01
-  period: 1
+  period: 10
 
 - benchmark: writebenchmark
   title: "java write benchmark"
-  clients: 4,6,8,10
+  clients: 20:201:20
   device: test/javabenchmarktarget/01
-  period: 1
+  period: 10
 
 - benchmark: eventbenchmark
   title: "java event benchmark"
-  clients: 4,6,8,10
+  clients: 20:201:20
   device: test/javabenchmarktarget/01
-  period: 1
+  period: 10
 
 - benchmark: pipebenchmark
   title: "java pipe benchmark"
-  clients: 4,6,8,10
+  clients: 20:201:20
   device: test/javabenchmarktarget/01
-  period: 1
+  period: 10
 
 
 - server_instance: JavaBenchmarkTarget/rtest
