@@ -2,7 +2,7 @@
   title: "python read benchmark"
   clients: 20:201:20
   device: test/pybenchmarktarget/01
-  period: 100
+  period: 10
 
 - benchmark: writebenchmark
   title: "Python attribute write benchmark"

@@ -118,7 +118,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             self.__class__.__name__, sys._getframe().f_code.co_name))
 
         vl, er = self.runscript(
-            'benchmarkrunner -c config_examples/default.json'.split())
+            'benchmarkrunner -c config_examples/python.json'.split())
 
         self.assertEqual('', er)
         self.assertTrue(vl)

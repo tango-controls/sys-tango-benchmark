@@ -73,7 +73,10 @@ For client side (benchmark runners):
 The benchmark runner (`tg_benchmarkrunner`) uses a configuration script provided with `-c` command line options. 
 The suite comes with set of preconfigured tests (see the *benchmarks/config_examples* folder). 
 - Go to the examples folder: `cd benchmarks/config_examples`
-- Run the benchmark: `tg_benchmarkrunner -c default.json`
+- Run the benchmark: `tg_benchmarkrunner -c default.yml`
+
+Please look on/run with other config files, too. To use a `python_heavy.json` example
+configuration you may need to increase a limit of opened files (`ulimit -n 2048`).
 
 ## Remarks
 
