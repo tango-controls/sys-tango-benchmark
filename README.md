@@ -78,6 +78,28 @@ The suite comes with set of preconfigured tests (see the *benchmarks/config_exam
 Please look on/run with other config files, too. To use a `python_heavy.json` example
 configuration you may need to increase a limit of opened files (`ulimit -n 2048`).
 
+### Output
+
+The benchmarks produce reStructuredText formatted output to stdout 
+and optionally to a CSV file  (if requested with `--csv-file` option).
+The output contains configuration parameters and a result table. 
+
+Below is a description of certain columns of the result table:
+- `Run no.`:  subsequent run (with new input parameters, usually new number of clients),
+- `Sum counts`: total number of operations (reads, writes, subscriptions etc., depending of type of benchmark)
+  counted during period (`Time`) of the run,
+- `Sum speed`: `Sum counts`/`Time`, how fast certain operation can be performed on server side,
+- `Counts`: average number of benchmarked operations within one client, `Sum counts`/`No. clients`,  
+- `Speed`: average speed of clients, `Counts`/`Time`,
+- `No. clients`: number of clients for this run,
+- `Time`: Measured period of the run, 
+- `Errors`: communication errors are counted during period of measurement,
+- `SD`: columns contains standard deviation of a related values. These may be used as indicators of validity of benchmark.
+
+**Hint:** You may generate a pdf file from benchmark results with `rst2pdf`: 
+- Install it if not installed: `pip isntall rst2pdf`,
+- Run a benchmark like the following: `tg_benchmarkrunner -c default.yml | rst2pdf -o benchmark-result.pdf`.
+
 ## Remarks
 
 ### Available benchmarks
@@ -122,22 +144,26 @@ prior attempt to prepare an environment (configure tango database and start a mi
 
 The file is a list of items corresponding to benchmarks to be run as the following (in case of JSON):
 ```json
-{
-  benchmark: name_of_the_benchmark_script
-  commandline_param1_name: commandline_param1_value
-  ....
-  commandline_paramN_name: commandline_paramN_value
-}
+[
+    {
+      benchmark: name_of_the_benchmark_script
+      commandline_param1_name: commandline_param1_value
+      ....
+      commandline_paramN_name: commandline_paramN_value
+    },
+]
 ```
 And optionally spec for environment setup (target devices):
 
 ```json
-{
-  target_device: name_of_device
-  device_class: CppBenchmarkTarget or JavaBenchmarkTarget or PythonBenchmarkTarget or TangoTest
-  server_instance: name_of_server_instance 
-  host: name_of_host_where_the_device_should_be_run  #used only if there is a Starter device running, if not provided default is local
-}
+[
+    {
+      target_device: name_of_device
+      device_class: CppBenchmarkTarget or JavaBenchmarkTarget or PythonBenchmarkTarget or TangoTest
+      server_instance: name_of_server_instance 
+      host: name_of_host_where_the_device_should_be_run  #used only if there is a Starter device running, if not provided default is local
+    } 
+]
 ```
 
 See, a YAML example:
