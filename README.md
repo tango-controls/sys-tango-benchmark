@@ -80,7 +80,7 @@ configuration you may need to increase a limit of opened files (`ulimit -n 2048`
 
 ### Output
 
-The benchmarks produce reStructuredText formatted output to stdout 
+Benchmarks write results to the stdout as reStructuredText 
 and optionally to a CSV file  (if requested with `--csv-file` option).
 The output contains configuration parameters and a result table. 
 
