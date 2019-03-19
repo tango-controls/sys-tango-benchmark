@@ -1,0 +1,29 @@
+- benchmark: readbenchmark
+  title: "java read benchmark"
+  clients: 4,6,8,10
+  device: test/javabenchmarktarget/01
+  period: 1
+
+- benchmark: writebenchmark
+  title: "java write benchmark"
+  clients: 4,6,8,10
+  device: test/javabenchmarktarget/01
+  period: 1
+
+- benchmark: eventbenchmark
+  title: "java event benchmark"
+  clients: 4,6,8,10
+  device: test/javabenchmarktarget/01
+  period: 1
+
+- benchmark: pipebenchmark
+  title: "java pipe benchmark"
+  clients: 4,6,8,10
+  device: test/javabenchmarktarget/01
+  period: 1
+
+
+- server_instance: JavaBenchmarkTarget/rtest
+  device_class: JavaBenchmarkTarget
+  target_device: test/javabenchmarktarget/01
+# host: localhost:10000

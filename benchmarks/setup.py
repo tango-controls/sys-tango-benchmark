@@ -52,6 +52,7 @@ install_requires = [
     'whichcraft',
     'docutils',
     'pytz',
+    'python-dateutil',
     ]
 
 

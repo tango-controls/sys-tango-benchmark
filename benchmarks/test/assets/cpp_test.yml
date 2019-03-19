@@ -1,0 +1,29 @@
+- benchmark: readbenchmark
+  title: "cpp read benchmark"
+  clients: 4,6,8,10
+  device: test/cppbenchmarktarget/01
+  period: 1
+
+- benchmark: writebenchmark
+  title: "cpp write benchmark"
+  clients: 4,6,8,10
+  device: test/cppbenchmarktarget/01
+  period: 1
+
+- benchmark: eventbenchmark
+  title: "cpp event benchmark"
+  clients: 4,6,8,10
+  device: test/cppbenchmarktarget/01
+  period: 1
+
+- benchmark: pipebenchmark
+  title: "cpp pipe benchmark"
+  clients: 4,6,8,10
+  device: test/cppbenchmarktarget/01
+  period: 1
+
+
+- server_instance: CppBenchmarkTarget/rtest
+  device_class: CppBenchmarkTarget
+  target_device: test/cppbenchmarktarget/01
+# host: localhost:10000
