@@ -68,7 +68,7 @@ class Starter(Process):
              tuple(self.__launched)))
 
     def register(self, device_class=None, server_instance=None,
-                 target_device=None, host=None):
+                 target_device=None, host=None, stop=True):
         """create device
 
         :param device_class: device class
@@ -79,6 +79,8 @@ class Starter(Process):
         :type target_device: :obj:`str`
         :param host: host name
         :type host: :obj:`str`
+        :param stop: mark server to be stopped
+        :type stop: :obj:`bool`
         """
 
         servers = self.__db.get_server_list(server_instance).value_string
@@ -94,17 +96,19 @@ class Starter(Process):
                     "Device %s exists in different server" % device_class)
             self.__db.add_device(new_device)
             self.__db.add_server(new_device.server, new_device)
-            self.__registered_servers.append(new_device.server)
-            self.__registered_devices.append(target_device)
+            if stop:
+                self.__registered_servers.append(new_device.server)
+                self.__registered_devices.append(target_device)
         else:
             if target_device not in devices:
                 self.__db.add_device(new_device)
-                self.__registered_devices.append(target_device)
+                if stop:
+                    self.__registered_devices.append(target_device)
             else:
                 pass
 
     def launch(self, device_class=None, server_instance=None,
-               target_device=None, host=None, verbose=False):
+               target_device=None, host=None, stop=True, verbose=False):
         """launch device
 
         :param device_class: device class
@@ -115,6 +119,8 @@ class Starter(Process):
         :type target_device: :obj:`str`
         :param host: host name
         :type host: :obj:`str`
+        :param stop: mark server to be stopped
+        :type stop: :obj:`bool`
         :param verbose: verbose mode
         :type verbose: :obj:`bool`
         """
@@ -204,7 +210,8 @@ class Starter(Process):
         if not self.checkDevice(target_device):
             raise Exception("Server %s start failed" % server_instance)
         if not found:
-            self.__launched.append(server_instance)
+            if stop:
+                self.__launched.append(server_instance)
 
     def checkDevice(self, dvname, maxtime=10, verbose=False):
         """ waits for tango device
