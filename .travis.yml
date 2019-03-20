@@ -27,7 +27,7 @@ before_install:
 before_script:
   - if [ "$TEST" != "flake8" ]; then docker build -t s2i .travis/"${OS}"_py"${PY}"; fi
   - if [ "$TEST" != "flake8" ]; then docker run  --name  s2i -d -it -v `pwd`:/home/tango  s2i; fi
-  - if [ "$TEST" != "flake8" ]; then .travis/install.sh "${OS}" "${PY}"; fi
+  - if [ "$TEST" != "flake8" ]; then travis_wait 30 .travis/install.sh "${OS}" "${PY}"; fi
 
 script:
   - if [ "$TEST" == "devices" ]; then .travis/testdevices.sh ${PY}; fi
