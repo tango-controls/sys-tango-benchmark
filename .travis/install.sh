@@ -14,7 +14,7 @@ then
     exit -1
 fi
 echo "install tango servers"
-docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive;  apt-get -qq update; apt-get -qq install -y tango-starter tango-test liblog4j1.2-java g++ openjdk-8-jdk openjdk-8-jre  libtango-dev liblog4tango-dev maven maven-debian-helper maven-repo-helper dpkg'
+docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive;  apt-get -qq update; apt-get  install -y tango-starter tango-test liblog4j1.2-java g++ openjdk-8-jdk openjdk-8-jre  libtango-dev liblog4tango-dev maven maven-debian-helper maven-repo-helper dpkg'
 if [ "$?" -ne "0" ]
 then
     exit -1
