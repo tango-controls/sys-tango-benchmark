@@ -238,7 +238,7 @@ def main(**kargs):
         "Sum Speed [event/s]", "SD [event/s]",
         "Counts [event]", "SD [event]",
         "Speed [event/s]", "SD [event/s]",
-        "No. ", "  Time [s]  ", "  SD [s]  ", " Errors "
+        "No. clients", "  Time [s]  ", "  SD [s]  ", " Errors "
     ]
 
     if options.csvfile:

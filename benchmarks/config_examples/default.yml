@@ -1,26 +1,27 @@
 - benchmark: readbenchmark
   title: "python read benchmark"
-  clients: 4,6,8,10
+  clients: 20:201:20
   device: test/pybenchmarktarget/01
-  period: 1
+  period: 10
 
 - benchmark: writebenchmark
-  title: "python write benchmark"
-  clients: 4,6,8,10
+  title: "Python attribute write benchmark"
+  clients: 4,8,16,32,64,128
   device: test/pybenchmarktarget/01
-  period: 1
+  period: 10
 
 - benchmark: eventbenchmark
-  title: "python event benchmark"
-  clients: 4,6,8,10
+  title: "Python event subscription benchmark"
+  clients: 20:201:20
   device: test/pybenchmarktarget/01
-  period: 1
+  period: 10
 
 - benchmark: pipebenchmark
-  title: "python pipe benchmark"
-  clients: 4,6,8,10
+  title: "Python pipe read/write benchmark"
+  clients: 20:201:20
   device: test/pybenchmarktarget/01
-  period: 1
+  size: 256,
+  period: 10
 
 
 - server_instance: PyBenchmarkTarget/rtest

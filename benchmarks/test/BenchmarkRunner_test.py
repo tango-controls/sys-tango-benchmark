@@ -25,6 +25,7 @@
 
 import sys
 import os
+import shutil
 import unittest
 import datetime
 import docutils.parsers.rst
@@ -60,9 +61,11 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
     def setUp(self):
         print("\nsetting up ...")
+        shutil.copy('test/assets/default.yml', './')
 
     def tearDown(self):
         print("tearing down ...")
+        os.remove('default.yml')
 
     def runscript(self, argv):
         old_stdout = sys.stdout
@@ -118,7 +121,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             self.__class__.__name__, sys._getframe().f_code.co_name))
 
         vl, er = self.runscript(
-            'benchmarkrunner -c config_examples/default.json'.split())
+            'benchmarkrunner -c test/assets/python_test.json'.split())
 
         self.assertEqual('', er)
         self.assertTrue(vl)
@@ -131,7 +134,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             self.__class__.__name__, sys._getframe().f_code.co_name))
 
         vl, er = self.runscript(
-            'benchmarkrunner -c config_examples/java_test.yml'.split())
+            'benchmarkrunner -c test/assets/java_test.yml'.split())
 
         self.assertEqual('', er)
         self.assertTrue(vl)
@@ -144,7 +147,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             self.__class__.__name__, sys._getframe().f_code.co_name))
 
         vl, er = self.runscript(
-            'benchmarkrunner -c config_examples/cpp_test.yml'.split())
+            'benchmarkrunner -c test/assets/cpp_test.yml'.split())
 
         self.assertEqual('', er)
         self.assertTrue(vl)
@@ -222,7 +225,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<entry><paragraph>SD [read]</paragraph></entry>'
             '<entry><paragraph>Speed [read/s]</paragraph></entry>'
             '<entry><paragraph>SD [read/s]</paragraph></entry>'
-            '<entry><paragraph>No.</paragraph></entry>'
+            '<entry><paragraph>No. clients</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
             '<entry><paragraph>SD [s]</paragraph></entry>'
             '<entry><paragraph>Errors</paragraph></entry>'
@@ -312,7 +315,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<entry><paragraph>SD [write]</paragraph></entry>'
             '<entry><paragraph>Speed [write/s]</paragraph></entry>'
             '<entry><paragraph>SD [write/s]</paragraph></entry>'
-            '<entry><paragraph>No.</paragraph></entry>'
+            '<entry><paragraph>No. clients</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
             '<entry><paragraph>SD [s]</paragraph></entry>'
             '<entry><paragraph>Errors</paragraph></entry>'
@@ -402,7 +405,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<entry><paragraph>SD [event]</paragraph></entry>'
             '<entry><paragraph>Speed [event/s]</paragraph></entry>'
             '<entry><paragraph>SD [event/s]</paragraph></entry>'
-            '<entry><paragraph>No.</paragraph></entry>'
+            '<entry><paragraph>No. clients</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
             '<entry><paragraph>SD [s]</paragraph></entry>'
             '<entry><paragraph>Errors</paragraph></entry>'
@@ -493,7 +496,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<entry><paragraph>SD [write]</paragraph></entry>'
             '<entry><paragraph>Speed [write/s]</paragraph></entry>'
             '<entry><paragraph>SD [write/s]</paragraph></entry>'
-            '<entry><paragraph>No.</paragraph></entry>'
+            '<entry><paragraph>No. clients</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
             '<entry><paragraph>SD [s]</paragraph></entry>'
             '<entry><paragraph>Errors</paragraph></entry>'
@@ -534,7 +537,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<entry><paragraph>SD [read]</paragraph></entry>'
             '<entry><paragraph>Speed [read/s]</paragraph></entry>'
             '<entry><paragraph>SD [read/s]</paragraph></entry>'
-            '<entry><paragraph>No.</paragraph></entry>'
+            '<entry><paragraph>No. clients</paragraph></entry>'
             '<entry><paragraph>Time [s]</paragraph></entry>'
             '<entry><paragraph>SD [s]</paragraph></entry>'
             '<entry><paragraph>Errors</paragraph></entry>'
