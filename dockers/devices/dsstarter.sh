@@ -52,6 +52,6 @@ echo "Starting: PyBenchmarkTarget/docker   - docker/pybenchmarktarget/01"
 echo "          CppBenchmarkTarget/docker  - docker/cppbenchmarktarget/01"
 echo "          JavaBenchmarkTarget/docker - docker/javabenchmarktarget/01"
 cd /home/tango
-su -s /bin/bash -c "tg_benchmarkrunner -c /var/lib/tango/devices.json " -g tango tango > /dev/null
+su -s /bin/bash -c "tg_benchmarkrunner -c /var/lib/tango/config_examples/devices.json " -g tango tango > /dev/null
 echo "TANGO_HOST=$TANGO_HOST"
 su -s /bin/bash -g tango tango
