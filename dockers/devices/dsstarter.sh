@@ -48,9 +48,9 @@ python setup.py -q install
 
 # cd /opt/sys-tango-benchmark/benchmarks
 # python setup.py test
-echo "Starting: PyBenchmarkTarget/docker   - docker/pybenchmarktarget/01"
-echo "          CppBenchmarkTarget/docker  - docker/cppbenchmarktarget/01"
-echo "          JavaBenchmarkTarget/docker - docker/javabenchmarktarget/01"
+echo "Starting: PyBenchmarkTarget/pytarget1     - sys/benchmark/pytarget01"
+echo "          CppBenchmarkTarget/cpptarget1   - sys/benchmark/cpptarget01"
+echo "          JavaBenchmarkTarget/javatarget1 - sys/benchmark/javatarget01"
 cd /home/tango
 su -s /bin/bash -c "tg_benchmarkrunner -c /var/lib/tango/config_examples/devices.json " -g tango tango > /dev/null
 echo "TANGO_HOST=$TANGO_HOST"
