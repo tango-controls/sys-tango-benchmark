@@ -1,0 +1,20 @@
+[
+    {
+        "target_device": "docker/pybenchmarktarget/01",
+        "server_instance": "PyBenchmarkTarget/docker",
+        "device_class": "PyBenchmarkTarget",
+        "stop": false
+    },
+    {
+        "target_device": "docker/cppbenchmarktarget/01",
+        "server_instance": "CppBenchmarkTarget/docker",
+        "device_class": "CppBenchmarkTarget",
+        "stop": false
+    },
+    {
+        "target_device": "docker/javabenchmarktarget/01",
+        "server_instance": "JavaBenchmarkTarget/docker",
+        "device_class": "JavaBenchmarkTarget",
+        "stop": false
+    }
+]
