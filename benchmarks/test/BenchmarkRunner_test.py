@@ -103,7 +103,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         er = mystderr.getvalue()
         return vl, er
 
-    def test_BenchmarkRunnerDefault(self):
+    def ttest_BenchmarkRunnerDefault(self):
         """Test for BenchmarkRunner default"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))

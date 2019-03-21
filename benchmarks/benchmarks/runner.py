@@ -52,7 +52,7 @@ def main():
         help="program version")
     parser.add_argument(
         "-c", "--config", dest="config",
-        default="default.yml",
+        default="config_examples/default.yml",
         help="YAML or JSON file with configuration, default: default.yml\n"
         "Its exmaples can be found in the 'config_examples' directory")
 
@@ -108,7 +108,7 @@ def main():
     starter = servers.Starter(devices, stqueue)
     starter.start()
     starter.join()
-    started = stqueue.get(block=False)
+    tostop = stqueue.get(block=False)
 
     # without it we gets Timeout errors
     time.sleep(2)
@@ -118,8 +118,8 @@ def main():
         if script.lower() in scripts.keys():
             scripts[script].main(**bmk)
 
-    if started:
-        stoper = servers.Stoper(*started)
+    if tostop:
+        stoper = servers.Stoper(*tostop)
         stoper.start()
         stoper.join()
 
