@@ -233,11 +233,12 @@ class Starter(Process):
                 if verbose:
                     sys.stdout.write(".")
                     sys.stdout.flush()
-                exl = self.__db.get_device_exported(dvname)
-                if dvname not in exl.value_string:
-                    time.sleep(0.01)
-                    cnt += 1
-                    continue
+                if hasattr(self, '__Starter_db') and self.__db is not None:
+                    exl = self.__db.get_device_exported(dvname)
+                    if dvname not in exl.value_string:
+                        time.sleep(0.01)
+                        cnt += 1
+                        continue
                 device = tango.DeviceProxy(dvname)
                 time.sleep(0.01)
                 device.ping()
