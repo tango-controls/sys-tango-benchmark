@@ -54,4 +54,5 @@ echo "          JavaBenchmarkTarget/javatarget1 - sys/benchmark/javatarget01"
 cd /home/tango
 su -s /bin/bash -c "tg_benchmarkrunner -c /var/lib/tango/config_examples/devices.json " -g tango tango > /dev/null
 echo "TANGO_HOST=$TANGO_HOST"
-su -s /bin/bash -g tango tango
+#su -s /bin/bash -g tango tango
+exec /opt/waitwithserver.sh PyBenchmarkTarget pytarget1 --verbose 

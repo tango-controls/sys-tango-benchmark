@@ -40,6 +40,7 @@ WORKDIR /home/tango
 RUN /bin/sh -c 'mkdir -p /var/lib/tango/config_examples'
 COPY devices.json /var/lib/tango/config_examples
 COPY dsstarter.sh /opt/
+COPY waitforserver.sh /opt/
 RUN /bin/sh -c 'chown -R tango:tango /var/lib/tango/config_examples'
 RUN /bin/sh -c 'chown -R tango:tango /var/lib/tango/config_examples/devices.json'
 
