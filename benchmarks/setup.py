@@ -27,7 +27,7 @@ import subprocess
 from setuptools import setup
 from distutils.core import Command
 from sphinx.setup_command import BuildDoc
-from benchmarks.release import name, version
+from tangobenchmarks.release import name, version
 
 setup_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -38,10 +38,10 @@ sys.path.insert(0, setup_dir)
 # with open(readme_filename) as file:
 #     long_description = file.read()
 
-release_filename = os.path.join(setup_dir, 'benchmarks', 'release.py')
+release_filename = os.path.join(setup_dir, 'tangobenchmarks', 'release.py')
 exec(open(release_filename).read())
 
-pack = ['benchmarks']
+pack = ['tangobenchmarks']
 
 
 install_requires = [
@@ -81,7 +81,7 @@ class TestCommand(Command):
 SETUPDATA = dict(
     name=name,
     version=version,
-    description='Benchmarks for counting attribute, '
+    description='Tango Benchmarks for counting attribute, '
     'command and pipe calls',
     packages=pack,
     include_package_data=True,
@@ -89,12 +89,12 @@ SETUPDATA = dict(
     install_requires=install_requires,
     entry_points={
         'console_scripts': [
-            'tg_pipebenchmark = benchmarks.pipebenchmark:main',
-            'tg_readbenchmark = benchmarks.readbenchmark:main',
-            'tg_writebenchmark = benchmarks.writebenchmark:main',
-            'tg_eventbenchmark = benchmarks.eventbenchmark:main',
-            'tg_cmdbenchmark = benchmarks.cmdbenchmark:main',
-            'tg_benchmarkrunner = benchmarks.runner:main',
+            'tg_pipebenchmark = tangobenchmarks.pipebenchmark:main',
+            'tg_readbenchmark = tangobenchmarks.readbenchmark:main',
+            'tg_writebenchmark = tangobenchmarks.writebenchmark:main',
+            'tg_eventbenchmark = tangobenchmarks.eventbenchmark:main',
+            'tg_cmdbenchmark = tangobenchmarks.cmdbenchmark:main',
+            'tg_benchmarkrunner = tangobenchmarks.runner:main',
         ]},
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',

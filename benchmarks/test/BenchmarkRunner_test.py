@@ -32,7 +32,7 @@ import docutils.parsers.rst
 import docutils.utils
 import dateutil.parser
 
-from benchmarks import runner
+from tangobenchmarks import runner
 
 try:
     from cStringIO import StringIO
