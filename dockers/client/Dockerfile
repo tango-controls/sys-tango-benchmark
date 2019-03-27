@@ -6,7 +6,7 @@ RUN apt-get -qq update && apt-get -qq install -y libterm-readline-gnu-perl softw
 RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 RUN /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y python-pytango git libgfortran5 libblas3 python-numpy liblapack3 libboost-python1.67.0 python-tz python-setuptools python-sphinx python-whichcraft python-yaml python-docutils python-dateutil'
 
-RUN /bin/sh -c 'cd /opt && git clone https://github.com/tango-controls/sys-tango-benchmark'
+RUN /bin/sh -c 'cd /opt &&  git clone https://github.com/tango-controls/sys-tango-benchmark'
 
 
 # ##########################################

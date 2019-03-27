@@ -26,10 +26,10 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get -qq update && apt-get -qq i
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get -qq update && apt-get -qq install -y  git dbconfig-common dbconfig-mysql libgfortran5 libblas3 python-numpy liblapack3 libboost-python1.67.0
 RUN /bin/sh -c 'mkdir -p /opt'
 RUN /bin/sh -c 'cd /opt && curl  -O https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb'
-RUN /bin/sh -c 'cd /opt && git clone https://github.com/tango-controls/sys-tango-benchmark'
 # --download-only
 
 RUN  apt-get -qq update && apt-get -qq install --download-only tango-db tango-common tango-starter tango-test  libtango-dev liblog4tango-dev python-pytango
+RUN /bin/sh -c 'cd /opt &&  git clone https://github.com/tango-controls/sys-tango-benchmark'
 RUN  /bin/sh -c 'cd /opt/sys-tango-benchmark/ds/JavaBenchmarkTarget; mvn clean install'
 RUN service mysql restart
 
