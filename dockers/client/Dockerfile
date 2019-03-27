@@ -19,6 +19,11 @@ RUN /bin/sh -c 'chown -R tango:tango /var/lib/tango/config_examples/*'
 RUN sed -i 's/config_examples\//\/var\/lib\/tango\/config_examples\//g' /opt/sys-tango-benchmark/benchmarks/benchmarks/runner.py
 RUN /bin/sh -c 'cd /opt/sys-tango-benchmark/benchmarks; python setup.py -q install'
 
+COPY clientstarter.sh /opt/
+COPY waitfordevice.py /opt/
+RUN /bin/sh -c 'chown -R tango:tango /opt/clientstarter.sh'
+RUN /bin/sh -c 'chown -R tango:tango /opt/waitfordevice.py'
+
 USER tango
 
-CMD bash
+ENTRYPOINT ["/opt/clientstarter.sh"]

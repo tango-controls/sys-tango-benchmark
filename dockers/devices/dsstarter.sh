@@ -34,14 +34,16 @@ export TANGO_ROOT=/usr
 # update-alternatives --list java
 update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java > /dev/null
 
+echo "Installing PyBenchmarkTarget ..."
 cd /opt/sys-tango-benchmark/ds/PyBenchmarkTarget; python setup.py -q install
+
+echo "Installing benchmark runner ..."
 cp -r /opt/sys-tango-benchmark/benchmarks/config_examples/* /var/lib/tango/config_examples/
 
 chown -R tango:tango /opt/
 chown -R tango:tango /opt/sys-tango-benchmark/benchmarks
 chown -R tango:tango /var/lib/tango/config_examples/*
 
-echo "Installing benchmark runner ..."
 cd /opt/sys-tango-benchmark/benchmarks
 sed -i 's/config_examples\//\/var\/lib\/tango\/config_examples\//g' benchmarks/runner.py
 python setup.py -q install
@@ -53,6 +55,8 @@ echo "          CppBenchmarkTarget/cpptarget1   - sys/benchmark/cpptarget01"
 echo "          JavaBenchmarkTarget/javatarget1 - sys/benchmark/javatarget01"
 cd /home/tango
 su -s /bin/bash -c "tg_benchmarkrunner -c /var/lib/tango/config_examples/devices.json " -g tango tango > /dev/null
+echo ""
 echo "TANGO_HOST=$TANGO_HOST"
+echo ""
 #su -s /bin/bash -g tango tango
 exec /opt/waitwithserver.sh PyBenchmarkTarget pytarget1 --verbose 

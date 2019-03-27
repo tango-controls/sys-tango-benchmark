@@ -1,22 +1,26 @@
 #!/usr/bin/env python
 
-from benchmarks import servers
+from tangobenchmarks import servers
 import argparse
 
-parser = argparse.ArgumentParser(
-    description="waits till the device is running")
-parser.add_argument(
-    "-d", "--device", dest="device",
-    help="device on which the test will be performed")
-args = parser.parse_args()
-if args.device is None:
-    device = "sys/tg_test/1"
-pydevice = "sys/benchmark/pytarget01"
-cppdevice = "sys/benchmark/cpptarget01"
-javadevice = "sys/benchmark/javatarget01"
+def main():
+    parser = argparse.ArgumentParser(
+        description="waits till the device is running")
+    parser.add_argument('devices', metavar='N', type=str, nargs='*',
+                        help='a list of devices to wait for')
 
-st = servers.Starter(None, None)
-st.checkDevice(device, 120, True)
-st.checkDevice(pydevice, 120)
-st.checkDevice(cppdevice, 120)
-st.checkDevice(javadevice, 120)
+    args = parser.parse_args()
+    if not args.devices:
+        args.devices = ["sys/tg_test/1"]
+
+    st = servers.Starter(None, None)
+
+    for device in args.devices:
+        print("Waiting for: %s" % device)
+        status = st.checkDevice(device, 300)
+        if not status:
+            print("%s is not running" % device)
+    
+
+if __name__ == "__main__":
+    main()
