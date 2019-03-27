@@ -3,6 +3,7 @@
 from tangobenchmarks import servers
 import argparse
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="waits till the device is running")
@@ -20,7 +21,7 @@ def main():
         status = st.checkDevice(device, 300)
         if not status:
             print("%s is not running" % device)
-    
+
 
 if __name__ == "__main__":
     main()
