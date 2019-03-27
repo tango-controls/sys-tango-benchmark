@@ -16,7 +16,7 @@ RUN /bin/sh -c 'mkdir -p /var/lib/tango/config_examples'
 RUN /bin/sh -c 'chown -R tango:tango /var/lib/tango/config_examples'
 RUN cp -r /opt/sys-tango-benchmark/benchmarks/config_examples/* /var/lib/tango/config_examples/
 RUN /bin/sh -c 'chown -R tango:tango /var/lib/tango/config_examples/*'
-RUN sed -i 's/config_examples\//\/var\/lib\/tango\/config_examples\//g' /opt/sys-tango-benchmark/benchmarks/benchmarks/runner.py
+RUN sed -i 's/config_examples\//\/var\/lib\/tango\/config_examples\//g' /opt/sys-tango-benchmark/benchmarks/tangobenchmarks/runner.py
 RUN /bin/sh -c 'cd /opt/sys-tango-benchmark/benchmarks; python setup.py -q install'
 
 COPY clientstarter.sh /opt/

@@ -45,7 +45,7 @@ chown -R tango:tango /opt/sys-tango-benchmark/benchmarks
 chown -R tango:tango /var/lib/tango/config_examples/*
 
 cd /opt/sys-tango-benchmark/benchmarks
-sed -i 's/config_examples\//\/var\/lib\/tango\/config_examples\//g' benchmarks/runner.py
+sed -i 's/config_examples\//\/var\/lib\/tango\/config_examples\//g' tangobenchmarks/runner.py
 python setup.py -q install
 
 # cd /opt/sys-tango-benchmark/benchmarks
