@@ -221,12 +221,12 @@ def main(**kargs):
         options.attribute = "BenchmarkScalarAttribute"
 
     headers = [
-        "Run no.",
+        "Run no.", "No. clients",
         "Sum counts [read]", "SD [read]",
         "Sum Speed [read/s]", "SD [read/s]",
         "Counts [read]", "SD [read]",
         "Speed [read/s]", "SD [read/s]",
-        "No. clients", "  Time [s]  ", " SD [s]  ", " Errors "
+        "  Time [s]  ", " SD [s]  ", " Errors "
     ]
     if options.csvfile:
         csvo = utils.CSVOutput(options.csvfile, options)
@@ -244,12 +244,11 @@ def main(**kargs):
         bm.fetchResults(options.verbose)
         out = bm.output(False)
         record = [
-            str(i),
+            str(i), cl,
             out["sumcounts"], out["sd_sumcounts"],
             out["sumspeed"], out["sd_sumspeed"],
             out["counts"], out["sd_counts"],
             out["speed"], out["sd_speed"],
-            cl,
             out["time"], out["sd_time"],
             out["error_sum"]
         ]
