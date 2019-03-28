@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 #
-# Usage:
+# Usage examples:
 #
-#  run-with-param.sh
+#  run-with-params.sh
 #
-#  run-with-param.sh /my/config/file.yml
+#  run-with-params.sh /var/lib/tango/config_examples/cpp_test.yml
 #
-#  run-with-param.sh /my/config/file.json
+#  run-with-params.sh /var/lib/tango/config_examples/java_test.yml
 #
-#  run-with-param.sh bash
+#  run-with-params.sh /var/lib/tango/config_examples/python_test.json
 #
-#  run-with-param.sh ping
+#  run-with-params.sh bash
 #
-sudo docker-compose up --build --no-start
-sudo docker-compose run  client $@
-sudo docker-compose down
+#  run-with-params.sh ping
+#
+docker-compose build
+docker-compose run  client $@
+docker-compose down

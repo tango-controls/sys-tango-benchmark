@@ -4,4 +4,4 @@
 #
 #  run-default.sh
 #
-sudo docker-compose up --build
+docker-compose up --build
