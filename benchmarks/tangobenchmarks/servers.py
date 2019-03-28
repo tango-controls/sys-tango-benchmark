@@ -247,6 +247,7 @@ class Starter(Process):
                 if verbose:
                     print("%s: %s is working" % (cnt, device))
             except Exception as e:
+                time.sleep(0.01)
                 if verbose:
                     print(str(e))
                 found = False
