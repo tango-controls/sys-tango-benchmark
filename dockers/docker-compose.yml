@@ -5,7 +5,10 @@ services:
     image: i2sd
     environment:
      - TANGO_HOST=localhost:10000
-  i2sc:
+    expose:
+      - "22"
+      - "10000"
+  client:
     build: client
     image: i2sc
     environment:

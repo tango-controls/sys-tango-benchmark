@@ -16,5 +16,11 @@
         "server_instance": "JavaBenchmarkTarget/javatarget1",
         "device_class": "JavaBenchmarkTarget",
         "stop": false
+    },
+    {
+        "target_device": "sys/tg_test/1",
+        "server_instance": "TangoTest/test",
+        "device_class": "TangoTest",
+        "stop": false
     }
 ]

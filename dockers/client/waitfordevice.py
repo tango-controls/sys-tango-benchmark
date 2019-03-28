@@ -10,8 +10,8 @@ def main():
     parser.add_argument('devices', metavar='N', type=str, nargs='*',
                         help='a list of devices to wait for')
     parser.add_argument(
-        '-t', '--timeout', dest='timeout', type=int, default=1000,
-        help='timeout in seconds (default: 1000 s)')
+        '-t', '--timeout', dest='timeout', type=int, default=2000,
+        help='timeout in seconds (default: 2000 s)')
     args = parser.parse_args()
     if not args.devices:
         args.devices = ["sys/tg_test/1"]

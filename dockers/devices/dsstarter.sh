@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 
-echo "Restarting mysql ..."
 export DEBIAN_FRONTEND=noninteractive
+# echo "Restarting mysql ..."
 service mysql restart
+# echo "Restarting ssh ..."
+service ssh restart
 
 echo "Installing tango ..."
 apt-get -qq update > /dev/null
 apt-get install -qq tango-db tango-common tango-starter tango-test libtango-dev liblog4tango-dev libtango-tools python-pytango > /dev/null
 
 service tango-db restart
-service tango-starter restart
 
 # apt-get -qq install -y   python-pytango
 
 . /etc/tangorc; export TANGO_HOST;python -c "import tango;tango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"
+. /etc/tangorc; export TANGO_HOST;python -c "import PyTango; import socket; dv = \"tango/admin/%s\" % socket.gethostname(); db = PyTango.Database(); db.put_device_property(dv, {\"StartDsPath\": [\"/usr/local/bin\", \"/usr/bin\", \"/usr/lib/tango\"]})"
 
+service tango-starter restart
 
 cd /opt ;
 dpkg -i ./libtango-java_9.2.5a-1_all.deb > /dev/null
@@ -30,6 +33,7 @@ mvn clean install -q > /dev/null 2> /dev/null
 cp src/scripts/JavaBenchmarkTarget /usr/bin/
 cp target/JavaBenchmarkTarget-1.0.jar /usr/share/java/
 export TANGO_ROOT=/usr
+sed -i 's/usr\/local/usr/g' /usr/bin/JavaBenchmarkTarget
 
 # update-alternatives --list java
 update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java > /dev/null
