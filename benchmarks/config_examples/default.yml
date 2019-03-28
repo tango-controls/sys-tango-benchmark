@@ -20,7 +20,7 @@
   title: "Python pipe read/write benchmark"
   clients: 20:201:20
   device: test/pybenchmarktarget/01
-  size: 256,
+  size: 256
   period: 10
 
 
