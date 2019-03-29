@@ -1,0 +1,19 @@
+version: '2'
+services:
+  devices:
+    build: devices
+    image: i2sd
+    environment:
+     - TANGO_HOST=localhost:10000
+    expose:
+      - "22"
+      - "10000"
+  client:
+    build: client
+    image: i2sc
+    environment:
+     - TANGO_HOST=devices:10000
+    links:
+     - "devices:localhost"
+    depends_on:
+     - devices
