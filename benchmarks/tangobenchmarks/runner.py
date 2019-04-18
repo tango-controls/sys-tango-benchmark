@@ -81,7 +81,7 @@ def main():
             if filename.endswith(".json"):
                 cflist = json.load(stream)
             else:
-                cflist = yaml.load(stream)
+                cflist = yaml.load(stream, Loader=yaml.FullLoader)
 
         benchmarks = []
         devices = []
