@@ -1,6 +1,15 @@
 FROM debian:buster
 
 MAINTAINER Jan Kotanski <jankotan@gmail.com>
+
+RUN echo '\
+deb http://snapshot.debian.org/archive/debian/20190326T120000Z buster main \n\
+deb http://snapshot.debian.org/archive/debian-security/20190326T120000Z buster/updates main \n\
+deb http://snapshot.debian.org/archive/debian/20190326T120000Z buster-updates main' \
+> /etc/apt/sources.list
+
+RUN echo 'Acquire::Check-Valid-Until "0";' > /etc/apt/apt.conf.d/ignore-valid-until
+
 RUN /bin/bash -c 'echo "deb http://ftp.de.debian.org/debian buster main" > /etc/apt/sources.list.d/debian9de.list'
 RUN apt-get -qq update && apt-get -qq install -y libterm-readline-gnu-perl software-properties-common coreutils gnupg2 procps apt-utils curl apt-transport-https gnupg2 ca-certificates
 RUN apt-get -qq update && apt-get -qq -y dist-upgrade
