@@ -20,14 +20,13 @@
 
 import argparse
 import sys
-import tango
-import time
 
 from argparse import RawTextHelpFormatter
-from multiprocessing import Process, Queue
 
 from . import release
 from . import utils
+
+from multiprocessing import Queue
 
 from tangobenchmarks.client.python.event import Worker
 

@@ -24,7 +24,7 @@
 import os
 import sys
 import subprocess
-from setuptools import setup
+from setuptools import setup, find_packages
 from distutils.core import Command
 from sphinx.setup_command import BuildDoc
 from tangobenchmarks.release import name, version
@@ -41,8 +41,7 @@ sys.path.insert(0, setup_dir)
 release_filename = os.path.join(setup_dir, 'tangobenchmarks', 'release.py')
 exec(open(release_filename).read())
 
-pack = ['tangobenchmarks']
-
+pack = find_packages('.', exclude=['test'])
 
 install_requires = [
     'numpy>1.6.0',

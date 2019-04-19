@@ -1,11 +1,11 @@
 import tango
 import time
-from multiprocessing import Process, Queue
+import multiprocessing
 
 import tangobenchmarks.utils as utils
 
 
-class Worker(Process):
+class Worker(multiprocessing.Process):
     """ read worker instance
     """
 
@@ -24,7 +24,7 @@ class Worker(Process):
         :type qresult: :class:`Queue.Queue` or `queue.queue`
 
         """
-        Process.__init__(self)
+        multiprocessing.Process.__init__(self)
 
         # : (:obj:`int`) worker id
         self.__wid = wid

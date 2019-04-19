@@ -1,6 +1,6 @@
 import tango
 import time
-from multiprocessing import Process, Queue
+import multiprocessing
 
 import tangobenchmarks.utils as utils
 
@@ -13,7 +13,7 @@ def cb_tango(*args):
         print(event_data.errors)
 
 
-class Worker(Process):
+class Worker(multiprocessing.Process):
     """ worker instance
     """
 
@@ -32,7 +32,7 @@ class Worker(Process):
         :type qresult: :class:`Queue.Queue` or `queue.queue`
 
         """
-        Process.__init__(self)
+        multiprocessing.Process.__init__(self)
 
         # : (:obj:`int`) worker id
         self.__wid = wid
