@@ -167,7 +167,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             '<rst-doc>', settings=settings)
         parser.parse(text, document)
 
-        self.assertEqual(len(document), 4)
+        self.assertEqual(len(document), 5)
 
         # python read benchmark
         section = document[0]
@@ -426,13 +426,13 @@ class BenchmarkRunnerTest(unittest.TestCase):
                 self.assertTrue(
                     isinstance(float(tbody[i][j][0][0]), float))
 
-        # python pipe benchmark
+        # python pipe write benchmark
         section = document[3]
         self.assertEqual(section.tagname, 'section')
         self.assertEqual(len(section), 5)
         self.assertEqual(len(section[0]), 1)
         self.assertEqual(
-            str(section[0]), '<title>%s pipe benchmark</title>' % lang)
+            str(section[0]), '<title>%s pipe write benchmark</title>' % lang)
         self.assertEqual(len(section[1]), 1)
         self.assertEqual(
             str(section[1]), '<paragraph>Speed test</paragraph>')
@@ -466,7 +466,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             'size=1'
             '</paragraph>' % dvname
         )
-        self.assertEqual(len(section[4]), 4)
+        self.assertEqual(len(section[4]), 3)
         self.assertEqual(len(section[4][0]), 1)
         self.assertEqual(
             str(section[4][0]),
@@ -517,7 +517,58 @@ class BenchmarkRunnerTest(unittest.TestCase):
                 self.assertTrue(
                     isinstance(float(tbody[i][j][0][0]), float))
 
-        table = section[4][3]
+        # python pipe read benchmark
+        section = document[4]
+        self.assertEqual(section.tagname, 'section')
+        self.assertEqual(len(section), 5)
+        self.assertEqual(len(section[0]), 1)
+        self.assertEqual(
+            str(section[0]), '<title>%s pipe read benchmark</title>' % lang)
+        self.assertEqual(len(section[1]), 1)
+        self.assertEqual(
+            str(section[1]), '<paragraph>Speed test</paragraph>')
+        self.assertEqual(len(section[2]), 2)
+        self.assertEqual(len(section[2][0]), 1)
+        self.assertEqual(
+            str(section[2][0]), '<strong>Date:</strong>')
+        self.assertTrue(isinstance(
+            dateutil.parser.parse(str(section[2][1])),
+            datetime.datetime))
+        self.assertTrue(str(section[3][1]))
+        self.assertEqual(len(section[3]), 3)
+        self.assertEqual(len(section[3][0]), 1)
+        self.assertEqual(
+            str(section[3][0]), '<title>Benchmark setup</title>')
+        self.assertEqual(section[3][1].tagname, 'system_message')
+        self.assertEqual(
+            str(section[3][1][0]),
+            '<paragraph>'
+            'Duplicate implicit target name: "benchmark setup".'
+            '</paragraph>'
+        )
+        self.assertEqual(
+            str(section[3][2]),
+            '<paragraph>'
+            'clients=4,6,8,10\n'
+            'csvfile=\n'
+            'device=%s\n'
+            'period=1\n'
+            'pipe=BenchmarkPipe\n'
+            'size=1'
+            '</paragraph>' % dvname
+        )
+        self.assertEqual(len(section[4]), 3)
+        self.assertEqual(len(section[4][0]), 1)
+        self.assertEqual(
+            str(section[4][0]),
+            '<title>Results</title>')
+        self.assertEqual(section[4][1].tagname, 'system_message')
+        self.assertEqual(
+            str(section[4][1][0]),
+            '<paragraph>Duplicate implicit target name: "results".</paragraph>'
+        )
+
+        table = section[4][2]
         self.assertEqual(table.tagname, 'table')
         self.assertEqual(len(table), 1)
         self.assertEqual(table[0].tagname, 'tgroup')

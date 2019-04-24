@@ -89,7 +89,7 @@ Below is a description of certain columns of the result table:
 - `Sum counts`: total number of operations (reads, writes, subscriptions etc., depending of type of benchmark)
   counted during period (`Time`) of the run,
 - `Sum speed`: `Sum counts`/`Time`, how fast certain operation can be performed on server side,
-- `Counts`: average number of benchmarked operations within one client, `Sum counts`/`No. clients`,  
+- `Counts`: average number of benchmarked operations within one client, `Sum counts`/`No. clients`,
 - `Speed`: average speed of clients, `Counts`/`Time`,
 - `No. clients`: number of clients for this run,
 - `Time`: Measured period of the run, 
@@ -112,9 +112,11 @@ to define a scope of tests. Please use `--help` option to list them. Below is a 
    it reads scalar, spectrum or image attribute,
 - `tg_writebenchmark` checks how the number of clients affects attributes write speed. One may chose whether 
    it reads scalar, spectrum or image attribute,
-- `tg_pipebenchmark` checks how number of clients affects pipe read speed. Size of pipe may be provided to check 
+- `tg_pipe_read_benchmark` checks how number of clients affects pipe read speed. Size of pipe may be provided to check 
   also impact of data size,
-- `tg_eventbanchmark` checks how event subscription time is affected by number of clients.   
+- `tg_pipe_write_benchmark` checks how number of clients affects pipe write speed. Size of pipe may be provided to check 
+  also impact of data size,
+- `tg_eventbanchmark` checks how event subscription time is affected by number of clients.
 
 Please note, new ones will be provided soon :).
 
@@ -135,7 +137,7 @@ Then it tries to run them with the *Starter* or from the command line.
 
 The configuration file allows to define a machine (`host` parameter) on which the certain target device should be run. 
 For remote machines, the auto-setup feature requires them to run a *Starter* device. Of course, the target device servers
-should be installed on that machine and available to the *Starter*.  
+should be installed on that machine and available to the *Starter*.
 
 #### Configuration file
 

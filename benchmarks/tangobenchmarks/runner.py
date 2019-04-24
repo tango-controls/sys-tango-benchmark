@@ -32,7 +32,8 @@ from . import release
 from . import readbenchmark
 from . import writebenchmark
 from . import eventbenchmark
-from . import pipebenchmark
+from . import pipe_read_benchmark
+from . import pipe_write_benchmark
 from . import servers
 
 
@@ -104,7 +105,8 @@ def main():
         "readbenchmark": readbenchmark,
         "writebenchmark": writebenchmark,
         "eventbenchmark": eventbenchmark,
-        "pipebenchmark": pipebenchmark,
+        "pipe_read_benchmark": pipe_read_benchmark,
+        "pipe_write_benchmark": pipe_write_benchmark,
     }
 
     stqueue = Queue()

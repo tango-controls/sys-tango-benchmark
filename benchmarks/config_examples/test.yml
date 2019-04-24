@@ -13,11 +13,15 @@
   clients: 4,6,8,10
   device: p00/pybenchmarktarget/01
 
-- benchmark: pipebenchmark
-  title: "python pipe benchmark"
+- benchmark: pipe_write_benchmark
+  title: "python pipe write benchmark"
   clients: 4,6,8,10
   device: p00/pybenchmarktarget/01
 
+- benchmark: pipe_read_benchmark
+  title: "python pipe read benchmark"
+  clients: 4,6,8,10
+  device: p00/pybenchmarktarget/01
 
 - target_device: p00/pybenchmarktarget/01
   device_class: PyBenchmarkTarget

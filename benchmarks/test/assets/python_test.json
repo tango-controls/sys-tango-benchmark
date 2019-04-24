@@ -4,21 +4,30 @@
      "period": "1",
      "benchmark": "readbenchmark",
      "title": "python read benchmark"},
+
     {"device": "test/pybenchmarktarget/01",
      "clients": "4,6,8,10",
      "period": "1",
      "benchmark": "writebenchmark",
      "title": "python write benchmark"},
+
     {"device": "test/pybenchmarktarget/01",
      "clients": "4,6,8,10",
      "period": "1",
      "benchmark": "eventbenchmark",
      "title": "python event benchmark"},
+
     {"device": "test/pybenchmarktarget/01",
      "clients": "4,6,8,10",
      "period": "1",
-     "benchmark": "pipebenchmark",
-     "title": "python pipe benchmark"},
+     "benchmark": "pipe_write_benchmark",
+     "title": "python pipe write benchmark"},
+
+    {"device": "test/pybenchmarktarget/01",
+     "clients": "4,6,8,10",
+     "period": "1",
+     "benchmark": "pipe_read_benchmark",
+     "title": "python pipe read benchmark"},
 
     {"target_device": "test/pybenchmarktarget/01",
      "server_instance": "PyBenchmarkTarget/rtest",

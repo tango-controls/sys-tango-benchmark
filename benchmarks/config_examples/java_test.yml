@@ -16,12 +16,17 @@
   device: test/javabenchmarktarget/01
   period: 10
 
-- benchmark: pipebenchmark
-  title: "java pipe benchmark"
+- benchmark: pipe_write_benchmark
+  title: "java pipe write benchmark"
   clients: 20:201:20
   device: test/javabenchmarktarget/01
   period: 10
 
+- benchmark: pipe_read_benchmark
+  title: "java pipe read benchmark"
+  clients: 20:201:20
+  device: test/javabenchmarktarget/01
+  period: 10
 
 - server_instance: JavaBenchmarkTarget/rtest
   device_class: JavaBenchmarkTarget

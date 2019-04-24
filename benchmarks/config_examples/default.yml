@@ -16,13 +16,19 @@
   device: test/pybenchmarktarget/01
   period: 10
 
-- benchmark: pipebenchmark
-  title: "Python pipe read/write benchmark"
+- benchmark: pipe_write_benchmark
+  title: "Python pipe write benchmark"
   clients: 20:201:20
   device: test/pybenchmarktarget/01
   size: 256
   period: 10
 
+- benchmark: pipe_read_benchmark
+  title: "Python pipe read benchmark"
+  clients: 20:201:20
+  device: test/pybenchmarktarget/01
+  size: 256
+  period: 10
 
 - server_instance: PyBenchmarkTarget/rtest
   device_class: PyBenchmarkTarget

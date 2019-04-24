@@ -54,6 +54,16 @@ install_requires = [
     'python-dateutil',
     ]
 
+entrypoint_scripts = [
+    'tg_pipe_read_benchmark = tangobenchmarks.pipe_read_benchmark:main',
+    'tg_pipe_write_benchmark = tangobenchmarks.pipe_write_benchmark:main',
+    'tg_readbenchmark = tangobenchmarks.readbenchmark:main',
+    'tg_writebenchmark = tangobenchmarks.writebenchmark:main',
+    'tg_eventbenchmark = tangobenchmarks.eventbenchmark:main',
+    'tg_cmdbenchmark = tangobenchmarks.cmdbenchmark:main',
+    'tg_benchmarkrunner = tangobenchmarks.runner:main',
+    ]
+
 
 class TestCommand(Command):
     """ test command class
@@ -87,14 +97,8 @@ SETUPDATA = dict(
     zip_safe=False,
     install_requires=install_requires,
     entry_points={
-        'console_scripts': [
-            'tg_pipebenchmark = tangobenchmarks.pipebenchmark:main',
-            'tg_readbenchmark = tangobenchmarks.readbenchmark:main',
-            'tg_writebenchmark = tangobenchmarks.writebenchmark:main',
-            'tg_eventbenchmark = tangobenchmarks.eventbenchmark:main',
-            'tg_cmdbenchmark = tangobenchmarks.cmdbenchmark:main',
-            'tg_benchmarkrunner = tangobenchmarks.runner:main',
-        ]},
+        'console_scripts': entrypoint_scripts
+    },
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',
     license='GPL',

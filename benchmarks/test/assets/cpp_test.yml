@@ -16,12 +16,17 @@
   device: test/cppbenchmarktarget/01
   period: 1
 
-- benchmark: pipebenchmark
-  title: "cpp pipe benchmark"
+- benchmark: pipe_write_benchmark
+  title: "cpp pipe write benchmark"
   clients: 4,6,8,10
   device: test/cppbenchmarktarget/01
   period: 1
 
+- benchmark: pipe_read_benchmark
+  title: "cpp pipe read benchmark"
+  clients: 4,6,8,10
+  device: test/cppbenchmarktarget/01
+  period: 1
 
 - server_instance: CppBenchmarkTarget/rtest
   device_class: CppBenchmarkTarget
