@@ -1,4 +1,3 @@
-from tangobenchmarks.client.python.pipe_read import Worker as ReadWorker
 from tangobenchmarks.utility.benchmark import common_main
 
 
@@ -23,7 +22,7 @@ def main(**kargs):
         kargs,
         _add_arguments,
         _update_options,
-        worker_class=ReadWorker,
+        default_worker='tangobenchmarks.client.python.pipe_read.Worker',
         description=(
             'perform check if and how a number of simultaneous '
             'clients affect pipes read speed'),

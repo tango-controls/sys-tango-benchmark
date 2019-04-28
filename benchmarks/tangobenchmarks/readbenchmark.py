@@ -18,7 +18,6 @@
 # Boston, MA  02110-1301, USA.
 #
 
-from tangobenchmarks.client.python.read import Worker
 from tangobenchmarks.utility.benchmark import common_main
 
 
@@ -40,7 +39,7 @@ def main(**kargs):
         kargs,
         _add_arguments,
         _update_options,
-        worker_class=Worker,
+        default_worker='tangobenchmarks.client.python.read.Worker',
         description=(
             'perform check if and how a number of simultaneous '
             'clients affect attributes reads speed'),

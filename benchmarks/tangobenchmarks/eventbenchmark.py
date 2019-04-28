@@ -18,7 +18,6 @@
 # Boston, MA  02110-1301, USA.
 #
 
-from tangobenchmarks.client.python.event import Worker
 from tangobenchmarks.utility.benchmark import common_main
 
 
@@ -39,7 +38,7 @@ def main(**kargs):
         kargs,
         _add_arguments,
         _update_options,
-        worker_class=Worker,
+        default_worker='tangobenchmarks.client.python.event.Worker',
         description=(
             'perform check if and how number of parallel '
             'subscribers affects subscription time'),

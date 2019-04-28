@@ -1,15 +1,27 @@
 import sys
 import argparse
+import importlib
 
 from tangobenchmarks import release
 from tangobenchmarks import utils
+
+
+def _load_worker(worker_class):
+    try:
+        module, clazz = worker_class.rsplit(".", 1)
+        m = importlib.import_module(module)
+        return getattr(m, clazz)
+    except Exception as e:
+        print(e)
+        print("Cannot load worker class")
+        sys.exit(255)
 
 
 def common_main(
         kw_options,
         add_arguments,
         update_options,
-        worker_class,
+        default_worker,
         description,
         title,
         header_text,
@@ -25,6 +37,11 @@ def common_main(
         default=False,
         dest="version",
         help="program version")
+    parser.add_argument(
+        "--worker",
+        dest="worker",
+        help="custom worker class, e.g. my.module.MyWorker",
+        default=default_worker)
     parser.add_argument(
         "-d", "--device", dest="device",
         help="device on which the test will be performed")
@@ -129,7 +146,11 @@ def common_main(
 
     options.period = float(options.period)
 
+    if not options.worker:
+        options.worker = default_worker
+
     extra_options = build_extra_options(options)
+    worker_class = _load_worker(options.worker)
 
     for i, cl in enumerate(clients):
         options.clients = int(cl)

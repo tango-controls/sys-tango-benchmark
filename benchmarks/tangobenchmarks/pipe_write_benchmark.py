@@ -1,6 +1,5 @@
 import numpy as np
 
-from tangobenchmarks.client.python.pipe_write import Worker as WriteWorker
 from tangobenchmarks.utility.benchmark import common_main
 
 
@@ -52,7 +51,7 @@ def main(**kargs):
         kargs,
         _add_arguments,
         _update_options,
-        worker_class=WriteWorker,
+        default_worker='tangobenchmarks.client.python.pipe_write.Worker',
         build_extra_options=_build_extra_options,
         description=(
             'perform check if and how a number of simultaneous '

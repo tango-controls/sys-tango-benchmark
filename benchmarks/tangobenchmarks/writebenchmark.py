@@ -20,7 +20,6 @@
 
 import numpy as np
 
-from tangobenchmarks.client.python.write import Worker
 from tangobenchmarks.utility.benchmark import common_main
 
 
@@ -84,7 +83,7 @@ def main(**kargs):
         kargs,
         _add_arguments,
         _update_options,
-        worker_class=Worker,
+        default_worker='tangobenchmarks.client.python.write.Worker',
         build_extra_options=_build_extra_options,
         description=(
             'perform check if and how a number of simultaneous '
