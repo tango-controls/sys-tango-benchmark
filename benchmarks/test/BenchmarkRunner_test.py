@@ -220,6 +220,29 @@ class BenchmarkRunnerTest(unittest.TestCase):
             operation='write',
             setup=(BENCHMARK_RST_SETUP_WRITE % dvname))
 
+    def test_external_cpp_client(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        vl, er = self.runscript(
+            'benchmarkrunner -c test/assets/external_cpp.yml'.split())
+
+        self.assertEqual('', er)
+        self.assertTrue(vl)
+        print(vl)
+
+        lang = 'python'
+        dvname = self.get_target_device_name(lang)
+        document = self.parse_rst(vl)
+        self.assertEqual(len(document), 1)
+
+        self.check_benchmark_rst_output(
+            document[0],
+            has_duplicate_targets=False,
+            title=('%s read benchmark' % lang),
+            operation='read',
+            setup=(BENCHMARK_RST_SETUP_READ % dvname))
+
     def get_target_device_name(self, lang):
         if lang == "python":
             return 'test/pybenchmarktarget/01'

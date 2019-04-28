@@ -71,3 +71,6 @@ if [ "$2" = "2" ]; then
 else
     docker exec -it --user root s2i /bin/sh -c 'cd benchmarks; python3 setup.py -q install'
 fi
+
+echo "install cpp clients"
+docker exec -it --user root s2i /bin/sh -c 'cd cppclient && make all'
