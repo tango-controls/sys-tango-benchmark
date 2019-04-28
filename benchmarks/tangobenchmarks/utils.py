@@ -256,7 +256,7 @@ class RSTOutput(object):
         """
         #: (:obj:`list` <:obj:`str`> ) hidden options
         self.__hidden = ["title", "description",
-                         "verbose", "version", "worker"]
+                         "verbose", "version", "worker", "worker_program"]
 
         #: (:obj:`str`) title
         self._title = options.title

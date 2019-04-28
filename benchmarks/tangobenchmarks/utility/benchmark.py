@@ -43,6 +43,11 @@ def common_main(
         help="custom worker class, e.g. my.module.MyWorker",
         default=default_worker)
     parser.add_argument(
+        "--worker-program",
+        dest="worker_program",
+        help="path to executable program for external worker",
+        default=default_worker)
+    parser.add_argument(
         "-d", "--device", dest="device",
         help="device on which the test will be performed")
     parser.add_argument(
