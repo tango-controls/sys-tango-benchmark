@@ -45,9 +45,9 @@ class WriteBenchmark(utils.Benchmark):
         #: (:obj:`str`) device attribute name
         self.__attribute = options.attribute
         #: (:obj:`float`) time period in seconds
-        self.__period = float(options.period)
+        self.__period = options.period
         #: (:obj:`int`) number of clients
-        self.__clients = int(options.clients)
+        self.__clients = options.clients
         #: (:obj:`float` or :class:`numpy.array`) attribute value to write
         self.__value = 0
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues

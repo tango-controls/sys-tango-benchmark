@@ -43,9 +43,9 @@ class EventBenchmark(utils.Benchmark):
         #: (:obj:`str`) device attribute name
         self.__attribute = options.attribute
         #: (:obj:`float`) time period in seconds
-        self.__period = float(options.period)
+        self.__period = options.period
         #: (:obj:`int`) number of clients
-        self.__clients = int(options.clients)
+        self.__clients = options.clients
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
         self._qresults = [Queue() for i in range(self.__clients)]
         #: (:obj:`list` < :class:`Worker` >) process worker

@@ -23,9 +23,9 @@ class ReadPipeBenchmark(utils.Benchmark):
         #: (:obj:`str`) device pipe name
         self.__pipe = options.pipe
         #: (:obj:`float`) time period in seconds
-        self.__period = float(options.period)
+        self.__period = options.period
         #: (:obj:`int`) number of clients
-        self.__clients = int(options.clients)
+        self.__clients = options.clients
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
         self._qresults = [Queue() for i in range(self.__clients)]
 

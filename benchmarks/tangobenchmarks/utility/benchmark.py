@@ -126,8 +126,10 @@ def common_main(
     rst.printInfo()
     rst.printHeader(headers)
 
+    options.period = float(options.period)
+
     for i, cl in enumerate(clients):
-        options.clients = cl
+        options.clients = int(cl)
         bm = benchmark_class(options=options)
         bm.start()
         bm.fetchResults(options.verbose)
