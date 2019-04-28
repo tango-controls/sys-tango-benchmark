@@ -18,33 +18,8 @@
 # Boston, MA  02110-1301, USA.
 #
 
-from . import utils
-
-from multiprocessing import Queue
-
 from tangobenchmarks.client.python.event import Worker
 from tangobenchmarks.utility.benchmark import common_main
-
-
-class EventBenchmark(utils.Benchmark):
-    """  master class for read benchmark
-    """
-
-    def __init__(self, options):
-        """ constructor
-
-        :param options: commandline options
-        :type options: :class:`argparse.Namespace`
-        """
-
-        utils.Benchmark.__init__(self)
-        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._qresults = [Queue() for i in range(options.clients)]
-        #: (:obj:`list` < :class:`Worker` >) process worker
-        self._workers = [
-            Worker(i, q, options)
-            for i, q in enumerate(self._qresults)
-        ]
 
 
 def _add_arguments(parser):
@@ -64,7 +39,7 @@ def main(**kargs):
         kargs,
         _add_arguments,
         _update_options,
-        benchmark_class=EventBenchmark,
+        worker_class=Worker,
         description=(
             'perform check if and how number of parallel '
             'subscribers affects subscription time'),

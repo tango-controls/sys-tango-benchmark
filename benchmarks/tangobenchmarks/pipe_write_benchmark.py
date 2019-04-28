@@ -1,9 +1,5 @@
 import numpy as np
 
-from multiprocessing import Queue
-
-from . import utils
-
 from tangobenchmarks.client.python.pipe_write import Worker as WriteWorker
 from tangobenchmarks.utility.benchmark import common_main
 
@@ -32,31 +28,7 @@ def _build_extra_options(options):
 
     __value = __value[0], tuple(value1)
 
-    return { "value": __value }
-
-
-class WritePipeBenchmark(utils.Benchmark):
-    """  master class for pipe benchmark
-    """
-
-    def __init__(self, options):
-        """ constructor
-
-        :param options: commandline options
-        :type options: :class:`argparse.Namespace`
-        """
-
-        utils.Benchmark.__init__(self)
-
-        extra_options = _build_extra_options(options)
-
-        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._qresults = [Queue() for i in range(options.clients)]
-        #: (:obj:`list` < :class:`Worker` >) process worker
-        self._workers = [
-            WriteWorker(i, q, options, **extra_options)
-            for i, q in enumerate(self._qresults)
-        ]
+    return {"value": __value}
 
 
 def _add_arguments(parser):
@@ -80,7 +52,8 @@ def main(**kargs):
         kargs,
         _add_arguments,
         _update_options,
-        benchmark_class=WritePipeBenchmark,
+        worker_class=WriteWorker,
+        build_extra_options=_build_extra_options,
         description=(
             'perform check if and how a number of simultaneous '
             'clients affect pipes write speed'),

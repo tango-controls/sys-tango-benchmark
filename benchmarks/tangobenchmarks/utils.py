@@ -25,6 +25,8 @@ import datetime
 import csv
 import sys
 
+from multiprocessing import Queue
+
 
 #: python3 running
 PY3 = (sys.version_info > (3,))
@@ -34,17 +36,22 @@ class Benchmark(object):
     """  master class for read benchmark
     """
 
-    def __init__(self):
+    def __init__(self, worker_class, options, extra_options):
         """ constructor
 
+        :param options: commandline options
+        :type options: :class:`argparse.Namespace`
         """
 
-        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._qresults = []
         #: (:obj:`list` < :class:`Result` >) result list
         self._results = []
+        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
+        self._qresults = [Queue() for i in range(options.clients)]
         #: (:obj:`list` < :class:`Worker` >) process worker
-        self._workers = []
+        self._workers = [
+            worker_class(i, q, options, **extra_options)
+            for i, q in enumerate(self._qresults)
+        ]
 
     def start(self):
         """ start benchmark

@@ -9,10 +9,11 @@ def common_main(
         kw_options,
         add_arguments,
         update_options,
-        benchmark_class,
+        worker_class,
         description,
         title,
-        header_text):
+        header_text,
+        build_extra_options=lambda _: dict()):
 
     parser = argparse.ArgumentParser(
         description='perform check if and how a number of simultaneous '
@@ -128,9 +129,14 @@ def common_main(
 
     options.period = float(options.period)
 
+    extra_options = build_extra_options(options)
+
     for i, cl in enumerate(clients):
         options.clients = int(cl)
-        bm = benchmark_class(options=options)
+        bm = utils.Benchmark(
+            worker_class=worker_class,
+            options=options,
+            extra_options=extra_options)
         bm.start()
         bm.fetchResults(options.verbose)
         out = bm.output(False)
