@@ -28,6 +28,38 @@ from tangobenchmarks.client.python.write import Worker
 from tangobenchmarks.utility.benchmark import common_main
 
 
+def _build_extra_options(options):
+    __value = 0
+
+    try:
+        shape = list(map(int, options.shape.split(',')))
+    except Exception:
+        shape = None
+
+    try:
+        value = list(
+            map(float, options.value.replace('m', '-').split(',')))
+    except Exception:
+        value = [0]
+    if shape is None:
+        if len(value) == 1:
+            __value = value[0]
+        elif len(value) > 1:
+            __value = np.array(value)
+    elif len(shape) == 1:
+        __value = np.array(
+            (value * (shape[0] // max(1, len(value) - 1) + 1))[:shape[0]]
+        ).reshape(shape)
+    elif len(shape) == 2:
+        __value = np.array(
+            (
+                value * (shape[0] * shape[1] // max(1, len(value) - 1) + 1)
+            )[:shape[0] * shape[1]]
+        ).reshape(shape)
+
+    return { "value": __value }
+
+
 class WriteBenchmark(utils.Benchmark):
     """  master class for write benchmark
     """
@@ -41,39 +73,13 @@ class WriteBenchmark(utils.Benchmark):
 
         utils.Benchmark.__init__(self)
 
-        __value = 0
-
-        try:
-            shape = list(map(int, options.shape.split(',')))
-        except Exception:
-            shape = None
-
-        try:
-            value = list(
-                map(float, options.value.replace('m', '-').split(',')))
-        except Exception:
-            value = [0]
-        if shape is None:
-            if len(value) == 1:
-                __value = value[0]
-            elif len(value) > 1:
-                __value = np.array(value)
-        elif len(shape) == 1:
-            __value = np.array(
-                (value * (shape[0] // max(1, len(value) - 1) + 1))[:shape[0]]
-            ).reshape(shape)
-        elif len(shape) == 2:
-            __value = np.array(
-                (
-                    value * (shape[0] * shape[1] // max(1, len(value) - 1) + 1)
-                )[:shape[0] * shape[1]]
-            ).reshape(shape)
+        extra_options = _build_extra_options(options)
 
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
         self._qresults = [Queue() for i in range(options.clients)]
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
-            Worker(i, q, options, value=__value)
+            Worker(i, q, options, **extra_options)
             for i, q in enumerate(self._qresults)
         ]
 

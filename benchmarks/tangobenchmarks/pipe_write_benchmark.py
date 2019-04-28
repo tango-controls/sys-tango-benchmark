@@ -8,6 +8,33 @@ from tangobenchmarks.client.python.pipe_write import Worker as WriteWorker
 from tangobenchmarks.utility.benchmark import common_main
 
 
+def _build_extra_options(options):
+    __value = (
+        'PipeBlob',
+        [
+            {'name': 'DevLong64', 'value': 123, },
+            {'name': 'DevULong', 'value': np.uint32(123)},
+            {'name': 'DevVarUShortArray',
+             'value': range(5), 'dtype': ('uint16',)},
+            {'name': 'DevVarDoubleArray',
+             'value': [1.11, 2.22], 'dtype': ('float64',)},
+            {'name': 'DevBoolean', 'value': True},
+        ]
+    )
+
+    size = max(1, int(options.size))
+    value1 = (__value[1] *
+              (size // max(1, len(__value[1]) - 1) + 1))[:size]
+
+    for i in range(len(value1)):
+        value1[i] = dict(value1[i])
+        value1[i]["name"] = str(i) + "_" + value1[i]["name"]
+
+    __value = __value[0], tuple(value1)
+
+    return { "value": __value }
+
+
 class WritePipeBenchmark(utils.Benchmark):
     """  master class for pipe benchmark
     """
@@ -21,34 +48,13 @@ class WritePipeBenchmark(utils.Benchmark):
 
         utils.Benchmark.__init__(self)
 
-        __value = (
-            'PipeBlob',
-            [
-                {'name': 'DevLong64', 'value': 123, },
-                {'name': 'DevULong', 'value': np.uint32(123)},
-                {'name': 'DevVarUShortArray',
-                 'value': range(5), 'dtype': ('uint16',)},
-                {'name': 'DevVarDoubleArray',
-                 'value': [1.11, 2.22], 'dtype': ('float64',)},
-                {'name': 'DevBoolean', 'value': True},
-            ]
-        )
+        extra_options = _build_extra_options(options)
+
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
         self._qresults = [Queue() for i in range(options.clients)]
-
-        size = max(1, int(options.size))
-        value1 = (__value[1] *
-                  (size // max(1, len(__value[1]) - 1) + 1))[:size]
-
-        for i in range(len(value1)):
-            value1[i] = dict(value1[i])
-            value1[i]["name"] = str(i) + "_" + value1[i]["name"]
-
-        __value = __value[0], tuple(value1)
-
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
-            WriteWorker(i, q, options, value=__value)
+            WriteWorker(i, q, options, **extra_options)
             for i, q in enumerate(self._qresults)
         ]
 
