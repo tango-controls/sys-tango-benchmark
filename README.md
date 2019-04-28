@@ -63,7 +63,7 @@ For client side (benchmark runners):
 
 4. Make sure that the installed device servers are in *Starter* paths (if you use Starter) or in *PATH*. 
    The benchmark runner will try to either run the servers with the *Starter* service or as command line processes.
-      
+
 5. Install benchmarks from `benchmarks` folder. 
     - Go to this folder: `cd benchmarks`
     - Install: `pip install .`
@@ -201,4 +201,89 @@ See, a YAML example:
   target_device: test/javabenchmarktarget/01
   # host: localhost:10000
 ```
- 
+
+#### Custom workers
+
+It is possible to use a custom worker (client) class in order to change the test
+scenario or tweak some parameters. Option `worker` (or `--worker` argument)
+must point to a worker module/class, e.g.:
+```yaml
+- benchmark: readbenchmark
+  title: "benchmark with custom worker"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+  worker: your.custom.WorkerClass
+```
+
+In the example above, `WorkerClass` is located in `your.custom` module on `$PYTHONPATH`.
+
+The worker class must expose `multiprocessing.Process`-like interface, e.g.:
+```python
+class WorkerClass
+    def __init__(self, wid, qresult, options, **_):
+        pass
+
+    def start(self):
+        pass
+
+    def join(self):
+        pass
+```
+
+Where:
+* `wid` is worker's id (`int`),
+* `qresult` is a `multiprocessing.Queue` and must be populated with
+  `tangobenchmarks.utils.Result`
+* `options` is a dictionary with configuration file entries
+  (or commandline arguments)
+
+If no `worker` is configured, a default worker (specific to each benchmark)
+is used.
+
+#### Workers in external programs
+
+`tangobenchmarks.client.external.Worker` module allows to use an external program
+as a benchmark worker. `worker_program` option (or `--worker-program` argument)
+must point to the worker program. It is possible to use either an absolute path,
+a relative path (to benchmark's working directory) or a name available on `$PATH`.
+```yaml
+- benchmark: writebenchmark
+  # ...
+  worker: "tangobenchmarks.client.external.Worker"
+  worker_program: "test/assets/dummy_client.sh"
+```
+
+All benchmark options are passed to the worker program via environment
+variables. Variable names are prefixed with `_TANGO_BENCHMARK_`. Example
+variable names are:
+* `_TANGO_BENCHMARK_device`
+* `_TANGO_BENCHMARK_period`
+
+Worker program is expected to print a single line to stdandard output and then
+exit with 0. The output must be formatted as follows:
+
+```
+<number-of-successful-operations> <time-delta> <number-of-errors>
+```
+
+#### C++ workers
+
+Some C++ workers are provided as an alternative to default Python workers.
+C++ workers are located in `cppclient` directory. The workers need to be
+compiled, e.g. using provided `Makefile`:
+
+```bash
+cd cppclient && make all
+```
+
+Following dependencies are required to compile C++ workers:
+`libtango`, `libomniORB4`, `libomnithread`.
+
+C++ worker program must be configured using external worker module, e.g.:
+```yaml
+- benchmark: readbenchmark
+  # ...
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: path/to/cppclient/bin/tg_benchmark_client_read
+```
