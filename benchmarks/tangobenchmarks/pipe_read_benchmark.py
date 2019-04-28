@@ -18,22 +18,12 @@ class ReadPipeBenchmark(utils.Benchmark):
         """
 
         utils.Benchmark.__init__(self)
-        #: (:obj:`str`) device proxy
-        self.__device = options.device
-        #: (:obj:`str`) device pipe name
-        self.__pipe = options.pipe
-        #: (:obj:`float`) time period in seconds
-        self.__period = options.period
-        #: (:obj:`int`) number of clients
-        self.__clients = options.clients
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._qresults = [Queue() for i in range(self.__clients)]
-
+        self._qresults = [Queue() for i in range(options.clients)]
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
-            ReadWorker(i, self.__device, self.__pipe, self.__period,
-                       self._qresults[i])
-            for i in range(self.__clients)
+            ReadWorker(i, q, options)
+            for i, q in enumerate(self._qresults)
         ]
 
 

@@ -20,16 +20,8 @@ class WritePipeBenchmark(utils.Benchmark):
         """
 
         utils.Benchmark.__init__(self)
-        #: (:obj:`str`) device proxy
-        self.__device = options.device
-        #: (:obj:`str`) device pipe name
-        self.__pipe = options.pipe
-        #: (:obj:`float`) time period in seconds
-        self.__period = options.period
-        #: (:obj:`int`) number of clients
-        self.__clients = options.clients
-        #: (:obj:`float` or :class:`numpy.array`) pipe value to pipe
-        self.__value = (
+
+        __value = (
             'PipeBlob',
             [
                 {'name': 'DevLong64', 'value': 123, },
@@ -42,23 +34,22 @@ class WritePipeBenchmark(utils.Benchmark):
             ]
         )
         #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._qresults = [Queue() for i in range(self.__clients)]
+        self._qresults = [Queue() for i in range(options.clients)]
 
         size = max(1, int(options.size))
-        value1 = (self.__value[1] *
-                  (size // max(1, len(self.__value[1]) - 1) + 1))[:size]
+        value1 = (__value[1] *
+                  (size // max(1, len(__value[1]) - 1) + 1))[:size]
 
         for i in range(len(value1)):
             value1[i] = dict(value1[i])
             value1[i]["name"] = str(i) + "_" + value1[i]["name"]
 
-        self.__value = self.__value[0], tuple(value1)
+        __value = __value[0], tuple(value1)
 
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
-            WriteWorker(i, self.__device, self.__pipe, self.__period,
-                        self.__value, self._qresults[i])
-            for i in range(self.__clients)
+            WriteWorker(i, q, options, value=__value)
+            for i, q in enumerate(self._qresults)
         ]
 
 

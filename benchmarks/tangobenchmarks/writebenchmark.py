@@ -40,18 +40,8 @@ class WriteBenchmark(utils.Benchmark):
         """
 
         utils.Benchmark.__init__(self)
-        #: (:obj:`str`) device proxy
-        self.__device = options.device
-        #: (:obj:`str`) device attribute name
-        self.__attribute = options.attribute
-        #: (:obj:`float`) time period in seconds
-        self.__period = options.period
-        #: (:obj:`int`) number of clients
-        self.__clients = options.clients
-        #: (:obj:`float` or :class:`numpy.array`) attribute value to write
-        self.__value = 0
-        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
-        self._qresults = [Queue() for i in range(self.__clients)]
+
+        __value = 0
 
         try:
             shape = list(map(int, options.shape.split(',')))
@@ -65,25 +55,26 @@ class WriteBenchmark(utils.Benchmark):
             value = [0]
         if shape is None:
             if len(value) == 1:
-                self.__value = value[0]
+                __value = value[0]
             elif len(value) > 1:
-                self.__value = np.array(value)
+                __value = np.array(value)
         elif len(shape) == 1:
-            self.__value = np.array(
+            __value = np.array(
                 (value * (shape[0] // max(1, len(value) - 1) + 1))[:shape[0]]
             ).reshape(shape)
         elif len(shape) == 2:
-            self.__value = np.array(
+            __value = np.array(
                 (
                     value * (shape[0] * shape[1] // max(1, len(value) - 1) + 1)
                 )[:shape[0] * shape[1]]
             ).reshape(shape)
 
+        #: (:obj:`list` < :class:`multiprocessing.Queue` >) result queues
+        self._qresults = [Queue() for i in range(options.clients)]
         #: (:obj:`list` < :class:`Worker` >) process worker
         self._workers = [
-            Worker(i, self.__device, self.__attribute, self.__period,
-                   self.__value, self._qresults[i])
-            for i in range(self.__clients)
+            Worker(i, q, options, value=__value)
+            for i, q in enumerate(self._qresults)
         ]
 
 

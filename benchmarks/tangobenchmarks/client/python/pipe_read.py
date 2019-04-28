@@ -9,17 +9,11 @@ class Worker(multiprocessing.Process):
     """ read worker instance
     """
 
-    def __init__(self, wid, device, pipe, period, qresult):
+    def __init__(self, wid, qresult, options):
         """ constructor
 
         :param wid: worker id
         :type wid: :obj:`int`
-        :param device: device name
-        :type device: :obj:`str`
-        :param pipe: pipe name
-        :type pipe: :obj:`str`
-        :param period: time period
-        :type period: :obj:`float`
         :param qresult: queue with result
         :type qresult: :class:`Queue.Queue` or `queue.queue`
 
@@ -29,11 +23,11 @@ class Worker(multiprocessing.Process):
         # : (:obj:`int`) worker id
         self.__wid = wid
         # : (:obj:`float`) time period in seconds
-        self.__period = float(period)
+        self.__period = float(options.period)
         #: (:obj:`str`) device proxy
-        self.__device = device
+        self.__device = options.device
         #: (:obj:`str`) device pipe name
-        self.__pipe = pipe
+        self.__pipe = options.pipe
         # : (:class:`tango.PipeProxy`) pipe proxy
         self.__proxy = None
         # : (:class:`Queue.Queue`) result queue
