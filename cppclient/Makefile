@@ -1,26 +1,29 @@
-OUTDIR=bin
+ifdef TANGO_ROOT
+	MAKE_ENV=$(TANGO_ROOT)/share/pogo/preferences
+else
+	MAKE_ENV=/usr/share/pogo/preferences
+endif
+
+RELEASE_TYPE=RELEASE
+
+TANGO_REQUIRED=TRUE
+
+include $(MAKE_ENV)/tango.opt
+
+CXXFLAGS += -std=c++14 -Wall -Wpedantic -Werror -Wno-error=deprecated
 
 SOURCES=$(wildcard *.cpp)
-CLIENTS=$(patsubst %.cpp, $(OUTDIR)/%, $(SOURCES))
+CLIENTS=$(patsubst %.cpp, $(OUTPUT_DIR)/%, $(SOURCES))
 
 all: $(CLIENTS)
 
 clean:
-	rm -rf $(OUTDIR)/*
+	rm -rf $(OUTPUT_DIR)/*
 
-$(OUTDIR):
+$(OUTPUT_DIR):
 	mkdir $@
 
-$(CLIENTS): $(OUTDIR)/%: %.cpp | $(OUTDIR)
-	g++ \
-		-I/usr/include/tango \
-		-I/usr/local/include/tango \
-		-L/usr/lib \
-		-L/usr/local/lib \
-		-o $@ \
-		$< \
-		-ltango \
-		-lomniORB4 \
-		-lomnithread
+$(CLIENTS): $(OUTPUT_DIR)/%: %.cpp | $(OUTPUT_DIR)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
 .PHONY: all clean
