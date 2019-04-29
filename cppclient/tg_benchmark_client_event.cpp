@@ -31,12 +31,15 @@ int main(int, char**)
 
     const double period = std::atof(periodStr);
 
-    std::string _attributeName = attributeName;
-
     auto proxy = Tango::DeviceProxy(deviceName);
 
     long counter = 0;
     long errors = 0;
+
+    std::vector<int> eventIds;
+    eventIds.reserve(100'000);
+
+    Tango::CallBack callback{};
 
     const auto startTime = std::chrono::system_clock::now();
     auto endTime = startTime;
@@ -45,7 +48,13 @@ int main(int, char**)
     {
         try
         {
-            proxy.read_attribute(_attributeName);
+            int eventId = proxy.subscribe_event(
+                attributeName,
+                Tango::EventType::CHANGE_EVENT,
+                &callback);
+
+            eventIds.push_back(eventId);
+
             counter++;
         }
         catch (...)
@@ -54,6 +63,12 @@ int main(int, char**)
         }
         endTime = std::chrono::system_clock::now();
     }
+
+    for (const auto eventId : eventIds)
+    {
+        proxy.unsubscribe_event(eventId);
+    }
+
 
     std::cout
         << counter << " "

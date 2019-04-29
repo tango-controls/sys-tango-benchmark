@@ -1,10 +1,43 @@
+
 - benchmark: readbenchmark
   title: "python read benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01
   period: 1
-  worker: "tangobenchmarks.client.external.Worker"
-  worker_program: "../cppclient/bin/tg_benchmark_client_read"
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: ../cppclient/bin/tg_benchmark_client_read
+
+- benchmark: writebenchmark
+  title: "python write benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: ../cppclient/bin/tg_benchmark_client_write
+
+- benchmark: eventbenchmark
+  title: "python event benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: ../cppclient/bin/tg_benchmark_client_event
+
+- benchmark: pipe_write_benchmark
+  title: "python pipe write benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: ../cppclient/bin/tg_benchmark_client_pipe_write
+
+- benchmark: pipe_read_benchmark
+  title: "python pipe read benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: ../cppclient/bin/tg_benchmark_client_pipe_read
 
 - server_instance: PyBenchmarkTarget/rtest
   device_class: PyBenchmarkTarget

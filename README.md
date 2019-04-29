@@ -232,7 +232,7 @@ class WorkerClass
 ```
 
 Where:
-* `wid` is worker's id (`int`),
+* `wid` is worker id (`int`),
 * `qresult` is a `multiprocessing.Queue` and must be populated with
   `tangobenchmarks.utils.Result`
 * `options` is a dictionary with configuration file entries
@@ -250,7 +250,7 @@ a relative path (to benchmark's working directory) or a name available on `$PATH
 ```yaml
 - benchmark: writebenchmark
   # ...
-  worker: "tangobenchmarks.client.external.Worker"
+  worker: tangobenchmarks.client.external.Worker
   worker_program: "test/assets/dummy_client.sh"
 ```
 
@@ -274,11 +274,11 @@ C++ workers are located in `cppclient` directory. The workers need to be
 compiled, e.g. using provided `Makefile`:
 
 ```bash
-cd cppclient && make all
+cd cppclient
+make all
+make install INSTALL_DIR=~/.local/bin
+# or: sudo -E make install
 ```
-
-Following dependencies are required to compile C++ workers:
-`libtango`, `libomniORB4`, `libomnithread`.
 
 C++ worker program must be configured using external worker module, e.g.:
 ```yaml

@@ -10,20 +10,30 @@ TANGO_REQUIRED=TRUE
 
 include $(MAKE_ENV)/tango.opt
 
+INSTALL_DIR=$(TANGO_HOME)/bin
+
 CXXFLAGS += -std=c++14 -Wall -Wpedantic -Werror -Wno-error=deprecated
 
 SOURCES=$(wildcard *.cpp)
-CLIENTS=$(patsubst %.cpp, $(OUTPUT_DIR)/%, $(SOURCES))
+CLIENTS=$(patsubst %.cpp, %, $(SOURCES))
+TARGETS=$(patsubst %.cpp, $(OUTPUT_DIR)/%, $(SOURCES))
 
-all: $(CLIENTS)
+all: $(TARGETS)
 
 clean:
 	rm -rf $(OUTPUT_DIR)/*
 
+install:
+	install -C $(OUTPUT_DIR)/* $(INSTALL_DIR)
+
+uninstall:
+	rm -f $(patsubst %, $(INSTALL_DIR)/%, $(CLIENTS))
+
+
 $(OUTPUT_DIR):
 	mkdir $@
 
-$(CLIENTS): $(OUTPUT_DIR)/%: %.cpp | $(OUTPUT_DIR)
+$(TARGETS): $(OUTPUT_DIR)/%: %.cpp | $(OUTPUT_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
-.PHONY: all clean
+.PHONY: all clean install

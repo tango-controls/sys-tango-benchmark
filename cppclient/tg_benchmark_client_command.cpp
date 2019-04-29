@@ -21,17 +21,17 @@ double timeDelta(const Time& t1, const Time& t2)
 int main(int, char**)
 {
     const char* deviceName = getOption("device");
-    const char* attributeName = getOption("attribute");
+    const char* commandName = getOption("command");
     const char* periodStr = getOption("period");
 
-    if (not (deviceName and attributeName and periodStr))
+    if (not (deviceName and commandName and periodStr))
     {
         return 1;
     }
 
     const double period = std::atof(periodStr);
 
-    std::string _attributeName = attributeName;
+    std::string _commandName = commandName;
 
     auto proxy = Tango::DeviceProxy(deviceName);
 
@@ -45,7 +45,7 @@ int main(int, char**)
     {
         try
         {
-            proxy.read_attribute(_attributeName);
+            proxy.command_inout(_commandName);
             counter++;
         }
         catch (...)
