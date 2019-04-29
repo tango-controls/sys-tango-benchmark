@@ -51,7 +51,7 @@ For client side (benchmark runners):
     - the C++ target
         - `cd ../CppBenchmarkTarget`
         - `make`
-        - `sudo make install`
+        - `sudo -E make install`
     - the Java target
         - `cd ../JavaBenchmarkTarget`
         - `mvn clean install`
