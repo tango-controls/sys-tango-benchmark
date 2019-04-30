@@ -41,9 +41,9 @@ For client side (benchmark runners):
 
 1. clone the repository: `git clone https://github.com/tango-controls/sys-tango-benchmark`
 
-2. change to the cloned folder `cd sys-tango-benchmark`
+1. change to the cloned folder `cd sys-tango-benchmark`
 
-3. install device servers from `ds` folder:
+1. install device servers from `ds` folder:
 
     - the Python target
         - `cd ds/PyBenchmarkTarget`
@@ -60,14 +60,21 @@ For client side (benchmark runners):
         - Copy the compiled jar file to `$TANGO_ROOT/share/java/`:
             - `sudo cp target/JavaBenchmarkTarget-1.0.jar /usr/local/share/java/`
 
-
-4. Make sure that the installed device servers are in *Starter* paths (if you use Starter) or in *PATH*. 
+1. Make sure that the installed device servers are in *Starter* paths (if you use Starter) or in *PATH*. 
    The benchmark runner will try to either run the servers with the *Starter* service or as command line processes.
 
-5. Install benchmarks from `benchmarks` folder. 
+1. Install benchmarks from `benchmarks` folder. 
     - Go to this folder: `cd benchmarks`
     - Install: `pip install .`
- 
+
+1. Install C++ workers:
+    ```bash
+    cd cppclient
+    make all
+    sudo -E make install
+    # or make install INSTALL_DIR=~/.local/bin
+    ```
+
 ### Running a default benchmark
 
 The benchmark runner (`tg_benchmarkrunner`) uses a configuration script provided with `-c` command line options. 
