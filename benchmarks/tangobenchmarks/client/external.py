@@ -28,7 +28,8 @@ class Worker(multiprocessing.Process):
                 float(time),
                 int(errors))
         except Exception:
-            print("Malformed result from external client: %s" % output)
+            sys.stderr.write(
+                "Malformed result from external client: %s\n" % output)
             return utils.Result(self.__wid, 0, 0, 0)
 
     def _start(self):
