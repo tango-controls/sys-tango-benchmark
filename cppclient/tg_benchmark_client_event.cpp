@@ -66,7 +66,14 @@ int main(int, char**)
 
     for (const auto eventId : eventIds)
     {
-        proxy.unsubscribe_event(eventId);
+        try
+        {
+            proxy.unsubscribe_event(eventId);
+        }
+        catch (const Tango::DevFailed& e)
+        {
+            std::cerr << "unsubscribe_event failed: " << e.errors[0].desc << "\n";
+        }
     }
 
 
