@@ -33,12 +33,16 @@ class Worker(multiprocessing.Process):
     def _start(self):
         self.__process = subprocess.Popen(
             [self.__options.worker_program],
+            shell=True,
             stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             env=self._build_env())
 
     def _join(self):
-        out, _ = self.__process.communicate()
+        out, err = self.__process.communicate()
         self.__qresult.put(self._build_result(out))
+        if err:
+            print(err)
 
     def run(self):
         self._start()
