@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <string>
+#include <memory>
 
 #include <tango.h>
 
@@ -31,7 +32,18 @@ int main(int, char**)
 
     const double period = std::atof(periodStr);
 
-    auto proxy = Tango::DeviceProxy(deviceName);
+    std::unique_ptr<Tango::DeviceProxy> proxy;
+
+    try
+    {
+        proxy = std::make_unique<Tango::DeviceProxy>(deviceName);
+    }
+    catch (const Tango::DevFailed& e)
+    {
+        Tango::Except::print_exception(e);
+        std::cout << "0 0 0\n";
+        return 1;
+    }
 
     long counter = 0;
     long errors = 0;
@@ -48,7 +60,7 @@ int main(int, char**)
     {
         try
         {
-            int eventId = proxy.subscribe_event(
+            int eventId = proxy->subscribe_event(
                 attributeName,
                 Tango::EventType::CHANGE_EVENT,
                 &callback);
@@ -68,14 +80,13 @@ int main(int, char**)
     {
         try
         {
-            proxy.unsubscribe_event(eventId);
+            proxy->unsubscribe_event(eventId);
         }
         catch (const Tango::DevFailed& e)
         {
-            std::cerr << "unsubscribe_event failed: " << e.errors[0].desc << "\n";
+            Tango::Except::print_exception(e);
         }
     }
-
 
     std::cout
         << counter << " "
