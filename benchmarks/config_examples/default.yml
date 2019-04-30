@@ -1,34 +1,60 @@
-- benchmark: readbenchmark
-  title: "python read benchmark"
+- &opts
   clients: 20:201:20
   device: test/pybenchmarktarget/01
   period: 10
+
+- &cppopts
+  <<: *opts
+  worker: tangobenchmarks.client.external.Worker
+
+- benchmark: readbenchmark
+  title: "python read benchmark"
+  <<: *opts
 
 - benchmark: writebenchmark
   title: "Python attribute write benchmark"
   clients: 4,8,16,32,64,128
-  device: test/pybenchmarktarget/01
-  period: 10
+  <<: *opts
 
 - benchmark: eventbenchmark
   title: "Python event subscription benchmark"
-  clients: 20:201:20
-  device: test/pybenchmarktarget/01
-  period: 10
+  <<: *opts
 
 - benchmark: pipe_write_benchmark
   title: "Python pipe write benchmark"
-  clients: 20:201:20
-  device: test/pybenchmarktarget/01
   size: 256
-  period: 10
+  <<: *opts
 
 - benchmark: pipe_read_benchmark
   title: "Python pipe read benchmark"
-  clients: 20:201:20
-  device: test/pybenchmarktarget/01
+  <<: *opts
+
+- benchmark: readbenchmark
+  title: "python read benchmark with cpp client"
+  worker_program: tg_benchmark_client_read
+  <<: *cppopts
+
+- benchmark: writebenchmark
+  title: "Python attribute write benchmark with cpp client"
+  clients: 4,8,16,32,64,128
+  worker_program: tg_benchmark_client_write
+  <<: *cppopts
+
+- benchmark: eventbenchmark
+  title: "Python event subscription benchmark with cpp client"
+  worker_program: tg_benchmark_client_event
+  <<: *cppopts
+
+- benchmark: pipe_write_benchmark
+  title: "Python pipe write benchmark with cpp client"
   size: 256
-  period: 10
+  worker_program: tg_benchmark_client_pipe_write
+  <<: *cppopts
+
+- benchmark: pipe_read_benchmark
+  title: "Python pipe read benchmark with cpp client"
+  worker_program: tg_benchmark_client_pipe_read
+  <<: *cppopts
 
 - server_instance: PyBenchmarkTarget/rtest
   device_class: PyBenchmarkTarget
