@@ -1,3 +1,4 @@
+import sys
 import subprocess
 import multiprocessing
 
@@ -42,7 +43,7 @@ class Worker(multiprocessing.Process):
         out, err = self.__process.communicate()
         self.__qresult.put(self._build_result(out))
         if err:
-            print(err)
+            sys.stderr.write(err + "\n")
 
     def run(self):
         self._start()
