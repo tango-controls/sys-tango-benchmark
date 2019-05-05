@@ -8,20 +8,19 @@ fi
 docker exec -it --user root s2i service mysql stop
 docker exec -it --user root s2i /bin/sh -c '$(service mysql start &) && sleep 30'
 
+set -e
+
 docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y tango-db tango-common; sleep 10'
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
+
 echo "install tango servers"
 docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive;  apt-get -qq update; apt-get  install -y tango-starter tango-test liblog4j1.2-java g++ openjdk-8-jdk openjdk-8-jre  libtango-dev liblog4tango-dev maven maven-debian-helper maven-repo-helper dpkg'
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
+
+set +e
 
 docker exec -it --user root s2i service tango-db restart
 docker exec -it --user root s2i service tango-starter restart
+
+set -e
 
 if [ "$2" = "2" ]; then
     echo "install python-pytango"
@@ -30,11 +29,6 @@ else
     echo "install python3-pytango"
     docker exec -it --user root s2i /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango python3-tz python3-setuptools python3-sphinx python3-whichcraft python3-yaml python3-docutils python3-dateutil'
 fi
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
-
 
 if [ "$2" = "2" ]; then
     echo "install python-pytango"
@@ -43,35 +37,22 @@ else
     echo "install python-pytango"
     docker exec -it --user root s2i /bin/sh -c '. /etc/tangorc; export TANGO_HOST;python3 -c "import tango;tango.Database().put_property(\"CtrlSystem\",{\"EventBufferHwm\":1000})"'
 fi
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
-
 
 docker exec -it --user root s2i /bin/sh -c 'curl -O https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb; dpkg -i ./libtango-java_9.2.5a-1_all.deb'
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
+
 echo "install CppBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make'
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
+
 echo "install JavaBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'cd ds/JavaBenchmarkTarget; mvn clean install'
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
+
+set +e
+
 docker exec -it --user root s2i /bin/sh -c 'update-alternatives --list java'
+
+set -e
+
 docker exec -it --user root s2i /bin/sh -c 'update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java'
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
 
 echo "install PyBenchmarkTarget"
 if [ "$2" = "2" ]; then
@@ -79,23 +60,10 @@ if [ "$2" = "2" ]; then
 else
     docker exec -it --user root s2i /bin/sh -c 'cd ds/PyBenchmarkTarget; python3 setup.py -q install'
 fi
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
 
 docker exec -it --user root s2i chown -R tango:tango .
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
 
 docker exec -it --user root s2i chown -R tango:tango benchmarks
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
-
 
 echo "install benchmark runner"
 if [ "$2" = "2" ]; then
@@ -103,7 +71,6 @@ if [ "$2" = "2" ]; then
 else
     docker exec -it --user root s2i /bin/sh -c 'cd benchmarks; python3 setup.py -q install'
 fi
-if [ "$?" -ne "0" ]
-then
-    exit -1
-fi
+
+echo "install cpp clients"
+docker exec -it --user root s2i /bin/sh -c 'cd cppclient && make all'

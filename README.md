@@ -41,9 +41,9 @@ For client side (benchmark runners):
 
 1. clone the repository: `git clone https://github.com/tango-controls/sys-tango-benchmark`
 
-2. change to the cloned folder `cd sys-tango-benchmark`
+1. change to the cloned folder `cd sys-tango-benchmark`
 
-3. install device servers from `ds` folder:
+1. install device servers from `ds` folder:
 
     - the Python target
         - `cd ds/PyBenchmarkTarget`
@@ -60,14 +60,21 @@ For client side (benchmark runners):
         - Copy the compiled jar file to `$TANGO_ROOT/share/java/`:
             - `sudo cp target/JavaBenchmarkTarget-1.0.jar /usr/local/share/java/`
 
-
-4. Make sure that the installed device servers are in *Starter* paths (if you use Starter) or in *PATH*. 
+1. Make sure that the installed device servers are in *Starter* paths (if you use Starter) or in *PATH*. 
    The benchmark runner will try to either run the servers with the *Starter* service or as command line processes.
-      
-5. Install benchmarks from `benchmarks` folder. 
+
+1. Install benchmarks from `benchmarks` folder. 
     - Go to this folder: `cd benchmarks`
     - Install: `pip install .`
- 
+
+1. Install C++ workers:
+    ```bash
+    cd cppclient
+    make all
+    sudo -E make install
+    # or make install INSTALL_DIR=~/.local/bin
+    ```
+
 ### Running a default benchmark
 
 The benchmark runner (`tg_benchmarkrunner`) uses a configuration script provided with `-c` command line options. 
@@ -89,7 +96,7 @@ Below is a description of certain columns of the result table:
 - `Sum counts`: total number of operations (reads, writes, subscriptions etc., depending of type of benchmark)
   counted during period (`Time`) of the run,
 - `Sum speed`: `Sum counts`/`Time`, how fast certain operation can be performed on server side,
-- `Counts`: average number of benchmarked operations within one client, `Sum counts`/`No. clients`,  
+- `Counts`: average number of benchmarked operations within one client, `Sum counts`/`No. clients`,
 - `Speed`: average speed of clients, `Counts`/`Time`,
 - `No. clients`: number of clients for this run,
 - `Time`: Measured period of the run, 
@@ -112,9 +119,11 @@ to define a scope of tests. Please use `--help` option to list them. Below is a 
    it reads scalar, spectrum or image attribute,
 - `tg_writebenchmark` checks how the number of clients affects attributes write speed. One may chose whether 
    it reads scalar, spectrum or image attribute,
-- `tg_pipebenchmark` checks how number of clients affects pipe read speed. Size of pipe may be provided to check 
+- `tg_pipe_read_benchmark` checks how number of clients affects pipe read speed. Size of pipe may be provided to check 
   also impact of data size,
-- `tg_eventbanchmark` checks how event subscription time is affected by number of clients.   
+- `tg_pipe_write_benchmark` checks how number of clients affects pipe write speed. Size of pipe may be provided to check 
+  also impact of data size,
+- `tg_eventbanchmark` checks how event subscription time is affected by number of clients.
 
 Please note, new ones will be provided soon :).
 
@@ -135,7 +144,7 @@ Then it tries to run them with the *Starter* or from the command line.
 
 The configuration file allows to define a machine (`host` parameter) on which the certain target device should be run. 
 For remote machines, the auto-setup feature requires them to run a *Starter* device. Of course, the target device servers
-should be installed on that machine and available to the *Starter*.  
+should be installed on that machine and available to the *Starter*.
 
 #### Configuration file
 
@@ -199,4 +208,89 @@ See, a YAML example:
   target_device: test/javabenchmarktarget/01
   # host: localhost:10000
 ```
- 
+
+#### Custom workers
+
+It is possible to use a custom worker (client) class in order to change the test
+scenario or tweak some parameters. Option `worker` (or `--worker` argument)
+must point to a worker module/class, e.g.:
+```yaml
+- benchmark: readbenchmark
+  title: "benchmark with custom worker"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+  worker: your.custom.WorkerClass
+```
+
+In the example above, `WorkerClass` is located in `your.custom` module on `$PYTHONPATH`.
+
+The worker class must expose `multiprocessing.Process`-like interface, e.g.:
+```python
+class WorkerClass
+    def __init__(self, wid, qresult, options, **_):
+        pass
+
+    def start(self):
+        pass
+
+    def join(self):
+        pass
+```
+
+Where:
+* `wid` is worker id (`int`),
+* `qresult` is a `multiprocessing.Queue` and must be populated with
+  `tangobenchmarks.utils.Result`
+* `options` is a dictionary with configuration file entries
+  (or commandline arguments)
+
+If no `worker` is configured, a default worker (specific to each benchmark)
+is used.
+
+#### Workers in external programs
+
+`tangobenchmarks.client.external.Worker` module allows to use an external program
+as a benchmark worker. `worker_program` option (or `--worker-program` argument)
+must point to the worker program. It is possible to use either an absolute path,
+a relative path (to benchmark's working directory) or a name available on `$PATH`.
+```yaml
+- benchmark: writebenchmark
+  # ...
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: "test/assets/dummy_client.sh"
+```
+
+All benchmark options are passed to the worker program via environment
+variables. Variable names are prefixed with `_TANGO_BENCHMARK_`. Example
+variable names are:
+* `_TANGO_BENCHMARK_device`
+* `_TANGO_BENCHMARK_period`
+
+Worker program is expected to print a single line to stdandard output and then
+exit with 0. The output must be formatted as follows:
+
+```
+<number-of-successful-operations> <time-delta> <number-of-errors>
+```
+
+#### C++ workers
+
+Some C++ workers are provided as an alternative to default Python workers.
+C++ workers are located in `cppclient` directory. The workers need to be
+compiled, e.g. using provided `Makefile`:
+
+```bash
+cd cppclient
+make all
+make install INSTALL_DIR=~/.local/bin
+# or: sudo -E make install
+```
+
+C++ worker program must be configured using external worker module, e.g.:
+```yaml
+- benchmark: readbenchmark
+  # ...
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: path/to/cppclient/bin/tg_benchmark_client_read
+```

@@ -32,7 +32,8 @@ from . import release
 from . import readbenchmark
 from . import writebenchmark
 from . import eventbenchmark
-from . import pipebenchmark
+from . import pipe_read_benchmark
+from . import pipe_write_benchmark
 from . import servers
 
 
@@ -81,7 +82,10 @@ def main():
             if filename.endswith(".json"):
                 cflist = json.load(stream)
             else:
-                cflist = yaml.load(stream)
+                if hasattr(yaml, 'FullLoader'):
+                    cflist = yaml.load(stream, Loader=yaml.FullLoader)
+                else:
+                    cflist = yaml.load(stream)
 
         benchmarks = []
         devices = []
@@ -101,7 +105,8 @@ def main():
         "readbenchmark": readbenchmark,
         "writebenchmark": writebenchmark,
         "eventbenchmark": eventbenchmark,
-        "pipebenchmark": pipebenchmark,
+        "pipe_read_benchmark": pipe_read_benchmark,
+        "pipe_write_benchmark": pipe_write_benchmark,
     }
 
     stqueue = Queue()

@@ -24,7 +24,7 @@
 import os
 import sys
 import subprocess
-from setuptools import setup
+from setuptools import setup, find_packages
 from distutils.core import Command
 from sphinx.setup_command import BuildDoc
 from tangobenchmarks.release import name, version
@@ -41,8 +41,7 @@ sys.path.insert(0, setup_dir)
 release_filename = os.path.join(setup_dir, 'tangobenchmarks', 'release.py')
 exec(open(release_filename).read())
 
-pack = ['tangobenchmarks']
-
+pack = find_packages('.', exclude=['test'])
 
 install_requires = [
     'numpy>1.6.0',
@@ -53,6 +52,16 @@ install_requires = [
     'docutils',
     'pytz',
     'python-dateutil',
+    ]
+
+entrypoint_scripts = [
+    'tg_pipe_read_benchmark = tangobenchmarks.pipe_read_benchmark:main',
+    'tg_pipe_write_benchmark = tangobenchmarks.pipe_write_benchmark:main',
+    'tg_readbenchmark = tangobenchmarks.readbenchmark:main',
+    'tg_writebenchmark = tangobenchmarks.writebenchmark:main',
+    'tg_eventbenchmark = tangobenchmarks.eventbenchmark:main',
+    'tg_cmdbenchmark = tangobenchmarks.cmdbenchmark:main',
+    'tg_benchmarkrunner = tangobenchmarks.runner:main',
     ]
 
 
@@ -88,14 +97,8 @@ SETUPDATA = dict(
     zip_safe=False,
     install_requires=install_requires,
     entry_points={
-        'console_scripts': [
-            'tg_pipebenchmark = tangobenchmarks.pipebenchmark:main',
-            'tg_readbenchmark = tangobenchmarks.readbenchmark:main',
-            'tg_writebenchmark = tangobenchmarks.writebenchmark:main',
-            'tg_eventbenchmark = tangobenchmarks.eventbenchmark:main',
-            'tg_cmdbenchmark = tangobenchmarks.cmdbenchmark:main',
-            'tg_benchmarkrunner = tangobenchmarks.runner:main',
-        ]},
+        'console_scripts': entrypoint_scripts
+    },
     author='Jan Kotanski, Piotr Goryl',
     author_email='jankotan at gmail.com, piotr.goryl at s2innovation.com',
     license='GPL',
