@@ -27,16 +27,48 @@ Benchmark device for counting attribute, command and pipe calls
 """
 
 import tango
-from tango import DebugIt
+from tango import DebugIt, DevState
 from tango.server import run
 from tango.server import Device, DeviceMeta
 from tango.server import attribute, command, pipe
 from tango import AttrWriteType, PipeWriteType
 import numpy as np
 import time
+from threading import Thread
 
 
 __all__ = ["PyBenchmarkTarget", "main"]
+
+
+class EventThread(Thread):
+
+    """ thread which pushes events
+    """
+
+    def __init__(self, dvname, speriod):
+        Thread.__init__(self)
+
+        self.__speriod = speriod
+        self.__dp = tango.DeviceProxy(dvname)
+        self.errors = []
+        self.running = True
+        self.counter = 0
+        self.finished = False
+
+    def run(self):
+        while self.running:
+            try:
+                self.__dp.PushScalarEvent()
+                self.counter += 1
+            except (tango.DevFailed, BaseException) as e:
+                self.errors.append(str(e))
+                # print(self.errors[-1])
+            except Exception as e:
+                self.errors.append(str(e))
+                # print(self.errors[-1])
+            if self.running:
+                time.sleep(self.__speriod * 0.001)
+        self.finished = True
 
 
 class PyBenchmarkTarget(Device):
@@ -123,6 +155,18 @@ class PyBenchmarkTarget(Device):
         doc="pipe writes count",
     )
 
+    EventSleepPeriod = attribute(
+        dtype='double',
+        access=AttrWriteType.READ_WRITE,
+        unit="ms",
+        doc="sleep period of the event thread in milliseconds",
+    )
+
+    ScalarEventsCount = attribute(
+        dtype='int',
+        doc="scalar events count",
+    )
+
     BenchmarkSpectrumAttribute = attribute(
         dtype=('double',),
         access=AttrWriteType.READ_WRITE,
@@ -168,6 +212,11 @@ class PyBenchmarkTarget(Device):
 
         self.__command_calls_count = 0
 
+        self.__event_sleep_period = 10.
+        self.__scalar_events_count = 0
+
+        self.__state = "ON"
+
         self.__reset_time = time.time()
 
         self.__benchmark_scalar_attribute = 0.0
@@ -201,12 +250,15 @@ class PyBenchmarkTarget(Device):
 
     @DebugIt()
     def dev_state(self):
-        argout = tango.DevState.ON
+        if self.__state == "ON":
+            argout = DevState.ON
+        else:
+            argout = DevState.RUNNING
         return argout
 
     @DebugIt()
     def dev_status(self):
-        self.argout = "State is ON"
+        self.argout = "State is %s" % self.__state
         self.set_status(self.argout)
         self.__status = Device.dev_status(self)
         return self.__status
@@ -267,6 +319,21 @@ class PyBenchmarkTarget(Device):
 
     def read_TimeSinceReset(self):
         return time.time() - self.__reset_time
+
+    def read_EventSleepPeriod(self):
+        return self.__event_sleep_period
+
+    def write_EventSleepPeriod(self, value):
+        self.__event_sleep_period = value
+
+    def is_EventSleepPeriod_allowed(self, attr):
+        if attr == attr.READ_REQ:
+            return True
+        else:
+            return self.get_state() not in [DevState.RUNNING]
+
+    def read_ScalarEventsCount(self):
+        return self.__scalar_events_count
 
     def read_BenchmarkSpectrumAttribute(self):
         self.__spectrum_reads_count += 1
@@ -344,6 +411,38 @@ class PyBenchmarkTarget(Device):
 
         self.__command_calls_count = 0
         self.__reset_time = time.time()
+
+    @command()
+    @DebugIt()
+    def StartScalarEvents(self):
+        self.__scalar_events_count = 0
+        self.__event_thread = EventThread(
+            self.get_name(), self.__event_sleep_period)
+        self.__event_thread.start()
+        self.__state = "RUNNING"
+
+    def is_StartScalarEvents_allowed(self):
+        return self.get_state() not in [DevState.RUNNING]
+
+    @command()
+    @DebugIt()
+    def StopScalarEvents(self):
+        self.__event_thread.running = False
+        while not self.__event_thread.finished:
+            time.sleep(0.01)
+        self.__event_thread.join()
+        self.__state = "ON"
+        self.__scalar_events_count = self.__event_thread.counter
+        errors = self.__event_thread.errors
+        if errors:
+            print(errors)
+
+    @command()
+    @DebugIt()
+    def PushScalarEvent(self):
+        self.push_change_event(
+            "BenchmarkScalarAttribute",
+            self.__benchmark_scalar_attribute)
 
 # ----------
 # Run server
