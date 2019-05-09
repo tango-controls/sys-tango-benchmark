@@ -30,6 +30,7 @@ import numpy as np
 import time
 import unittest
 import tango
+import threading
 
 
 # Path
@@ -46,6 +47,25 @@ def cb_tango(*args):
     event_data = args[0]
     if event_data.err:
         print(event_data.errors)
+
+
+class TangoCounterCb(object):
+    """callback class which counts events
+    """
+
+    def __init__(self):
+        self.counter = 0
+        self.errors = []
+        self.lock = threading.Lock()
+
+    def push_event(self, *args, **kwargs):
+        """callback method receiving the event
+        """
+        event_data = args[0]
+        with self.lock:
+            if event_data.err:
+                self.errors.append(event_data.errors)
+            self.counter += 1
 
 
 # Device test case
@@ -674,6 +694,91 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         time.sleep(0.1)
         self.assertTrue(isinstance(id_, int))
         self.proxy.unsubscribe_event(id_)
+
+    def test_ScalarEvents_start_stop(self):
+        """Test for start and stop thread of ScalarEvents"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkScalarAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        # default
+        # self.proxy.EventSleepPeriod = 10
+        self.proxy.StartScalarEvents()
+        time.sleep(1)
+        self.proxy.StopScalarEvents()
+        time.sleep(0.1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.ScalarEventsCount <= 101)
+        self.assertTrue(counter_cb.counter <= 102)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ScalarEvents_sleep_period_100(self):
+        """Test for start and stop thread of ScalarEvents"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkScalarAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventSleepPeriod = 100
+        self.proxy.StartScalarEvents()
+        time.sleep(1)
+        self.proxy.StopScalarEvents()
+        time.sleep(0.1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.ScalarEventsCount <= 11)
+        self.assertTrue(counter_cb.counter <= 12)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ScalarEvents_sleep_period_1000(self):
+        """Test for start and stop thread of ScalarEvents"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkScalarAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventSleepPeriod = 1000
+        self.proxy.StartScalarEvents()
+        time.sleep(1)
+        self.proxy.StopScalarEvents()
+        time.sleep(0.1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.ScalarEventsCount <= 2)
+        self.assertTrue(counter_cb.counter <= 3)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ScalarEvents_subscribe(self):
+        """Test for start and stop thread of ScalarEvents"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkScalarAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.EventSleepPeriod = 10
+        time.sleep(1)
+        time.sleep(0.1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.ScalarEventsCount, 0)
+        self.assertEqual(counter_cb.counter, 1)
+        self.assertTrue(not counter_cb.errors)
 
 
 def main():
