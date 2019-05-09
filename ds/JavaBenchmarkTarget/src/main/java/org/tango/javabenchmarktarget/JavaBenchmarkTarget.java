@@ -647,6 +647,76 @@ public class JavaBenchmarkTarget {
 	}
 	
 	/**
+	 * Attribute EventSleepPeriod, double, Scalar, READ_WRITE
+	 * description:
+	 *     sleep period of the event thread in milliseconds
+	 */
+	@Attribute(name="EventSleepPeriod")
+	@AttributeProperties(description="sleep period of the event thread in milliseconds",
+	                     unit="ms")
+	private double eventSleepPeriod;
+	/**
+	 * Read attribute EventSleepPeriod
+	 * 
+	 * @return attribute value
+	 * @throws DevFailed if read attribute failed.
+	 */
+	public org.tango.server.attribute.AttributeValue getEventSleepPeriod() throws DevFailed {
+		xlogger.entry();
+		org.tango.server.attribute.AttributeValue
+			attributeValue = new org.tango.server.attribute.AttributeValue();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getEventSleepPeriod) ENABLED START -----*/
+		
+		//	Put read attribute code here
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getEventSleepPeriod
+		attributeValue.setValue(eventSleepPeriod);
+		xlogger.exit();
+		return attributeValue;
+	}
+	/**
+	 * Write attribute EventSleepPeriod
+	 * @param  eventSleepPeriod value to write
+	 * @throws DevFailed if write attribute failed.
+	 */
+	public void setEventSleepPeriod(double eventSleepPeriod) throws DevFailed {
+		xlogger.entry();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setEventSleepPeriod) ENABLED START -----*/
+		this.eventSleepPeriod = eventSleepPeriod;
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setEventSleepPeriod
+		xlogger.exit();
+	}
+	
+	/**
+	 * Attribute ScalarEventsCount, int, Scalar, READ
+	 * description:
+	 *     scalar events count
+	 */
+	@Attribute(name="ScalarEventsCount")
+	@AttributeProperties(description="scalar events count")
+	private int scalarEventsCount;
+	/**
+	 * Read attribute ScalarEventsCount
+	 * 
+	 * @return attribute value
+	 * @throws DevFailed if read attribute failed.
+	 */
+	public org.tango.server.attribute.AttributeValue getScalarEventsCount() throws DevFailed {
+		xlogger.entry();
+		org.tango.server.attribute.AttributeValue
+			attributeValue = new org.tango.server.attribute.AttributeValue();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getScalarEventsCount) ENABLED START -----*/
+		
+		//	Put read attribute code here
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getScalarEventsCount
+		attributeValue.setValue(scalarEventsCount);
+		xlogger.exit();
+		return attributeValue;
+	}
+	
+	/**
 	 * Attribute BenchmarkSpectrumAttribute, double, Spectrum, READ_WRITE
 	 * description:
 	 *     benchmark spectrum attribute
@@ -917,10 +987,60 @@ public class JavaBenchmarkTarget {
 		imageWritesCount = 0;
 		pipeWritesCount = 0;
 		
-		commandCallsCount = 0;
+ 		commandCallsCount = 0;
+ 		scalarEventsCount = 0;
 		resetTime = System.currentTimeMillis();
 	    
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.resetCounters
+		xlogger.exit();
+	}
+	
+	/**
+	 * Execute command "StartScalarEvents".
+	 * description: starts a thread which pushes events of BenchmarkScalar Attribute values
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="StartScalarEvents", inTypeDesc="", outTypeDesc="")
+	@StateMachine(deniedStates={DeviceState.RUNNING})
+	public void StartScalarEvents() throws DevFailed {
+		xlogger.entry();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.startScalarEvents) ENABLED START -----*/
+		
+		//	Put command code here
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.startScalarEvents
+		xlogger.exit();
+	}
+	
+	/**
+	 * Execute command "StopScalarEvents".
+	 * description: stops a thread which pushes events of BenchmarkScalar Attribute values
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="StopScalarEvents", inTypeDesc="", outTypeDesc="")
+	public void StopScalarEvents() throws DevFailed {
+		xlogger.entry();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.stopScalarEvents) ENABLED START -----*/
+		
+		//	Put command code here
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.stopScalarEvents
+		xlogger.exit();
+	}
+	
+	/**
+	 * Execute command "PushScalarEvent".
+	 * description: pushes an event of BenchmarkScalarAttribute
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="PushScalarEvent", inTypeDesc="", outTypeDesc="")
+	public void PushScalarEvent() throws DevFailed {
+		xlogger.entry();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushScalarEvent) ENABLED START -----*/
+		
+		//	Put command code here
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.pushScalarEvent
 		xlogger.exit();
 	}
 	

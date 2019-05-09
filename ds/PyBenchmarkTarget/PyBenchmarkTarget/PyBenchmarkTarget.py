@@ -67,7 +67,6 @@ class EventThread(Thread):
                 self.errors.append(str(e))
                 # print(self.errors[-1])
             if self.running:
-                print(self.__speriod)
                 time.sleep(self.__speriod * 0.001)
         self.finished = True
 

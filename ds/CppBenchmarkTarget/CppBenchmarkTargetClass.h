@@ -238,6 +238,34 @@ public:
 		{return (static_cast<CppBenchmarkTarget *>(dev))->is_PipeWritesCount_allowed(ty);}
 };
 
+//	Attribute EventSleepPeriod class definition
+class EventSleepPeriodAttrib: public Tango::Attr
+{
+public:
+	EventSleepPeriodAttrib():Attr("EventSleepPeriod",
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
+	~EventSleepPeriodAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_EventSleepPeriod(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->write_EventSleepPeriod(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventSleepPeriod_allowed(ty);}
+};
+
+//	Attribute ScalarEventsCount class definition
+class ScalarEventsCountAttrib: public Tango::Attr
+{
+public:
+	ScalarEventsCountAttrib():Attr("ScalarEventsCount",
+			Tango::DEV_LONG, Tango::READ) {};
+	~ScalarEventsCountAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_ScalarEventsCount(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_ScalarEventsCount_allowed(ty);}
+};
+
 //	Attribute BenchmarkSpectrumAttribute class definition
 class BenchmarkSpectrumAttributeAttrib: public Tango::SpectrumAttr
 {
@@ -383,6 +411,75 @@ public:
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<CppBenchmarkTarget *>(dev))->is_ResetCounters_allowed(any);}
+};
+
+//	Command StartScalarEvents class definition
+class StartScalarEventsClass : public Tango::Command
+{
+public:
+	StartScalarEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	StartScalarEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~StartScalarEventsClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StartScalarEvents_allowed(any);}
+};
+
+//	Command StopScalarEvents class definition
+class StopScalarEventsClass : public Tango::Command
+{
+public:
+	StopScalarEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	StopScalarEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~StopScalarEventsClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StopScalarEvents_allowed(any);}
+};
+
+//	Command PushScalarEvent class definition
+class PushScalarEventClass : public Tango::Command
+{
+public:
+	PushScalarEventClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	PushScalarEventClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~PushScalarEventClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_PushScalarEvent_allowed(any);}
 };
 
 
