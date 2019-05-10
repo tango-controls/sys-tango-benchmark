@@ -45,11 +45,11 @@ class EventThread(Thread):
     """ thread which pushes events
     """
 
-    def __init__(self, dvname, speriod):
+    def __init__(self, server, speriod):
         Thread.__init__(self)
 
         self.__speriod = speriod
-        self.__dp = tango.DeviceProxy(dvname)
+        self.__server = server
         self.errors = []
         self.running = True
         self.counter = 0
@@ -58,7 +58,9 @@ class EventThread(Thread):
     def run(self):
         while self.running:
             try:
-                self.__dp.PushScalarEvent()
+                with tango.AutoTangoMonitor(self.__server):
+                    self.__server.PushScalarEvent()
+                # print(self.__speriod)
                 self.counter += 1
             except (tango.DevFailed, BaseException) as e:
                 self.errors.append(str(e))
@@ -417,7 +419,7 @@ class PyBenchmarkTarget(Device):
     def StartScalarEvents(self):
         self.__scalar_events_count = 0
         self.__event_thread = EventThread(
-            self.get_name(), self.__event_sleep_period)
+            self, self.__event_sleep_period)
         self.__event_thread.start()
         self.__state = "RUNNING"
 
