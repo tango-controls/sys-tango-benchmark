@@ -37,6 +37,8 @@
 #include <CppBenchmarkTarget.h>
 #include <CppBenchmarkTargetClass.h>
 #include <sys/time.h>
+#include "EventThread.h"
+
 
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget.cpp
 
@@ -139,6 +141,12 @@ void CppBenchmarkTarget::delete_device()
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::delete_device) ENABLED START -----*/
 
 	//	Delete device allocated objects
+	int* nret;
+	if(event_thread){
+	  event_thread->join((void**)&nret);
+	  delete(event_thread);
+	  event_thread = NULL;
+	}
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::delete_device
 	delete[] attr_BenchmarkScalarAttribute_read;
@@ -175,9 +183,9 @@ void CppBenchmarkTarget::init_device()
 	//	Initialization before get_device_property() call
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::init_device_before
-	
+
 	//	No device property to be read from database
-	
+
 	attr_BenchmarkScalarAttribute_read = new Tango::DevDouble[1];
 	attr_AlwaysExecutedHookCount_read = new Tango::DevLong[1];
 	attr_ReadAttributeHardwareCount_read = new Tango::DevLong[1];
@@ -202,22 +210,22 @@ void CppBenchmarkTarget::init_device()
 	always_executed_hook_count = 0;
 	read_attribute_hardware_count = 0;
 	write_attribute_counter_count = 0;
-	
+
 	scalar_reads_count = 0;
 	spectrum_reads_count = 0;
 	image_reads_count = 0;
 	pipe_reads_count = 0;
-  
+
 	scalar_writes_count = 0;
 	spectrum_writes_count = 0;
 	image_writes_count = 0;
 	pipe_writes_count = 0;
-	
+
 	command_calls_count = 0;
 	scalar_events_count = 0;
-	
-	event_sleep_period = 0.0;
-	
+
+	*attr_EventSleepPeriod_read =10.0;
+
 	gettimeofday(&reset_time, NULL);
 	//   self.__benchmark_pipe = (
         //     'PipeBlob',
@@ -595,7 +603,7 @@ void CppBenchmarkTarget::read_EventSleepPeriod(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_EventSleepPeriod) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_EventSleepPeriod_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_EventSleepPeriod
 }
 //--------------------------------------------------------
@@ -615,8 +623,8 @@ void CppBenchmarkTarget::write_EventSleepPeriod(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_EventSleepPeriod) ENABLED START -----*/
 	*attr_EventSleepPeriod_read = w_val;
-	
-	
+
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_EventSleepPeriod
 }
 //--------------------------------------------------------
@@ -635,7 +643,7 @@ void CppBenchmarkTarget::read_ScalarEventsCount(Tango::Attribute &attr)
 	//	Set the attribute value
 	*attr_ScalarEventsCount_read = scalar_events_count;
 	attr.set_value(attr_ScalarEventsCount_read);
-	
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_ScalarEventsCount
 }
 //--------------------------------------------------------
@@ -888,7 +896,7 @@ void CppBenchmarkTarget::set_image_size(const Tango::DevVarLongArray *argin)
 	attr_BenchmarkImageAttribute_length =
 	  attr_BenchmarkImageAttribute_x *
 	  attr_BenchmarkImageAttribute_y;
-	  
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::set_image_size
 }
 //--------------------------------------------------------
@@ -907,17 +915,17 @@ void CppBenchmarkTarget::reset_counters()
 	always_executed_hook_count = 0;
 	read_attribute_hardware_count = 0;
 	write_attribute_counter_count = 0;
-	
+
 	scalar_reads_count = 0;
 	spectrum_reads_count = 0;
 	image_reads_count = 0;
 	pipe_reads_count = 0;
-  
+
 	scalar_writes_count = 0;
 	spectrum_writes_count = 0;
 	image_writes_count = 0;
 	pipe_writes_count = 0;
-	
+
 	command_calls_count = 0;
 	gettimeofday(&reset_time, NULL);
 
@@ -934,9 +942,19 @@ void CppBenchmarkTarget::start_scalar_events()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::StartScalarEvents()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::start_scalar_events) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+	double speriod(*attr_EventSleepPeriod_read);
+	long usperiod;
+	int* nret;
+	scalar_events_count = 0;
+	usperiod = static_cast<long>(speriod * 1000);
+	if(event_thread){
+	  event_thread->join((void**)&nret);
+	  delete(event_thread);
+	}
+	event_thread = new EventThread(this, usperiod, m_mutex);
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::start_scalar_events
 }
 //--------------------------------------------------------
@@ -950,9 +968,28 @@ void CppBenchmarkTarget::stop_scalar_events()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::StopScalarEvents()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::stop_scalar_events) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+	int* nret;
+	{
+	  omni_mutex_lock l(m_mutex);
+	  event_thread->running = false;
+	}
+	bool loop = true;
+	while(loop){
+	  {
+	    omni_mutex_lock l(m_mutex);
+	    loop = not event_thread->finished;
+	  }
+	  usleep(10);
+	}
+	long ecounter;
+	{
+	  omni_mutex_lock l(m_mutex);
+	  scalar_events_count = event_thread->counter;
+	  ecounter = event_thread->errorcounter;
+	}
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::stop_scalar_events
 }
 //--------------------------------------------------------
@@ -966,9 +1003,10 @@ void CppBenchmarkTarget::push_scalar_event()
 {
 	DEBUG_STREAM << "CppBenchmarkTarget::PushScalarEvent()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::push_scalar_event) ENABLED START -----*/
-	
+
 	//	Add your own code
-	
+	push_change_event("BenchmarkScalarAttribute",
+			  attr_BenchmarkScalarAttribute_read);
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::push_scalar_event
 }
 //--------------------------------------------------------

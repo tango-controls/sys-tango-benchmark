@@ -48,7 +48,7 @@ namespace CppBenchmarkTarget_ns
 /*----- PROTECTED REGION ID(CppBenchmarkTarget::Additional Class Declarations) ENABLED START -----*/
 
 //	Additional Class Declarations
-
+  class EventThread;
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Additional Class Declarations
 
 class CppBenchmarkTarget : public TANGO_BASE_CLASS
@@ -79,14 +79,15 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   int command_calls_count = 0;
   int scalar_events_count = 0;
 
-  double event_sleep_period = 0.0;
-
   struct timeval reset_time;
 
   std::string pipe_name = "";
   std::string pipe_blob_name = "BlobCaseEven";
   std::vector<std::string> pipe_element_names {"EvenFirstDE","EvenSecondDE"};
   size_t pipe_size = 2;
+
+  omni_mutex m_mutex;
+  EventThread* event_thread = NULL;
 
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
