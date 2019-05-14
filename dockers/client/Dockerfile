@@ -7,7 +7,27 @@ RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 RUN /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y python-pytango git libgfortran5 libblas3 python-numpy liblapack3 libboost-python1.67.0 python-tz python-setuptools python-sphinx python-whichcraft python-yaml python-docutils python-dateutil'
 RUN /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y openssh-client ssh ipython libzmq-java'
 
+RUN apt update \
+ && apt install -y \
+    wget \
+    g++ \
+    binutils \
+    libtango-dev
+
+RUN mkdir tangotmp \
+ && cd tangotmp \
+ && wget https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb \
+ && ar x libtango-java_*.deb \
+ && tar xf data.tar.xz \
+ && cp -r usr/share/pogo /usr/share/ \
+ && cd .. \
+ && rm -rf tangotmp
+
 RUN /bin/sh -c 'cd /opt &&  git clone https://github.com/tango-controls/sys-tango-benchmark'
+
+RUN cd /opt/sys-tango-benchmark/cppclient \
+ && make \
+ && make install
 
 
 # ##########################################
