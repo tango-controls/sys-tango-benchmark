@@ -67,6 +67,8 @@ import org.tango.server.dynamic.DynamicManager;
 import org.tango.server.events.EventManager;
 import org.tango.server.events.EventType;
 import org.tango.utils.DevFailedUtils;
+import org.tango.server.attribute.AttributeValue;
+import java.lang.Thread;
 
 //	Import Tango IDL types
 import fr.esrf.Tango.*;
@@ -75,6 +77,9 @@ import fr.esrf.TangoApi.PipeBlob;
 import fr.esrf.TangoApi.PipeDataElement;
 
 import java.lang.System;
+
+import org.tango.javabenchmarktarget.EventThread;
+
 /*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.imports
 
 /**
@@ -99,7 +104,7 @@ public class JavaBenchmarkTarget {
 	
 	//	Put private variables here
     private long resetTime = 0;
-    
+    private EventThread eventThread;     
         // self.__benchmark_pipe = (
         //     'PipeBlob',
         //     (
@@ -140,6 +145,7 @@ public class JavaBenchmarkTarget {
 		PipeBlob myPipeBlob = new PipeBlob("A");
 		myPipeBlob.add(new PipeDataElement("C", "B"));
 		benchmarkPipe = new PipeValue(myPipeBlob);
+		state = DevState.ON;
 
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.initDevice
 		xlogger.exit();
@@ -869,7 +875,6 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getState) ENABLED START -----*/
 		
 		//	Put state code here
-		state = DevState.ON;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getState
 		return state;
 	}
@@ -1005,9 +1010,11 @@ public class JavaBenchmarkTarget {
 	public void StartScalarEvents() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.startScalarEvents) ENABLED START -----*/
-		
-		//	Put command code here
-		
+		scalarEventsCount = 0;		
+		eventThread = new EventThread(this,
+					      (int)eventSleepPeriod);
+		eventThread.start();
+		state = DevState.RUNNING;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.startScalarEvents
 		xlogger.exit();
 	}
@@ -1022,7 +1029,22 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.stopScalarEvents) ENABLED START -----*/
 		
-		//	Put command code here
+		eventThread.setRunning(false);
+		while(!eventThread.getFinished()){
+		    try{
+			Thread.sleep(10);
+		    }
+		    catch(java.lang.InterruptedException e){
+		    }
+		}
+		try{
+		    eventThread.join();
+		}
+		catch(java.lang.InterruptedException e){
+		}
+		state = DevState.RUNNING;
+		scalarEventsCount = eventThread.getCounter();
+		int errorCounter = eventThread.getErrorCounter();
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.stopScalarEvents
 		xlogger.exit();
@@ -1039,6 +1061,9 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushScalarEvent) ENABLED START -----*/
 		
 		//	Put command code here
+		deviceManager.pushEvent("BenchmarkScalarAttribute",
+					new AttributeValue(benchmarkScalarAttribute),
+					EventType.CHANGE_EVENT);
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.pushScalarEvent
 		xlogger.exit();

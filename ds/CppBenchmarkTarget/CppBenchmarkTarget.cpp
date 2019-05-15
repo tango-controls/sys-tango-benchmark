@@ -812,12 +812,11 @@ Tango::DevState CppBenchmarkTarget::dev_state()
 	DEBUG_STREAM << "CppBenchmarkTarget::State()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::dev_state) ENABLED START -----*/
 
-	Tango::DevState	argout = Tango::ON; // replace by your own algorithm
 	//	Add your own code
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::dev_state
-	set_state(argout);    // Give the state to Tango.
-	if (argout!=Tango::ALARM)
+	set_state(m_state);    // Give the state to Tango.
+	if (m_state!=Tango::ALARM)
 		Tango::DeviceImpl::dev_state();
 	return get_state();  // Return it after Tango management.
 }
@@ -835,6 +834,9 @@ Tango::ConstDevString CppBenchmarkTarget::dev_status()
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::dev_status) ENABLED START -----*/
 
 	string	status = "State is ON";
+	if (m_state == Tango::RUNNING){
+	  status = "State is RUNNING";
+	}
 	//	Add your own code
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::dev_status
@@ -954,7 +956,7 @@ void CppBenchmarkTarget::start_scalar_events()
 	  delete(event_thread);
 	}
 	event_thread = new EventThread(this, usperiod, m_mutex);
-
+	m_state = Tango::RUNNING;
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::start_scalar_events
 }
 //--------------------------------------------------------
@@ -983,6 +985,7 @@ void CppBenchmarkTarget::stop_scalar_events()
 	  }
 	  usleep(10);
 	}
+	m_state = Tango::ON;
 	long ecounter;
 	{
 	  omni_mutex_lock l(m_mutex);

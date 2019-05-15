@@ -707,11 +707,14 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             counter_cb)
         # default
         # self.proxy.EventSleepPeriod = 10
+        self.assertEqual(self.proxy.State(), tango.DevState.ON)
         self.proxy.StartScalarEvents()
+        self.assertEqual(self.proxy.State(), tango.DevState.RUNNING)
         time.sleep(1)
         self.proxy.StopScalarEvents()
         time.sleep(0.1)
         self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.State(), tango.DevState.ON)
         self.assertEqual(self.proxy.ScalarEventsCount + 1,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 101)

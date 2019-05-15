@@ -109,7 +109,6 @@ class PyBenchmarkTarget(Device):
         dtype='int',
         doc="scalar reads count",
     )
-
     SpectrumReadsCount = attribute(
         dtype='int',
         doc="spectrum reads count",

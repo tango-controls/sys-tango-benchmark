@@ -88,7 +88,9 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
 
   omni_mutex m_mutex;
   EventThread* event_thread = NULL;
-
+  Tango::DevState m_state = Tango::ON; // replace by your own algorithm
+  
+  
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
 

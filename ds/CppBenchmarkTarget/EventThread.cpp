@@ -12,7 +12,7 @@ namespace CppBenchmarkTarget_ns
      running(true),
      finished(false),
      counter(0),
-     errorcounter(0)     
+     errorcounter(0)
   {
     start_undetached();
   }
@@ -52,5 +52,5 @@ namespace CppBenchmarkTarget_ns
     }
     omni_thread::exit();
   }
-  
+
 } // End of namespace
