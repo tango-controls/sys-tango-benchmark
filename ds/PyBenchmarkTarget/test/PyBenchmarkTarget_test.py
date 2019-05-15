@@ -719,7 +719,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertEqual(self.proxy.ScalarEventsCount + 1,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 101)
-        self.assertTrue(counter_cb.counter <= 102)
+        self.assertTrue(counter_cb.counter <=
+                        101 + self.event_on_subscribe)
         self.assertTrue(self.proxy.ScalarEventsCount > 50)
         self.assertTrue(counter_cb.counter > 50)
         self.assertTrue(not counter_cb.errors)
@@ -744,7 +745,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                          self.event_on_subscribe,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 11)
-        self.assertTrue(counter_cb.counter <= 12)
+        self.assertTrue(counter_cb.counter <=
+                        1 + self.event_on_subscribe)
         self.assertTrue(self.proxy.ScalarEventsCount > 5)
         self.assertTrue(counter_cb.counter > 5)
         self.assertTrue(not counter_cb.errors)
@@ -769,9 +771,10 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                          self.event_on_subscribe,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 2)
-        self.assertTrue(counter_cb.counter <= 3)
+        self.assertTrue(counter_cb.counter <=
+                        1 + self.event_on_subscribe)
         self.assertTrue(self.proxy.ScalarEventsCount > 0)
-        self.assertTrue(counter_cb.counter > 1)
+        self.assertTrue(counter_cb.counter > self.event_on_subscribe)
         self.assertTrue(not counter_cb.errors)
 
     def test_ScalarEvents_subscribe(self):
@@ -789,7 +792,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         time.sleep(0.1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.ScalarEventsCount, 0)
-        self.assertEqual(counter_cb.counter, 1)
+        self.assertEqual(counter_cb.counter,
+                         self.event_on_subscribe)
         self.assertTrue(not counter_cb.errors)
 
 
