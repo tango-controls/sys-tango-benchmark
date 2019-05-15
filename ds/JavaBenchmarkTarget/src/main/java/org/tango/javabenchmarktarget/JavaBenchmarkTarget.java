@@ -146,7 +146,7 @@ public class JavaBenchmarkTarget {
 		myPipeBlob.add(new PipeDataElement("C", "B"));
 		benchmarkPipe = new PipeValue(myPipeBlob);
 		state = DevState.ON;
-
+		eventSleepPeriod = 10.0;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.initDevice
 		xlogger.exit();
 	}
@@ -660,7 +660,7 @@ public class JavaBenchmarkTarget {
 	@Attribute(name="EventSleepPeriod")
 	@AttributeProperties(description="sleep period of the event thread in milliseconds",
 	                     unit="ms")
-	private double eventSleepPeriod;
+	private double eventSleepPeriod = 10.0;
 	/**
 	 * Read attribute EventSleepPeriod
 	 * 
