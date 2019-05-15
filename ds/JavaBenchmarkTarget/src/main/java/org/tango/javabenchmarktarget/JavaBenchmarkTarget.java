@@ -140,7 +140,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.initDevice) ENABLED START -----*/
 		
 		//	Put your device initialization code here
-		resetTime = System.currentTimeMillis();
+		resetTime = System.nanoTime();
 
 		PipeBlob myPipeBlob = new PipeBlob("A");
 		myPipeBlob.add(new PipeDataElement("C", "B"));
@@ -584,8 +584,8 @@ public class JavaBenchmarkTarget {
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		long endTime = System.currentTimeMillis();
-		timeSinceReset = (double)(endTime - resetTime) / 1000.;
+		long endTime = System.nanoTime();
+		timeSinceReset = (double)(endTime - resetTime) / 1000000000.;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getTimeSinceReset
 		attributeValue.setValue(timeSinceReset);
 		xlogger.exit();
@@ -994,7 +994,7 @@ public class JavaBenchmarkTarget {
 		
  		commandCallsCount = 0;
  		scalarEventsCount = 0;
-		resetTime = System.currentTimeMillis();
+		resetTime = System.nanoTime();
 	    
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.resetCounters
 		xlogger.exit();
@@ -1042,7 +1042,7 @@ public class JavaBenchmarkTarget {
 		}
 		catch(java.lang.InterruptedException e){
 		}
-		state = DevState.RUNNING;
+		state = DevState.ON;
 		scalarEventsCount = eventThread.getCounter();
 		int errorCounter = eventThread.getErrorCounter();
 		

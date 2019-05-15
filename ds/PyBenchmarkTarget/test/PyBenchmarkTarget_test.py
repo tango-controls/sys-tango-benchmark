@@ -86,6 +86,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                                                 self.instance
         self.new_device_info_benchmark.name = self.device
         self.proxy = None
+        self.event_on_subscribe = 1
 
         if PY3:
             if os.path.isdir("./PyBenchmarkTarget"):
@@ -739,7 +740,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.proxy.StopScalarEvents()
         time.sleep(0.1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+        self.assertEqual(self.proxy.ScalarEventsCount +
+                         self.event_on_subscribe,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 11)
         self.assertTrue(counter_cb.counter <= 12)
@@ -763,7 +765,8 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.proxy.StopScalarEvents()
         time.sleep(0.1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+        self.assertEqual(self.proxy.ScalarEventsCount +
+                         self.event_on_subscribe,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 2)
         self.assertTrue(counter_cb.counter <= 3)
