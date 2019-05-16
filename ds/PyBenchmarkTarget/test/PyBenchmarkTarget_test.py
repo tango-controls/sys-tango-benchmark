@@ -713,7 +713,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.assertEqual(self.proxy.State(), tango.DevState.RUNNING)
         time.sleep(1)
         self.proxy.StopScalarEvents()
-        time.sleep(0.1)
+        time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.State(), tango.DevState.ON)
         self.assertEqual(
@@ -740,7 +740,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.proxy.StartScalarEvents()
         time.sleep(1)
         self.proxy.StopScalarEvents()
-        time.sleep(0.1)
+        time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.ScalarEventsCount +
                          self.event_on_subscribe,
@@ -766,7 +766,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.proxy.StartScalarEvents()
         time.sleep(1)
         self.proxy.StopScalarEvents()
-        time.sleep(0.1)
+        time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.ScalarEventsCount +
                          self.event_on_subscribe,
@@ -792,7 +792,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.proxy.StartScalarEvents()
         time.sleep(1)
         self.proxy.StopScalarEvents()
-        time.sleep(0.1)
+        time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.ScalarEventsCount +
                          self.event_on_subscribe,
@@ -816,7 +816,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             counter_cb)
         self.EventSleepPeriod = 10
         time.sleep(1)
-        time.sleep(0.1)
+        time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.ScalarEventsCount, 0)
         self.assertEqual(counter_cb.counter,
