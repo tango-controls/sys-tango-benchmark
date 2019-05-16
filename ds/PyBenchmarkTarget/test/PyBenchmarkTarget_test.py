@@ -716,7 +716,34 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         time.sleep(0.1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.State(), tango.DevState.ON)
-        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+        self.assertEqual(
+            self.proxy.ScalarEventsCount + self.event_on_subscribe,
+            counter_cb.counter)
+        self.assertTrue(self.proxy.ScalarEventsCount <= 101)
+        self.assertTrue(counter_cb.counter <=
+                        101 + self.event_on_subscribe)
+        self.assertTrue(self.proxy.ScalarEventsCount > 50)
+        self.assertTrue(counter_cb.counter > 50)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ScalarEvents_sleep_period_10(self):
+        """Test for start and stop thread of ScalarEvents"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkScalarAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventSleepPeriod = 10
+        self.proxy.StartScalarEvents()
+        time.sleep(1)
+        self.proxy.StopScalarEvents()
+        time.sleep(0.1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.ScalarEventsCount +
+                         self.event_on_subscribe,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 101)
         self.assertTrue(counter_cb.counter <=
@@ -746,7 +773,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 11)
         self.assertTrue(counter_cb.counter <=
-                        1 + self.event_on_subscribe)
+                        11 + self.event_on_subscribe)
         self.assertTrue(self.proxy.ScalarEventsCount > 5)
         self.assertTrue(counter_cb.counter > 5)
         self.assertTrue(not counter_cb.errors)
@@ -772,7 +799,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 2)
         self.assertTrue(counter_cb.counter <=
-                        1 + self.event_on_subscribe)
+                        2 + self.event_on_subscribe)
         self.assertTrue(self.proxy.ScalarEventsCount > 0)
         self.assertTrue(counter_cb.counter > self.event_on_subscribe)
         self.assertTrue(not counter_cb.errors)
