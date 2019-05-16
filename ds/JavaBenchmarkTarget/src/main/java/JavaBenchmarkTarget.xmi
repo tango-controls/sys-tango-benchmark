@@ -59,7 +59,7 @@
       </argout>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>
-    <commands name="StartScalarEvents" description="starts a thread which pushes events of BenchmarkScalar Attribute values" execMethod="start_scalar_events" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
+    <commands name="StartEvents" description="starts a thread which pushes events of BenchmarkScalar Attribute values" execMethod="start_scalar_events" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -69,7 +69,7 @@
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <excludedStates>RUNNING</excludedStates>
     </commands>
-    <commands name="StopScalarEvents" description="stops a thread which pushes events of BenchmarkScalar Attribute values" execMethod="stop_scalar_events" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
+    <commands name="StopEvents" description="stops a thread which pushes events of BenchmarkScalar Attribute values" execMethod="stop_scalar_events" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -78,7 +78,7 @@
       </argout>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>
-    <commands name="PushScalarEvent" description="pushes an event of BenchmarkScalarAttribute" execMethod="push_scalar_event" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
+    <commands name="PushEvent" description="pushes an event of BenchmarkScalarAttribute" execMethod="push_scalar_event" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -208,13 +208,13 @@
       <properties description="sleep period of the event thread in milliseconds" label="" unit="ms" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
       <writeExcludedStates>RUNNING</writeExcludedStates>
     </attributes>
-    <attributes name="ScalarEventsCount" attType="Scalar" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
+    <attributes name="EventsCount" attType="Scalar" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:IntType"/>
       <changeEvent fire="false" libCheckCriteria="false"/>
       <archiveEvent fire="false" libCheckCriteria="false"/>
       <dataReadyEvent fire="false" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-      <properties description="scalar events count" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <properties description="events count" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
     </attributes>
     <attributes name="BenchmarkSpectrumAttribute" attType="Spectrum" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="4096" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:DoubleType"/>

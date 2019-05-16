@@ -68,7 +68,7 @@ class EventThread extends Thread {
 	while(running.get()){
 	    try{
 	        synchronized (lock) {
-		    server.PushScalarEvent();
+		    server.PushEvent();
 		    counter++;
 		}
 	    }

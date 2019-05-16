@@ -28,7 +28,7 @@ namespace CppBenchmarkTarget_ns
       try{
 	{
 	  Tango::AutoTangoMonitor synch(m_objServer);
-	  m_objServer->push_scalar_event();
+	  m_objServer->push_event();
 	}
 	{
 	  omni_mutex_lock l(m_mutex);

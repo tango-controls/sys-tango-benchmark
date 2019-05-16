@@ -306,17 +306,17 @@ bool CppBenchmarkTarget::is_EventSleepPeriod_allowed(TANGO_UNUSED(Tango::AttReqT
 
 //--------------------------------------------------------
 /**
- *	Method      : CppBenchmarkTarget::is_ScalarEventsCount_allowed()
- *	Description : Execution allowed for ScalarEventsCount attribute
+ *	Method      : CppBenchmarkTarget::is_EventsCount_allowed()
+ *	Description : Execution allowed for EventsCount attribute
  */
 //--------------------------------------------------------
-bool CppBenchmarkTarget::is_ScalarEventsCount_allowed(TANGO_UNUSED(Tango::AttReqType type))
+bool CppBenchmarkTarget::is_EventsCount_allowed(TANGO_UNUSED(Tango::AttReqType type))
 {
 
-	//	Not any excluded states for ScalarEventsCount attribute in read access.
-	/*----- PROTECTED REGION ID(CppBenchmarkTarget::ScalarEventsCountStateAllowed_READ) ENABLED START -----*/
+	//	Not any excluded states for EventsCount attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventsCountStateAllowed_READ) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::ScalarEventsCountStateAllowed_READ
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventsCountStateAllowed_READ
 	return true;
 }
 
@@ -448,18 +448,18 @@ bool CppBenchmarkTarget::is_ResetCounters_allowed(TANGO_UNUSED(const CORBA::Any 
 
 //--------------------------------------------------------
 /**
- *	Method      : CppBenchmarkTarget::is_StartScalarEvents_allowed()
- *	Description : Execution allowed for StartScalarEvents attribute
+ *	Method      : CppBenchmarkTarget::is_StartEvents_allowed()
+ *	Description : Execution allowed for StartEvents attribute
  */
 //--------------------------------------------------------
-bool CppBenchmarkTarget::is_StartScalarEvents_allowed(TANGO_UNUSED(const CORBA::Any &any))
+bool CppBenchmarkTarget::is_StartEvents_allowed(TANGO_UNUSED(const CORBA::Any &any))
 {
 	//	Compare device state with not allowed states.
 	if (get_state()==Tango::RUNNING)
 	{
-	/*----- PROTECTED REGION ID(CppBenchmarkTarget::StartScalarEventsStateAllowed) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::StartEventsStateAllowed) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::StartScalarEventsStateAllowed
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::StartEventsStateAllowed
 		return false;
 	}
 	return true;
@@ -467,31 +467,31 @@ bool CppBenchmarkTarget::is_StartScalarEvents_allowed(TANGO_UNUSED(const CORBA::
 
 //--------------------------------------------------------
 /**
- *	Method      : CppBenchmarkTarget::is_StopScalarEvents_allowed()
- *	Description : Execution allowed for StopScalarEvents attribute
+ *	Method      : CppBenchmarkTarget::is_StopEvents_allowed()
+ *	Description : Execution allowed for StopEvents attribute
  */
 //--------------------------------------------------------
-bool CppBenchmarkTarget::is_StopScalarEvents_allowed(TANGO_UNUSED(const CORBA::Any &any))
+bool CppBenchmarkTarget::is_StopEvents_allowed(TANGO_UNUSED(const CORBA::Any &any))
 {
-	//	Not any excluded states for StopScalarEvents command.
-	/*----- PROTECTED REGION ID(CppBenchmarkTarget::StopScalarEventsStateAllowed) ENABLED START -----*/
+	//	Not any excluded states for StopEvents command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::StopEventsStateAllowed) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::StopScalarEventsStateAllowed
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::StopEventsStateAllowed
 	return true;
 }
 
 //--------------------------------------------------------
 /**
- *	Method      : CppBenchmarkTarget::is_PushScalarEvent_allowed()
- *	Description : Execution allowed for PushScalarEvent attribute
+ *	Method      : CppBenchmarkTarget::is_PushEvent_allowed()
+ *	Description : Execution allowed for PushEvent attribute
  */
 //--------------------------------------------------------
-bool CppBenchmarkTarget::is_PushScalarEvent_allowed(TANGO_UNUSED(const CORBA::Any &any))
+bool CppBenchmarkTarget::is_PushEvent_allowed(TANGO_UNUSED(const CORBA::Any &any))
 {
-	//	Not any excluded states for PushScalarEvent command.
-	/*----- PROTECTED REGION ID(CppBenchmarkTarget::PushScalarEventStateAllowed) ENABLED START -----*/
+	//	Not any excluded states for PushEvent command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::PushEventStateAllowed) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::PushScalarEventStateAllowed
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::PushEventStateAllowed
 	return true;
 }
 

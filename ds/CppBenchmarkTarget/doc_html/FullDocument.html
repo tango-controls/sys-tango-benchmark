@@ -20,9 +20,9 @@
 				<li> <a href="FullDocument.html#cmdSetSpectrumSize"> SetSpectrumSize </a>
 				<li> <a href="FullDocument.html#cmdSetImageSize"> SetImageSize </a>
 				<li> <a href="FullDocument.html#cmdResetCounters"> ResetCounters </a>
-				<li> <a href="FullDocument.html#cmdStartScalarEvents"> StartScalarEvents </a>
-				<li> <a href="FullDocument.html#cmdStopScalarEvents"> StopScalarEvents </a>
-				<li> <a href="FullDocument.html#cmdPushScalarEvent"> PushScalarEvent </a>
+				<li> <a href="FullDocument.html#cmdStartEvents"> StartEvents </a>
+				<li> <a href="FullDocument.html#cmdStopEvents"> StopEvents </a>
+				<li> <a href="FullDocument.html#cmdPushEvent"> PushEvent </a>
 			</ul>
 			<li> <a href="FullDocument.html#attributes">   Attributes   </a>
 			<ul>
@@ -41,7 +41,7 @@
 				<li> <a href="FullDocument.html#attrPipeReadsCount"> PipeReadsCount </a>
 				<li> <a href="FullDocument.html#attrPipeWritesCount"> PipeWritesCount </a>
 				<li> <a href="FullDocument.html#attrEventSleepPeriod"> EventSleepPeriod </a>
-				<li> <a href="FullDocument.html#attrScalarEventsCount"> ScalarEventsCount </a>
+				<li> <a href="FullDocument.html#attrEventsCount"> EventsCount </a>
 				<li> <a href="FullDocument.html#attrBenchmarkSpectrumAttribute"> BenchmarkSpectrumAttribute </a>
 				<li> <a href="FullDocument.html#attrBenchmarkImageAttribute"> BenchmarkImageAttribute </a>
 			</ul>
@@ -169,21 +169,21 @@
 		<td> reset counters </td>
 	</tr>
 	<tr>
-		<td> <a href="CmdStartScalarEvents.html"> StartScalarEvents </a> </td>
+		<td> <a href="CmdStartEvents.html"> StartEvents </a> </td>
 		<td> DEV_VOID </td>
 		<td> DEV_VOID </td>
 		<td> OPERATOR </td>
 		<td> starts a thread which pushes events of BenchmarkScalar Attribute values </td>
 	</tr>
 	<tr>
-		<td> <a href="CmdStopScalarEvents.html"> StopScalarEvents </a> </td>
+		<td> <a href="CmdStopEvents.html"> StopEvents </a> </td>
 		<td> DEV_VOID </td>
 		<td> DEV_VOID </td>
 		<td> OPERATOR </td>
 		<td> stops a thread which pushes events of BenchmarkScalar Attribute values </td>
 	</tr>
 	<tr>
-		<td> <a href="CmdPushScalarEvent.html"> PushScalarEvent </a> </td>
+		<td> <a href="CmdPushEvent.html"> PushEvent </a> </td>
 		<td> DEV_VOID </td>
 		<td> DEV_VOID </td>
 		<td> OPERATOR </td>
@@ -485,16 +485,16 @@
 	</tr>
 </table>
 <br><br><hr>
-<a name="cmdStartScalarEvents"> </a>
+<a name="cmdStartEvents"> </a>
 <br><br><br>
-<font size="+1"><u><b> Command StartScalarEvents : </b></u></font>
+<font size="+1"><u><b> Command StartEvents : </b></u></font>
 <ul>
 	starts a thread which pushes events of BenchmarkScalar Attribute values
 </ul>
 <br><br><br>
 <Table Border=2 Cellpadding=3 CELLSPACING=0>
 	<tr bgcolor="#CCCCFF" class="TableHeadingColor">
-	<td colspan=0> <font size=+1> <center><b> StartScalarEvents Definition </b></font></center></td>
+	<td colspan=0> <font size=+1> <center><b> StartEvents Definition </b></font></center></td>
 	</tr>
 	<tr>
 		<td> Input Argument </td>
@@ -534,16 +534,16 @@
 	</tr>
 </table>
 <br><br><hr>
-<a name="cmdStopScalarEvents"> </a>
+<a name="cmdStopEvents"> </a>
 <br><br><br>
-<font size="+1"><u><b> Command StopScalarEvents : </b></u></font>
+<font size="+1"><u><b> Command StopEvents : </b></u></font>
 <ul>
 	stops a thread which pushes events of BenchmarkScalar Attribute values
 </ul>
 <br><br><br>
 <Table Border=2 Cellpadding=3 CELLSPACING=0>
 	<tr bgcolor="#CCCCFF" class="TableHeadingColor">
-	<td colspan=0> <font size=+1> <center><b> StopScalarEvents Definition </b></font></center></td>
+	<td colspan=0> <font size=+1> <center><b> StopEvents Definition </b></font></center></td>
 	</tr>
 	<tr>
 		<td> Input Argument </td>
@@ -583,16 +583,16 @@
 	</tr>
 </table>
 <br><br><hr>
-<a name="cmdPushScalarEvent"> </a>
+<a name="cmdPushEvent"> </a>
 <br><br><br>
-<font size="+1"><u><b> Command PushScalarEvent : </b></u></font>
+<font size="+1"><u><b> Command PushEvent : </b></u></font>
 <ul>
 	pushes an event of BenchmarkScalarAttribute
 </ul>
 <br><br><br>
 <Table Border=2 Cellpadding=3 CELLSPACING=0>
 	<tr bgcolor="#CCCCFF" class="TableHeadingColor">
-	<td colspan=0> <font size=+1> <center><b> PushScalarEvent Definition </b></font></center></td>
+	<td colspan=0> <font size=+1> <center><b> PushEvent Definition </b></font></center></td>
 	</tr>
 	<tr>
 		<td> Input Argument </td>
@@ -799,14 +799,14 @@
 		<td> sleep period of the event thread in milliseconds </td>
 	</tr>
 	<tr>
-		<td> <a href="AttrScalarEventsCount.html"> ScalarEventsCount </a> </td>
+		<td> <a href="AttrEventsCount.html"> EventsCount </a> </td>
 		<td> false </td>
 		<td> false </td>
 		<td> Scalar </td>
 		<td> READ </td>
 		<td> Tango::DEV_LONG </td>
 		<td> OPERATOR </td>
-		<td> scalar events count </td>
+		<td> events count </td>
 	</tr>
 	<tr>
 		<td> <a href="AttrBenchmarkSpectrumAttribute.html"> BenchmarkSpectrumAttribute </a> </td>
@@ -3292,11 +3292,11 @@
 </table>
 <br><br>
 <hr>
-<a name="attrScalarEventsCount"> </a>
+<a name="attrEventsCount"> </a>
 <br><br><br>
-<font size="+1"><u><b> Attribute ScalarEventsCount : </b></u></font>
+<font size="+1"><u><b> Attribute EventsCount : </b></u></font>
 <ul>
-	scalar events count
+	events count
 </ul>
 <br><br><br>
 <Table Border=0 Cellpadding=0 CELLSPACING=20>

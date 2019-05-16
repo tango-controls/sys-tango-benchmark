@@ -59,7 +59,7 @@ class EventThread(Thread):
         while self.running:
             try:
                 with tango.AutoTangoMonitor(self.__server):
-                    self.__server.PushScalarEvent()
+                    self.__server.PushEvent()
                 # print(self.__speriod)
                 self.counter += 1
             except (tango.DevFailed, BaseException) as e:
@@ -163,9 +163,9 @@ class PyBenchmarkTarget(Device):
         doc="sleep period of the event thread in milliseconds",
     )
 
-    ScalarEventsCount = attribute(
+    EventsCount = attribute(
         dtype='int',
-        doc="scalar events count",
+        doc="events count",
     )
 
     BenchmarkSpectrumAttribute = attribute(
@@ -214,7 +214,7 @@ class PyBenchmarkTarget(Device):
         self.__command_calls_count = 0
 
         self.__event_sleep_period = 10.
-        self.__scalar_events_count = 0
+        self.__events_count = 0
 
         self.__state = "ON"
 
@@ -333,8 +333,8 @@ class PyBenchmarkTarget(Device):
         else:
             return self.get_state() not in [DevState.RUNNING]
 
-    def read_ScalarEventsCount(self):
-        return self.__scalar_events_count
+    def read_EventsCount(self):
+        return self.__events_count
 
     def read_BenchmarkSpectrumAttribute(self):
         self.__spectrum_reads_count += 1
@@ -415,32 +415,32 @@ class PyBenchmarkTarget(Device):
 
     @command()
     @DebugIt()
-    def StartScalarEvents(self):
-        self.__scalar_events_count = 0
+    def StartEvents(self):
+        self.__events_count = 0
         self.__event_thread = EventThread(
             self, self.__event_sleep_period)
         self.__event_thread.start()
         self.__state = "RUNNING"
 
-    def is_StartScalarEvents_allowed(self):
+    def is_StartEvents_allowed(self):
         return self.get_state() not in [DevState.RUNNING]
 
     @command()
     @DebugIt()
-    def StopScalarEvents(self):
+    def StopEvents(self):
         self.__event_thread.running = False
         while not self.__event_thread.finished:
             time.sleep(0.01)
         self.__event_thread.join()
         self.__state = "ON"
-        self.__scalar_events_count = self.__event_thread.counter
+        self.__events_count = self.__event_thread.counter
         errors = self.__event_thread.errors
         if errors:
             print(errors)
 
     @command()
     @DebugIt()
-    def PushScalarEvent(self):
+    def PushEvent(self):
         self.push_change_event(
             "BenchmarkScalarAttribute",
             self.__benchmark_scalar_attribute)

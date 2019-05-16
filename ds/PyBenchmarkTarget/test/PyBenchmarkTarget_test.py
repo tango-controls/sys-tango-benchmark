@@ -696,7 +696,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.proxy.unsubscribe_event(id_)
 
     def test_ScalarEvents_start_stop(self):
-        """Test for start and stop thread of ScalarEvents"""
+        """Test for start and stop thread of Events"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
         counter_cb = TangoCounterCb()
@@ -709,25 +709,25 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         # self.proxy.EventSleepPeriod = 10
         self.assertEqual(self.proxy.State(), tango.DevState.ON)
         time.sleep(1)
-        self.proxy.StartScalarEvents()
+        self.proxy.StartEvents()
         self.assertEqual(self.proxy.State(), tango.DevState.RUNNING)
         time.sleep(1)
-        self.proxy.StopScalarEvents()
+        self.proxy.StopEvents()
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.State(), tango.DevState.ON)
         self.assertEqual(
-            self.proxy.ScalarEventsCount + 1,
+            self.proxy.EventsCount + 1,
             counter_cb.counter)
-        self.assertTrue(self.proxy.ScalarEventsCount <= 101)
+        self.assertTrue(self.proxy.EventsCount <= 101)
         self.assertTrue(counter_cb.counter <=
                         102)
-        self.assertTrue(self.proxy.ScalarEventsCount > 50)
+        self.assertTrue(self.proxy.EventsCount > 50)
         self.assertTrue(counter_cb.counter > 50)
         self.assertTrue(not counter_cb.errors)
 
     def test_ScalarEvents_sleep_period_10(self):
-        """Test for start and stop thread of ScalarEvents"""
+        """Test for start and stop thread of Events"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
         counter_cb = TangoCounterCb()
@@ -738,21 +738,21 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             counter_cb)
         self.proxy.EventSleepPeriod = 10
         time.sleep(1)
-        self.proxy.StartScalarEvents()
+        self.proxy.StartEvents()
         time.sleep(1)
-        self.proxy.StopScalarEvents()
+        self.proxy.StopEvents()
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+        self.assertEqual(self.proxy.EventsCount + 1,
                          counter_cb.counter)
-        self.assertTrue(self.proxy.ScalarEventsCount <= 101)
+        self.assertTrue(self.proxy.EventsCount <= 101)
         self.assertTrue(counter_cb.counter <= 102)
-        self.assertTrue(self.proxy.ScalarEventsCount > 50)
+        self.assertTrue(self.proxy.EventsCount > 50)
         self.assertTrue(counter_cb.counter > 50)
         self.assertTrue(not counter_cb.errors)
 
     def test_ScalarEvents_sleep_period_100(self):
-        """Test for start and stop thread of ScalarEvents"""
+        """Test for start and stop thread of Events"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
         counter_cb = TangoCounterCb()
@@ -763,21 +763,21 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             counter_cb)
         self.proxy.EventSleepPeriod = 100
         time.sleep(1)
-        self.proxy.StartScalarEvents()
+        self.proxy.StartEvents()
         time.sleep(1)
-        self.proxy.StopScalarEvents()
+        self.proxy.StopEvents()
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+        self.assertEqual(self.proxy.EventsCount + 1,
                          counter_cb.counter)
-        self.assertTrue(self.proxy.ScalarEventsCount <= 11)
+        self.assertTrue(self.proxy.EventsCount <= 11)
         self.assertTrue(counter_cb.counter <= 12)
-        self.assertTrue(self.proxy.ScalarEventsCount > 5)
+        self.assertTrue(self.proxy.EventsCount > 5)
         self.assertTrue(counter_cb.counter > 5)
         self.assertTrue(not counter_cb.errors)
 
     def test_ScalarEvents_sleep_period_1000(self):
-        """Test for start and stop thread of ScalarEvents"""
+        """Test for start and stop thread of Events"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
         counter_cb = TangoCounterCb()
@@ -788,21 +788,21 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             counter_cb)
         self.proxy.EventSleepPeriod = 1000
         time.sleep(1)
-        self.proxy.StartScalarEvents()
+        self.proxy.StartEvents()
         time.sleep(1)
-        self.proxy.StopScalarEvents()
+        self.proxy.StopEvents()
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+        self.assertEqual(self.proxy.EventsCount + 1,
                          counter_cb.counter)
-        self.assertTrue(self.proxy.ScalarEventsCount <= 2)
+        self.assertTrue(self.proxy.EventsCount <= 2)
         self.assertTrue(counter_cb.counter <= 3)
-        self.assertTrue(self.proxy.ScalarEventsCount > 0)
+        self.assertTrue(self.proxy.EventsCount > 0)
         self.assertTrue(counter_cb.counter > 1)
         self.assertTrue(not counter_cb.errors)
 
     def test_ScalarEvents_subscribe(self):
-        """Test for start and stop thread of ScalarEvents"""
+        """Test for start and stop thread of Events"""
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
         counter_cb = TangoCounterCb()
@@ -814,7 +814,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         self.EventSleepPeriod = 10
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount, 0)
+        self.assertEqual(self.proxy.EventsCount, 0)
         self.assertEqual(counter_cb.counter, 1)
         self.assertTrue(not counter_cb.errors)
 

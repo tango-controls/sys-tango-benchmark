@@ -253,17 +253,17 @@ public:
 		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventSleepPeriod_allowed(ty);}
 };
 
-//	Attribute ScalarEventsCount class definition
-class ScalarEventsCountAttrib: public Tango::Attr
+//	Attribute EventsCount class definition
+class EventsCountAttrib: public Tango::Attr
 {
 public:
-	ScalarEventsCountAttrib():Attr("ScalarEventsCount",
+	EventsCountAttrib():Attr("EventsCount",
 			Tango::DEV_LONG, Tango::READ) {};
-	~ScalarEventsCountAttrib() {};
+	~EventsCountAttrib() {};
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<CppBenchmarkTarget *>(dev))->read_ScalarEventsCount(att);}
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_EventsCount(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<CppBenchmarkTarget *>(dev))->is_ScalarEventsCount_allowed(ty);}
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventsCount_allowed(ty);}
 };
 
 //	Attribute BenchmarkSpectrumAttribute class definition
@@ -413,11 +413,11 @@ public:
 	{return (static_cast<CppBenchmarkTarget *>(dev))->is_ResetCounters_allowed(any);}
 };
 
-//	Command StartScalarEvents class definition
-class StartScalarEventsClass : public Tango::Command
+//	Command StartEvents class definition
+class StartEventsClass : public Tango::Command
 {
 public:
-	StartScalarEventsClass(const char   *name,
+	StartEventsClass(const char   *name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
@@ -425,22 +425,22 @@ public:
 				   Tango::DispLevel  level)
 	:Command(name,in,out,in_desc,out_desc, level)	{};
 
-	StartScalarEventsClass(const char   *name,
+	StartEventsClass(const char   *name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
 	:Command(name,in,out)	{};
-	~StartScalarEventsClass() {};
+	~StartEventsClass() {};
 	
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StartScalarEvents_allowed(any);}
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StartEvents_allowed(any);}
 };
 
-//	Command StopScalarEvents class definition
-class StopScalarEventsClass : public Tango::Command
+//	Command StopEvents class definition
+class StopEventsClass : public Tango::Command
 {
 public:
-	StopScalarEventsClass(const char   *name,
+	StopEventsClass(const char   *name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
@@ -448,22 +448,22 @@ public:
 				   Tango::DispLevel  level)
 	:Command(name,in,out,in_desc,out_desc, level)	{};
 
-	StopScalarEventsClass(const char   *name,
+	StopEventsClass(const char   *name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
 	:Command(name,in,out)	{};
-	~StopScalarEventsClass() {};
+	~StopEventsClass() {};
 	
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StopScalarEvents_allowed(any);}
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StopEvents_allowed(any);}
 };
 
-//	Command PushScalarEvent class definition
-class PushScalarEventClass : public Tango::Command
+//	Command PushEvent class definition
+class PushEventClass : public Tango::Command
 {
 public:
-	PushScalarEventClass(const char   *name,
+	PushEventClass(const char   *name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
@@ -471,15 +471,15 @@ public:
 				   Tango::DispLevel  level)
 	:Command(name,in,out,in_desc,out_desc, level)	{};
 
-	PushScalarEventClass(const char   *name,
+	PushEventClass(const char   *name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
 	:Command(name,in,out)	{};
-	~PushScalarEventClass() {};
+	~PushEventClass() {};
 	
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<CppBenchmarkTarget *>(dev))->is_PushScalarEvent_allowed(any);}
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_PushEvent_allowed(any);}
 };
 
 

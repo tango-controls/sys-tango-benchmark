@@ -226,7 +226,7 @@ CORBA::Any *ResetCountersClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(
 
 //--------------------------------------------------------
 /**
- * method : 		StartScalarEventsClass::execute()
+ * method : 		StartEventsClass::execute()
  * description : 	method to trigger the execution of the command.
  *
  * @param	device	The device on which the command must be executed
@@ -235,16 +235,16 @@ CORBA::Any *ResetCountersClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(
  *	returns The command output data (packed in the Any object)
  */
 //--------------------------------------------------------
-CORBA::Any *StartScalarEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+CORBA::Any *StartEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "StartScalarEventsClass::execute(): arrived" << endl;
-	((static_cast<CppBenchmarkTarget *>(device))->start_scalar_events());
+	cout2 << "StartEventsClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->start_events());
 	return new CORBA::Any();
 }
 
 //--------------------------------------------------------
 /**
- * method : 		StopScalarEventsClass::execute()
+ * method : 		StopEventsClass::execute()
  * description : 	method to trigger the execution of the command.
  *
  * @param	device	The device on which the command must be executed
@@ -253,16 +253,16 @@ CORBA::Any *StartScalarEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNU
  *	returns The command output data (packed in the Any object)
  */
 //--------------------------------------------------------
-CORBA::Any *StopScalarEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+CORBA::Any *StopEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "StopScalarEventsClass::execute(): arrived" << endl;
-	((static_cast<CppBenchmarkTarget *>(device))->stop_scalar_events());
+	cout2 << "StopEventsClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->stop_events());
 	return new CORBA::Any();
 }
 
 //--------------------------------------------------------
 /**
- * method : 		PushScalarEventClass::execute()
+ * method : 		PushEventClass::execute()
  * description : 	method to trigger the execution of the command.
  *
  * @param	device	The device on which the command must be executed
@@ -271,10 +271,10 @@ CORBA::Any *StopScalarEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNUS
  *	returns The command output data (packed in the Any object)
  */
 //--------------------------------------------------------
-CORBA::Any *PushScalarEventClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+CORBA::Any *PushEventClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "PushScalarEventClass::execute(): arrived" << endl;
-	((static_cast<CppBenchmarkTarget *>(device))->push_scalar_event());
+	cout2 << "PushEventClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->push_event());
 	return new CORBA::Any();
 }
 
@@ -814,23 +814,23 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Memorized
 	att_list.push_back(eventsleepperiod);
 
-	//	Attribute : ScalarEventsCount
-	ScalarEventsCountAttrib	*scalareventscount = new ScalarEventsCountAttrib();
+	//	Attribute : EventsCount
+	EventsCountAttrib	*scalareventscount = new EventsCountAttrib();
 	Tango::UserDefaultAttrProp	scalareventscount_prop;
-	scalareventscount_prop.set_description("scalar events count");
-	//	label	not set for ScalarEventsCount
-	//	unit	not set for ScalarEventsCount
-	//	standard_unit	not set for ScalarEventsCount
-	//	display_unit	not set for ScalarEventsCount
-	//	format	not set for ScalarEventsCount
-	//	max_value	not set for ScalarEventsCount
-	//	min_value	not set for ScalarEventsCount
-	//	max_alarm	not set for ScalarEventsCount
-	//	min_alarm	not set for ScalarEventsCount
-	//	max_warning	not set for ScalarEventsCount
-	//	min_warning	not set for ScalarEventsCount
-	//	delta_t	not set for ScalarEventsCount
-	//	delta_val	not set for ScalarEventsCount
+	scalareventscount_prop.set_description("events count");
+	//	label	not set for EventsCount
+	//	unit	not set for EventsCount
+	//	standard_unit	not set for EventsCount
+	//	display_unit	not set for EventsCount
+	//	format	not set for EventsCount
+	//	max_value	not set for EventsCount
+	//	min_value	not set for EventsCount
+	//	max_alarm	not set for EventsCount
+	//	min_alarm	not set for EventsCount
+	//	max_warning	not set for EventsCount
+	//	min_warning	not set for EventsCount
+	//	delta_t	not set for EventsCount
+	//	delta_val	not set for EventsCount
 	
 	scalareventscount->set_default_properties(scalareventscount_prop);
 	//	Not Polled
@@ -976,32 +976,32 @@ void CppBenchmarkTargetClass::command_factory()
 			Tango::OPERATOR);
 	command_list.push_back(pResetCountersCmd);
 
-	//	Command StartScalarEvents
-	StartScalarEventsClass	*pStartScalarEventsCmd =
-		new StartScalarEventsClass("StartScalarEvents",
+	//	Command StartEvents
+	StartEventsClass	*pStartEventsCmd =
+		new StartEventsClass("StartEvents",
 			Tango::DEV_VOID, Tango::DEV_VOID,
 			"",
 			"",
 			Tango::OPERATOR);
-	command_list.push_back(pStartScalarEventsCmd);
+	command_list.push_back(pStartEventsCmd);
 
-	//	Command StopScalarEvents
-	StopScalarEventsClass	*pStopScalarEventsCmd =
-		new StopScalarEventsClass("StopScalarEvents",
+	//	Command StopEvents
+	StopEventsClass	*pStopEventsCmd =
+		new StopEventsClass("StopEvents",
 			Tango::DEV_VOID, Tango::DEV_VOID,
 			"",
 			"",
 			Tango::OPERATOR);
-	command_list.push_back(pStopScalarEventsCmd);
+	command_list.push_back(pStopEventsCmd);
 
-	//	Command PushScalarEvent
-	PushScalarEventClass	*pPushScalarEventCmd =
-		new PushScalarEventClass("PushScalarEvent",
+	//	Command PushEvent
+	PushEventClass	*pPushEventCmd =
+		new PushEventClass("PushEvent",
 			Tango::DEV_VOID, Tango::DEV_VOID,
 			"",
 			"",
 			Tango::OPERATOR);
-	command_list.push_back(pPushScalarEventCmd);
+	command_list.push_back(pPushEventCmd);
 
 	/*----- PROTECTED REGION ID(CppBenchmarkTargetClass::command_factory_after) ENABLED START -----*/
 	

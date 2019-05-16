@@ -111,7 +111,7 @@ public:
 	Tango::DevLong	*attr_PipeReadsCount_read;
 	Tango::DevLong	*attr_PipeWritesCount_read;
 	Tango::DevDouble	*attr_EventSleepPeriod_read;
-	Tango::DevLong	*attr_ScalarEventsCount_read;
+	Tango::DevLong	*attr_EventsCount_read;
 	Tango::DevDouble	*attr_BenchmarkSpectrumAttribute_read;
 	Tango::DevDouble	*attr_BenchmarkImageAttribute_read;
 
@@ -316,14 +316,14 @@ public:
 	virtual void write_EventSleepPeriod(Tango::WAttribute &attr);
 	virtual bool is_EventSleepPeriod_allowed(Tango::AttReqType type);
 /**
- *	Attribute ScalarEventsCount related methods
- *	Description: scalar events count
+ *	Attribute EventsCount related methods
+ *	Description: events count
  *
  *	Data type:	Tango::DevLong
  *	Attr type:	Scalar
  */
-	virtual void read_ScalarEventsCount(Tango::Attribute &attr);
-	virtual bool is_ScalarEventsCount_allowed(Tango::AttReqType type);
+	virtual void read_EventsCount(Tango::Attribute &attr);
+	virtual bool is_EventsCount_allowed(Tango::AttReqType type);
 /**
  *	Attribute BenchmarkSpectrumAttribute related methods
  *	Description: benchmark spectrum attribute
@@ -410,26 +410,26 @@ public:
 	virtual void reset_counters();
 	virtual bool is_ResetCounters_allowed(const CORBA::Any &any);
 	/**
-	 *	Command StartScalarEvents related method
+	 *	Command StartEvents related method
 	 *	Description: starts a thread which pushes events of BenchmarkScalar Attribute values
 	 *
 	 */
-	virtual void start_scalar_events();
-	virtual bool is_StartScalarEvents_allowed(const CORBA::Any &any);
+	virtual void start_events();
+	virtual bool is_StartEvents_allowed(const CORBA::Any &any);
 	/**
-	 *	Command StopScalarEvents related method
+	 *	Command StopEvents related method
 	 *	Description: stops a thread which pushes events of BenchmarkScalar Attribute values
 	 *
 	 */
-	virtual void stop_scalar_events();
-	virtual bool is_StopScalarEvents_allowed(const CORBA::Any &any);
+	virtual void stop_events();
+	virtual bool is_StopEvents_allowed(const CORBA::Any &any);
 	/**
-	 *	Command PushScalarEvent related method
+	 *	Command PushEvent related method
 	 *	Description: pushes an event of BenchmarkScalarAttribute
 	 *
 	 */
-	virtual void push_scalar_event();
-	virtual bool is_PushScalarEvent_allowed(const CORBA::Any &any);
+	virtual void push_event();
+	virtual bool is_PushEvent_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

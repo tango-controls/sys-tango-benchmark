@@ -695,29 +695,29 @@ public class JavaBenchmarkTarget {
 	}
 
 	/**
-	 * Attribute ScalarEventsCount, int, Scalar, READ
+	 * Attribute EventsCount, int, Scalar, READ
 	 * description:
-	 *     scalar events count
+	 *     events count
 	 */
-	@Attribute(name="ScalarEventsCount")
-	@AttributeProperties(description="scalar events count")
-	private int scalarEventsCount;
+	@Attribute(name="EventsCount")
+	@AttributeProperties(description="events count")
+	private int eventsCount;
 	/**
-	 * Read attribute ScalarEventsCount
+	 * Read attribute EventsCount
 	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
-	public org.tango.server.attribute.AttributeValue getScalarEventsCount() throws DevFailed {
+	public org.tango.server.attribute.AttributeValue getEventsCount() throws DevFailed {
 		xlogger.entry();
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
-		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getScalarEventsCount) ENABLED START -----*/
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getEventsCount) ENABLED START -----*/
 
 		//	Put read attribute code here
 
-		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getScalarEventsCount
-		attributeValue.setValue(scalarEventsCount);
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getEventsCount
+		attributeValue.setValue(eventsCount);
 		xlogger.exit();
 		return attributeValue;
 	}
@@ -993,7 +993,7 @@ public class JavaBenchmarkTarget {
 		pipeWritesCount = 0;
 
  		commandCallsCount = 0;
- 		scalarEventsCount = 0;
+ 		eventsCount = 0;
 		resetTime = System.nanoTime();
 
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.resetCounters
@@ -1001,16 +1001,16 @@ public class JavaBenchmarkTarget {
 	}
 
 	/**
-	 * Execute command "StartScalarEvents".
+	 * Execute command "StartEvents".
 	 * description: starts a thread which pushes events of BenchmarkScalar Attribute values
 	 * @throws DevFailed if command execution failed.
 	 */
-	@Command(name="StartScalarEvents", inTypeDesc="", outTypeDesc="")
+	@Command(name="StartEvents", inTypeDesc="", outTypeDesc="")
 	@StateMachine(deniedStates={DeviceState.RUNNING})
-	public void StartScalarEvents() throws DevFailed {
+	public void StartEvents() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.startScalarEvents) ENABLED START -----*/
-		scalarEventsCount = 0;
+		eventsCount = 0;
 		eventThread = new EventThread(this,
 					      (int)eventSleepPeriod);
 		eventThread.start();
@@ -1020,12 +1020,12 @@ public class JavaBenchmarkTarget {
 	}
 
 	/**
-	 * Execute command "StopScalarEvents".
+	 * Execute command "StopEvents".
 	 * description: stops a thread which pushes events of BenchmarkScalar Attribute values
 	 * @throws DevFailed if command execution failed.
 	 */
-	@Command(name="StopScalarEvents", inTypeDesc="", outTypeDesc="")
-	public void StopScalarEvents() throws DevFailed {
+	@Command(name="StopEvents", inTypeDesc="", outTypeDesc="")
+	public void StopEvents() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.stopScalarEvents) ENABLED START -----*/
 
@@ -1043,7 +1043,7 @@ public class JavaBenchmarkTarget {
 		catch(java.lang.InterruptedException e){
 		}
 		state = DevState.ON;
-		scalarEventsCount = eventThread.getCounter();
+		eventsCount = eventThread.getCounter();
 		int errorCounter = eventThread.getErrorCounter();
 
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.stopScalarEvents
@@ -1051,12 +1051,12 @@ public class JavaBenchmarkTarget {
 	}
 
 	/**
-	 * Execute command "PushScalarEvent".
+	 * Execute command "PushEvent".
 	 * description: pushes an event of BenchmarkScalarAttribute
 	 * @throws DevFailed if command execution failed.
 	 */
-	@Command(name="PushScalarEvent", inTypeDesc="", outTypeDesc="")
-	public void PushScalarEvent() throws DevFailed {
+	@Command(name="PushEvent", inTypeDesc="", outTypeDesc="")
+	public void PushEvent() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushScalarEvent) ENABLED START -----*/
 
