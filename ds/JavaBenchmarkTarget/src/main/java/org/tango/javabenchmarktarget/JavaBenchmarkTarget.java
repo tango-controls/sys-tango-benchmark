@@ -130,7 +130,7 @@ public class JavaBenchmarkTarget {
 	//========================================================
 	/**
 	 * Initialize the device.
-	 *
+	 * 
 	 * @throws DevFailed if something fails during the device initialization.
 	 */
 	@Init(lazyLoading = false)
@@ -147,13 +147,14 @@ public class JavaBenchmarkTarget {
 		benchmarkPipe = new PipeValue(myPipeBlob);
 		state = DevState.ON;
 		eventSleepPeriod = 10.0;
+		eventsAttribute = "BenchmarkScalarAttribute";
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.initDevice
 		xlogger.exit();
 	}
 
 	/**
 	 * all resources may be closed here. Collections may be also cleared.
-	 *
+	 * 
 	 * @throws DevFailed if something fails during the device object deletion.
 	 */
 	@Delete
@@ -182,14 +183,14 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 	}
 
-
+	
 	/**
 	 * dynamic command and attribute management. Will be injected by the framework.
 	 */
 	@DynamicManagement
 	protected DynamicManager dynamicManager;
 	/**
-	 * @param dynamicManager the DynamicManager instance
+	 * @param dynamicManager the DynamicManager instance 
 	 * @throws DevFailed if something fails during this method execution.
 	 */
 	public void setDynamicManager(final DynamicManager dynamicManager) throws DevFailed {
@@ -200,7 +201,7 @@ public class JavaBenchmarkTarget {
 
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setDynamicManager
 	}
-
+	
 	/**
 	 * Device management. Will be injected by the framework.
 	 */
@@ -224,7 +225,7 @@ public class JavaBenchmarkTarget {
 	private double benchmarkScalarAttribute;
 	/**
 	 * Read attribute BenchmarkScalarAttribute
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -258,7 +259,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkScalarAttribute
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Attribute AlwaysExecutedHookCount, int, Scalar, READ
 	 * description:
@@ -269,7 +270,7 @@ public class JavaBenchmarkTarget {
 	private int alwaysExecutedHookCount;
 	/**
 	 * Read attribute AlwaysExecutedHookCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -288,7 +289,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute ReadAttributeHardwareCount, int, Scalar, READ
 	 * description:
@@ -299,7 +300,7 @@ public class JavaBenchmarkTarget {
 	private int readAttributeHardwareCount;
 	/**
 	 * Read attribute ReadAttributeHardwareCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -318,7 +319,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute WriteAttributeCounterCount, int, Scalar, READ
 	 * description:
@@ -329,7 +330,7 @@ public class JavaBenchmarkTarget {
 	private int writeAttributeCounterCount;
 	/**
 	 * Read attribute WriteAttributeCounterCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -349,7 +350,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute ScalarReadsCount, int, Scalar, READ
 	 * description:
@@ -360,7 +361,7 @@ public class JavaBenchmarkTarget {
 	private int scalarReadsCount;
 	/**
 	 * Read attribute ScalarReadsCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -379,7 +380,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute SpectrumReadsCount, int, Scalar, READ
 	 * description:
@@ -390,7 +391,7 @@ public class JavaBenchmarkTarget {
 	private int spectrumReadsCount;
 	/**
 	 * Read attribute SpectrumReadsCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -409,7 +410,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute ImageReadsCount, int, Scalar, READ
 	 * description:
@@ -420,7 +421,7 @@ public class JavaBenchmarkTarget {
 	private int imageReadsCount;
 	/**
 	 * Read attribute ImageReadsCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -439,7 +440,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute ScalarWritesCount, int, Scalar, READ
 	 * description:
@@ -450,7 +451,7 @@ public class JavaBenchmarkTarget {
 	private int scalarWritesCount;
 	/**
 	 * Read attribute ScalarWritesCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -469,7 +470,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute SpectrumWritesCount, int, Scalar, READ
 	 * description:
@@ -480,7 +481,7 @@ public class JavaBenchmarkTarget {
 	private int spectrumWritesCount;
 	/**
 	 * Read attribute SpectrumWritesCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -499,7 +500,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute ImageWritesCount, int, Scalar, READ
 	 * description:
@@ -510,7 +511,7 @@ public class JavaBenchmarkTarget {
 	private int imageWritesCount;
 	/**
 	 * Read attribute ImageWritesCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -529,7 +530,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute CommandCallsCount, int, Scalar, READ
 	 * description:
@@ -540,7 +541,7 @@ public class JavaBenchmarkTarget {
 	private int commandCallsCount;
 	/**
 	 * Read attribute CommandCallsCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -559,7 +560,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute TimeSinceReset, double, Scalar, READ
 	 * description:
@@ -571,7 +572,7 @@ public class JavaBenchmarkTarget {
 	private double timeSinceReset;
 	/**
 	 * Read attribute TimeSinceReset
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -591,7 +592,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute PipeReadsCount, int, Scalar, READ
 	 * description:
@@ -602,7 +603,7 @@ public class JavaBenchmarkTarget {
 	private int pipeReadsCount;
 	/**
 	 * Read attribute PipeReadsCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -621,7 +622,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute PipeWritesCount, int, Scalar, READ
 	 * description:
@@ -632,7 +633,7 @@ public class JavaBenchmarkTarget {
 	private int pipeWritesCount;
 	/**
 	 * Read attribute PipeWritesCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -651,7 +652,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
 	/**
 	 * Attribute EventSleepPeriod, double, Scalar, READ_WRITE
 	 * description:
@@ -660,10 +661,10 @@ public class JavaBenchmarkTarget {
 	@Attribute(name="EventSleepPeriod")
 	@AttributeProperties(description="sleep period of the event thread in milliseconds",
 	                     unit="ms")
-	private double eventSleepPeriod = 10.0;
+	private double eventSleepPeriod;
 	/**
 	 * Read attribute EventSleepPeriod
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -693,7 +694,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setEventSleepPeriod
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Attribute EventsCount, int, Scalar, READ
 	 * description:
@@ -704,7 +705,7 @@ public class JavaBenchmarkTarget {
 	private int eventsCount;
 	/**
 	 * Read attribute EventsCount
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -721,7 +722,48 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-
+	
+	/**
+	 * Attribute EventsAttribute, String, Scalar, READ_WRITE
+	 * description:
+	 *     Attribute passed in events
+	 */
+	@Attribute(name="EventsAttribute")
+	@AttributeProperties(description="Attribute passed in events", label="events attribute")
+	private String eventsAttribute = "";
+	/**
+	 * Read attribute EventsAttribute
+	 * 
+	 * @return attribute value
+	 * @throws DevFailed if read attribute failed.
+	 */
+	public org.tango.server.attribute.AttributeValue getEventsAttribute() throws DevFailed {
+		xlogger.entry();
+		org.tango.server.attribute.AttributeValue
+			attributeValue = new org.tango.server.attribute.AttributeValue();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getEventsAttribute) ENABLED START -----*/
+		
+		//	Put read attribute code here
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getEventsAttribute
+		attributeValue.setValue(eventsAttribute);
+		xlogger.exit();
+		return attributeValue;
+	}
+	/**
+	 * Write attribute EventsAttribute
+	 * @param  eventsAttribute value to write
+	 * @throws DevFailed if write attribute failed.
+	 */
+	public void setEventsAttribute(String eventsAttribute) throws DevFailed {
+		xlogger.entry();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setEventsAttribute) ENABLED START -----*/
+		this.eventsAttribute = eventsAttribute;
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setEventsAttribute
+		xlogger.exit();
+	}
+	
 	/**
 	 * Attribute BenchmarkSpectrumAttribute, double, Spectrum, READ_WRITE
 	 * description:
@@ -732,7 +774,7 @@ public class JavaBenchmarkTarget {
 	private double[] benchmarkSpectrumAttribute = new double[4096];
 	/**
 	 * Read attribute BenchmarkSpectrumAttribute
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -767,7 +809,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkSpectrumAttribute
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Attribute BenchmarkImageAttribute, double, Image, READ_WRITE
 	 * description:
@@ -778,7 +820,7 @@ public class JavaBenchmarkTarget {
 	private double[][] benchmarkImageAttribute = new double[512][256];
 	/**
 	 * Read attribute BenchmarkImageAttribute
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -813,7 +855,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkImageAttribute
 		xlogger.exit();
 	}
-
+	
 
 	//========================================================
 	//	Pipe data members and related methods
@@ -827,7 +869,7 @@ public class JavaBenchmarkTarget {
 	private PipeValue benchmarkPipe;
 	/**
 	 * Read Pipe BenchmarkPipe
-	 *
+	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read pipe failed.
 	 */
@@ -885,7 +927,7 @@ public class JavaBenchmarkTarget {
 	public void setState(final DevState state) {
 		this.state = state;
 	}
-
+	
 	/**
 	 * The status of the device
 	 */
@@ -912,7 +954,7 @@ public class JavaBenchmarkTarget {
 	public void setStatus(final String status) {
 		this.status = status;
 	}
-
+	
 	/**
 	 * Execute command "BenchmarkCommand".
 	 * description: benchmark command
@@ -929,7 +971,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.benchmarkCommand
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Execute command "SetSpectrumSize".
 	 * description: set spectrum size
@@ -947,7 +989,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setSpectrumSize
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Execute command "SetImageSize".
 	 * description: set image size
@@ -965,7 +1007,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setImageSize
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Execute command "ResetCounters".
 	 * description: reset counters
@@ -999,7 +1041,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.resetCounters
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Execute command "StartEvents".
 	 * description: starts a thread which pushes events of BenchmarkScalar Attribute values
@@ -1009,16 +1051,17 @@ public class JavaBenchmarkTarget {
 	@StateMachine(deniedStates={DeviceState.RUNNING})
 	public void StartEvents() throws DevFailed {
 		xlogger.entry();
-		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.startScalarEvents) ENABLED START -----*/
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.startEvents) ENABLED START -----*/
 		eventsCount = 0;
 		eventThread = new EventThread(this,
 					      (int)eventSleepPeriod);
 		eventThread.start();
 		state = DevState.RUNNING;
-		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.startScalarEvents
+	
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.startEvents
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Execute command "StopEvents".
 	 * description: stops a thread which pushes events of BenchmarkScalar Attribute values
@@ -1027,13 +1070,12 @@ public class JavaBenchmarkTarget {
 	@Command(name="StopEvents", inTypeDesc="", outTypeDesc="")
 	public void StopEvents() throws DevFailed {
 		xlogger.entry();
-		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.stopScalarEvents) ENABLED START -----*/
-
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.stopEvents) ENABLED START -----*/
 		eventThread.setRunning(false);
 		while(!eventThread.getFinished()){
 		    try{
 			Thread.sleep(10);
-		    }
+                   }
 		    catch(java.lang.InterruptedException e){
 		    }
 		}
@@ -1046,10 +1088,11 @@ public class JavaBenchmarkTarget {
 		eventsCount = eventThread.getCounter();
 		int errorCounter = eventThread.getErrorCounter();
 
-		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.stopScalarEvents
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.stopEvents
 		xlogger.exit();
 	}
-
+	
 	/**
 	 * Execute command "PushEvent".
 	 * description: pushes an event of BenchmarkScalarAttribute
@@ -1058,18 +1101,16 @@ public class JavaBenchmarkTarget {
 	@Command(name="PushEvent", inTypeDesc="", outTypeDesc="")
 	public void PushEvent() throws DevFailed {
 		xlogger.entry();
-		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushScalarEvent) ENABLED START -----*/
-
-		//	Put command code here
-
-		deviceManager.pushEvent("BenchmarkScalarAttribute",
-					new AttributeValue(benchmarkScalarAttribute),
-					EventType.CHANGE_EVENT);
-
-		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.pushScalarEvent
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushEvent) ENABLED START -----*/
+		
+               deviceManager.pushEvent(eventsAttribute,
+                                       new AttributeValue(benchmarkScalarAttribute),
+                                       EventType.CHANGE_EVENT);
+	       
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.pushEvent
 		xlogger.exit();
 	}
-
+	
 
 	//========================================================
 	//	Programmer's methods
@@ -1081,10 +1122,10 @@ public class JavaBenchmarkTarget {
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.methods
 
 
-
-
-
-
+	
+	
+	
+	
 	/**
 	 * Starts the server.
 	 * @param args program arguments (instance_name [-v[trace level]]  [-nodb [-dlist <device name list>] [-file=fileName]])

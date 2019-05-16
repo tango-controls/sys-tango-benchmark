@@ -322,6 +322,26 @@ bool CppBenchmarkTarget::is_EventsCount_allowed(TANGO_UNUSED(Tango::AttReqType t
 
 //--------------------------------------------------------
 /**
+ *	Method      : CppBenchmarkTarget::is_EventsAttribute_allowed()
+ *	Description : Execution allowed for EventsAttribute attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_EventsAttribute_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for EventsAttribute attribute in Write access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventsAttributeStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventsAttributeStateAllowed_WRITE
+
+	//	Not any excluded states for EventsAttribute attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventsAttributeStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventsAttributeStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
  *	Method      : CppBenchmarkTarget::is_BenchmarkSpectrumAttribute_allowed()
  *	Description : Execution allowed for BenchmarkSpectrumAttribute attribute
  */

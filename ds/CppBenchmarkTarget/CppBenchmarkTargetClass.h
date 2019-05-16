@@ -266,6 +266,21 @@ public:
 		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventsCount_allowed(ty);}
 };
 
+//	Attribute EventsAttribute class definition
+class EventsAttributeAttrib: public Tango::Attr
+{
+public:
+	EventsAttributeAttrib():Attr("EventsAttribute",
+			Tango::DEV_STRING, Tango::READ_WRITE) {};
+	~EventsAttributeAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_EventsAttribute(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->write_EventsAttribute(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventsAttribute_allowed(ty);}
+};
+
 //	Attribute BenchmarkSpectrumAttribute class definition
 class BenchmarkSpectrumAttributeAttrib: public Tango::SpectrumAttr
 {

@@ -51,17 +51,17 @@
 //  The following table gives the correspondence
 //  between command and method names.
 //
-//  Command name       |  Method name
+//  Command name      |  Method name
 //================================================================
-//  State              |  dev_state
-//  Status             |  dev_status
-//  BenchmarkCommand   |  benchmark_command
-//  SetSpectrumSize    |  set_spectrum_size
-//  SetImageSize       |  set_image_size
-//  ResetCounters      |  reset_counters
-//  StartEvents  |  start_events
-//  StopEvents   |  stop_events
-//  PushEvent    |  push_event
+//  State             |  dev_state
+//  Status            |  dev_status
+//  BenchmarkCommand  |  benchmark_command
+//  SetSpectrumSize   |  set_spectrum_size
+//  SetImageSize      |  set_image_size
+//  ResetCounters     |  reset_counters
+//  StartEvents       |  start_events
+//  StopEvents        |  stop_events
+//  PushEvent         |  push_event
 //================================================================
 
 //================================================================
@@ -82,7 +82,8 @@
 //  PipeReadsCount              |  Tango::DevLong	Scalar
 //  PipeWritesCount             |  Tango::DevLong	Scalar
 //  EventSleepPeriod            |  Tango::DevDouble	Scalar
-//  EventsCount           |  Tango::DevLong	Scalar
+//  EventsCount                 |  Tango::DevLong	Scalar
+//  EventsAttribute             |  Tango::DevString	Scalar
 //  BenchmarkSpectrumAttribute  |  Tango::DevDouble	Spectrum  ( max = 4096)
 //  BenchmarkImageAttribute     |  Tango::DevDouble	Image  ( max = 4096 x 4096)
 //================================================================
@@ -165,6 +166,7 @@ void CppBenchmarkTarget::delete_device()
 	delete[] attr_PipeWritesCount_read;
 	delete[] attr_EventSleepPeriod_read;
 	delete[] attr_EventsCount_read;
+	delete[] attr_EventsAttribute_read;
 	delete[] attr_BenchmarkSpectrumAttribute_read;
 	delete[] attr_BenchmarkImageAttribute_read;
 }
@@ -183,9 +185,9 @@ void CppBenchmarkTarget::init_device()
 	//	Initialization before get_device_property() call
 
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::init_device_before
-
+	
 	//	No device property to be read from database
-
+	
 	attr_BenchmarkScalarAttribute_read = new Tango::DevDouble[1];
 	attr_AlwaysExecutedHookCount_read = new Tango::DevLong[1];
 	attr_ReadAttributeHardwareCount_read = new Tango::DevLong[1];
@@ -202,6 +204,7 @@ void CppBenchmarkTarget::init_device()
 	attr_PipeWritesCount_read = new Tango::DevLong[1];
 	attr_EventSleepPeriod_read = new Tango::DevDouble[1];
 	attr_EventsCount_read = new Tango::DevLong[1];
+	attr_EventsAttribute_read = new Tango::DevString[1];
 	attr_BenchmarkSpectrumAttribute_read = new Tango::DevDouble[4096];
 	attr_BenchmarkImageAttribute_read = new Tango::DevDouble[4096*4096];
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::init_device) ENABLED START -----*/
@@ -648,6 +651,44 @@ void CppBenchmarkTarget::read_EventsCount(Tango::Attribute &attr)
 }
 //--------------------------------------------------------
 /**
+ *	Read attribute EventsAttribute related method
+ *	Description: Attribute passed in events
+ *
+ *	Data type:	Tango::DevString
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::read_EventsAttribute(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::read_EventsAttribute(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_EventsAttribute) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_EventsAttribute_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_EventsAttribute
+}
+//--------------------------------------------------------
+/**
+ *	Write attribute EventsAttribute related method
+ *	Description: Attribute passed in events
+ *
+ *	Data type:	Tango::DevString
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::write_EventsAttribute(Tango::WAttribute &attr)
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::write_EventsAttribute(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve write value
+	Tango::DevString	w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_EventsAttribute) ENABLED START -----*/
+	
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_EventsAttribute
+}
+//--------------------------------------------------------
+/**
  *	Read attribute BenchmarkSpectrumAttribute related method
  *	Description: benchmark spectrum attribute
  *
@@ -814,9 +855,10 @@ Tango::DevState CppBenchmarkTarget::dev_state()
 
 	//	Add your own code
 
+	Tango::DevState argout = m_state;
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::dev_state
-	set_state(m_state);    // Give the state to Tango.
-	if (m_state!=Tango::ALARM)
+	set_state(argout);    // Give the state to Tango.
+	if (argout!=Tango::ALARM)
 		Tango::DeviceImpl::dev_state();
 	return get_state();  // Return it after Tango management.
 }

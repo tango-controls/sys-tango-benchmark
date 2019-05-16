@@ -168,6 +168,13 @@ class PyBenchmarkTarget(Device):
         doc="events count",
     )
 
+    EventsAttribute = attribute(
+        dtype='str',
+        access=AttrWriteType.READ_WRITE,
+        label="events attribute",
+        doc="Attribute passed in events",
+    )
+
     BenchmarkSpectrumAttribute = attribute(
         dtype=('double',),
         access=AttrWriteType.READ_WRITE,
@@ -215,7 +222,7 @@ class PyBenchmarkTarget(Device):
 
         self.__event_sleep_period = 10.
         self.__events_count = 0
-
+        self.__events_attribute = 'BenchmarkScalarAttribute'
         self.__state = "ON"
 
         self.__reset_time = time.time()
@@ -336,6 +343,12 @@ class PyBenchmarkTarget(Device):
     def read_EventsCount(self):
         return self.__events_count
 
+    def read_EventsAttribute(self):
+        return self._events_attribute
+
+    def write_EventsAttribute(self, value):
+        self._events_attribute = value
+
     def read_BenchmarkSpectrumAttribute(self):
         self.__spectrum_reads_count += 1
         return self.__benchmark_spectrum_attribute
@@ -442,7 +455,7 @@ class PyBenchmarkTarget(Device):
     @DebugIt()
     def PushEvent(self):
         self.push_change_event(
-            "BenchmarkScalarAttribute",
+            self.__events_attribute,
             self.__benchmark_scalar_attribute)
 
 # ----------

@@ -112,6 +112,7 @@ public:
 	Tango::DevLong	*attr_PipeWritesCount_read;
 	Tango::DevDouble	*attr_EventSleepPeriod_read;
 	Tango::DevLong	*attr_EventsCount_read;
+	Tango::DevString	*attr_EventsAttribute_read;
 	Tango::DevDouble	*attr_BenchmarkSpectrumAttribute_read;
 	Tango::DevDouble	*attr_BenchmarkImageAttribute_read;
 
@@ -324,6 +325,16 @@ public:
  */
 	virtual void read_EventsCount(Tango::Attribute &attr);
 	virtual bool is_EventsCount_allowed(Tango::AttReqType type);
+/**
+ *	Attribute EventsAttribute related methods
+ *	Description: Attribute passed in events
+ *
+ *	Data type:	Tango::DevString
+ *	Attr type:	Scalar
+ */
+	virtual void read_EventsAttribute(Tango::Attribute &attr);
+	virtual void write_EventsAttribute(Tango::WAttribute &attr);
+	virtual bool is_EventsAttribute_allowed(Tango::AttReqType type);
 /**
  *	Attribute BenchmarkSpectrumAttribute related methods
  *	Description: benchmark spectrum attribute

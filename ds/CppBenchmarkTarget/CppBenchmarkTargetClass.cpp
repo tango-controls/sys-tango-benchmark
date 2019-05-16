@@ -815,9 +815,9 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	att_list.push_back(eventsleepperiod);
 
 	//	Attribute : EventsCount
-	EventsCountAttrib	*scalareventscount = new EventsCountAttrib();
-	Tango::UserDefaultAttrProp	scalareventscount_prop;
-	scalareventscount_prop.set_description("events count");
+	EventsCountAttrib	*eventscount = new EventsCountAttrib();
+	Tango::UserDefaultAttrProp	eventscount_prop;
+	eventscount_prop.set_description("events count");
 	//	label	not set for EventsCount
 	//	unit	not set for EventsCount
 	//	standard_unit	not set for EventsCount
@@ -832,11 +832,35 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	delta_t	not set for EventsCount
 	//	delta_val	not set for EventsCount
 	
-	scalareventscount->set_default_properties(scalareventscount_prop);
+	eventscount->set_default_properties(eventscount_prop);
 	//	Not Polled
-	scalareventscount->set_disp_level(Tango::OPERATOR);
+	eventscount->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
-	att_list.push_back(scalareventscount);
+	att_list.push_back(eventscount);
+
+	//	Attribute : EventsAttribute
+	EventsAttributeAttrib	*eventsattribute = new EventsAttributeAttrib();
+	Tango::UserDefaultAttrProp	eventsattribute_prop;
+	eventsattribute_prop.set_description("Attribute passed in events");
+	eventsattribute_prop.set_label("events attribute");
+	//	unit	not set for EventsAttribute
+	//	standard_unit	not set for EventsAttribute
+	//	display_unit	not set for EventsAttribute
+	//	format	not set for EventsAttribute
+	//	max_value	not set for EventsAttribute
+	//	min_value	not set for EventsAttribute
+	//	max_alarm	not set for EventsAttribute
+	//	min_alarm	not set for EventsAttribute
+	//	max_warning	not set for EventsAttribute
+	//	min_warning	not set for EventsAttribute
+	//	delta_t	not set for EventsAttribute
+	//	delta_val	not set for EventsAttribute
+	
+	eventsattribute->set_default_properties(eventsattribute_prop);
+	//	Not Polled
+	eventsattribute->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(eventsattribute);
 
 	//	Attribute : BenchmarkSpectrumAttribute
 	BenchmarkSpectrumAttributeAttrib	*benchmarkspectrumattribute = new BenchmarkSpectrumAttributeAttrib();
