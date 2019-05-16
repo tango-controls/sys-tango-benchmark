@@ -57,7 +57,6 @@ class JavaBenchmarkTargetDeviceTest(PyBenchmarkTargetDeviceTest):
                                                 self.instance
         self.new_device_info_benchmark.name = self.device
         self.proxy = None
-        self.event_on_subscribe = 0
 
         # home = expanduser("~")
         # serverfile = "%s/DeviceServers/JavaBenchmarkTarget" % home

@@ -61,8 +61,8 @@ class TangoCounterCb(object):
     def push_event(self, *args, **kwargs):
         """callback method receiving the event
         """
-        event_data = args[0]
         with self.lock:
+            event_data = args[0]
             if event_data.err:
                 self.errors.append(event_data.errors)
             self.counter += 1
@@ -86,7 +86,6 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                                                 self.instance
         self.new_device_info_benchmark.name = self.device
         self.proxy = None
-        self.event_on_subscribe = 1
 
         if PY3:
             if os.path.isdir("./PyBenchmarkTarget"):
@@ -709,6 +708,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         # default
         # self.proxy.EventSleepPeriod = 10
         self.assertEqual(self.proxy.State(), tango.DevState.ON)
+        time.sleep(1)
         self.proxy.StartScalarEvents()
         self.assertEqual(self.proxy.State(), tango.DevState.RUNNING)
         time.sleep(1)
@@ -716,14 +716,12 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.State(), tango.DevState.ON)
-        # self.assertEqual(
-        #     self.proxy.ScalarEventsCount + self.event_on_subscribe,
-        #     counter_cb.counter)
-        self.assertTrue(
-            abs(self.proxy.ScalarEventsCount - counter_cb.counter) < 10)
+        self.assertEqual(
+            self.proxy.ScalarEventsCount + 1,
+            counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 101)
         self.assertTrue(counter_cb.counter <=
-                        101 + self.event_on_subscribe)
+                        102)
         self.assertTrue(self.proxy.ScalarEventsCount > 50)
         self.assertTrue(counter_cb.counter > 50)
         self.assertTrue(not counter_cb.errors)
@@ -739,19 +737,16 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         self.proxy.EventSleepPeriod = 10
+        time.sleep(1)
         self.proxy.StartScalarEvents()
         time.sleep(1)
         self.proxy.StopScalarEvents()
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
-        # self.assertEqual(self.proxy.ScalarEventsCount +
-        #                  self.event_on_subscribe,
-        #                  counter_cb.counter)
-        self.assertTrue(
-            abs(self.proxy.ScalarEventsCount - counter_cb.counter) < 10)
+        self.assertEqual(self.proxy.ScalarEventsCount + 1,
+                         counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 101)
-        self.assertTrue(counter_cb.counter <=
-                        101 + self.event_on_subscribe)
+        self.assertTrue(counter_cb.counter <= 102)
         self.assertTrue(self.proxy.ScalarEventsCount > 50)
         self.assertTrue(counter_cb.counter > 50)
         self.assertTrue(not counter_cb.errors)
@@ -767,17 +762,16 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         self.proxy.EventSleepPeriod = 100
+        time.sleep(1)
         self.proxy.StartScalarEvents()
         time.sleep(1)
         self.proxy.StopScalarEvents()
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount +
-                         self.event_on_subscribe,
+        self.assertEqual(self.proxy.ScalarEventsCount + 1,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 11)
-        self.assertTrue(counter_cb.counter <=
-                        11 + self.event_on_subscribe)
+        self.assertTrue(counter_cb.counter <= 12)
         self.assertTrue(self.proxy.ScalarEventsCount > 5)
         self.assertTrue(counter_cb.counter > 5)
         self.assertTrue(not counter_cb.errors)
@@ -793,19 +787,18 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         self.proxy.EventSleepPeriod = 1000
+        time.sleep(1)
         self.proxy.StartScalarEvents()
         time.sleep(1)
         self.proxy.StopScalarEvents()
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)
-        self.assertEqual(self.proxy.ScalarEventsCount +
-                         self.event_on_subscribe,
+        self.assertEqual(self.proxy.ScalarEventsCount + 1,
                          counter_cb.counter)
         self.assertTrue(self.proxy.ScalarEventsCount <= 2)
-        self.assertTrue(counter_cb.counter <=
-                        2 + self.event_on_subscribe)
+        self.assertTrue(counter_cb.counter <= 3)
         self.assertTrue(self.proxy.ScalarEventsCount > 0)
-        self.assertTrue(counter_cb.counter > self.event_on_subscribe)
+        self.assertTrue(counter_cb.counter > 1)
         self.assertTrue(not counter_cb.errors)
 
     def test_ScalarEvents_subscribe(self):
@@ -819,7 +812,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         self.EventSleepPeriod = 10
-        time.sleep(2)
+        time.sleep(1)
         self.proxy.unsubscribe_event(id_)
         self.assertEqual(self.proxy.ScalarEventsCount, 0)
         self.assertEqual(counter_cb.counter, 1)

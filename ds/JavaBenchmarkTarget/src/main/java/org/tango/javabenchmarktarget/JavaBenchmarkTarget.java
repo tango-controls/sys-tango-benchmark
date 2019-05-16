@@ -12,20 +12,20 @@
 // project :     Benchmark device
 //
 // This file is part of Tango device class.
-// 
+//
 // Tango is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Tango is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with Tango.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 //
 //
 //=============================================================================
@@ -96,15 +96,15 @@ public class JavaBenchmarkTarget {
 	//	Programmer's data members
 	//========================================================
     /*----- PROTECTED REGION ID(JavaBenchmarkTarget.variables) ENABLED START -----*/
-    
+
     //	Put static variables here
-    
+
     /*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.variables
 	/*----- PROTECTED REGION ID(JavaBenchmarkTarget.private) ENABLED START -----*/
-	
+
 	//	Put private variables here
     private long resetTime = 0;
-    private EventThread eventThread;     
+    private EventThread eventThread;
         // self.__benchmark_pipe = (
         //     'PipeBlob',
         //     (
@@ -117,7 +117,7 @@ public class JavaBenchmarkTarget {
         //         {'name': 'DevBoolean', 'value': True},
         //     )
         // )
-    
+
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.private
 
 	//========================================================
@@ -130,7 +130,7 @@ public class JavaBenchmarkTarget {
 	//========================================================
 	/**
 	 * Initialize the device.
-	 * 
+	 *
 	 * @throws DevFailed if something fails during the device initialization.
 	 */
 	@Init(lazyLoading = false)
@@ -138,7 +138,7 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		logger.debug("init device " + deviceManager.getName());
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.initDevice) ENABLED START -----*/
-		
+
 		//	Put your device initialization code here
 		resetTime = System.nanoTime();
 
@@ -153,16 +153,16 @@ public class JavaBenchmarkTarget {
 
 	/**
 	 * all resources may be closed here. Collections may be also cleared.
-	 * 
+	 *
 	 * @throws DevFailed if something fails during the device object deletion.
 	 */
 	@Delete
 	public void deleteDevice() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.deleteDevice) ENABLED START -----*/
-		
+
 		//	Put your device clearing code here
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.deleteDevice
 		xlogger.exit();
 	}
@@ -176,31 +176,31 @@ public class JavaBenchmarkTarget {
 	public void aroundInvoke(final InvocationContext ctx) throws DevFailed {
 		xlogger.entry();
 			/*----- PROTECTED REGION ID(JavaBenchmarkTarget.aroundInvoke) ENABLED START -----*/
-			
+
 			//	Put aroundInvoke code here
 			/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.aroundInvoke
 		xlogger.exit();
 	}
 
-	
+
 	/**
 	 * dynamic command and attribute management. Will be injected by the framework.
 	 */
 	@DynamicManagement
 	protected DynamicManager dynamicManager;
 	/**
-	 * @param dynamicManager the DynamicManager instance 
+	 * @param dynamicManager the DynamicManager instance
 	 * @throws DevFailed if something fails during this method execution.
 	 */
 	public void setDynamicManager(final DynamicManager dynamicManager) throws DevFailed {
 		this.dynamicManager = dynamicManager;
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setDynamicManager) ENABLED START -----*/
-		
+
 		//	Put your code here
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setDynamicManager
 	}
-	
+
 	/**
 	 * Device management. Will be injected by the framework.
 	 */
@@ -224,7 +224,7 @@ public class JavaBenchmarkTarget {
 	private double benchmarkScalarAttribute;
 	/**
 	 * Read attribute BenchmarkScalarAttribute
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -233,7 +233,7 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkScalarAttribute) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		scalarReadsCount++;
@@ -254,11 +254,11 @@ public class JavaBenchmarkTarget {
 		this.benchmarkScalarAttribute = benchmarkScalarAttribute;
 		alwaysExecutedHookCount++;
 		scalarWritesCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkScalarAttribute
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Attribute AlwaysExecutedHookCount, int, Scalar, READ
 	 * description:
@@ -269,7 +269,7 @@ public class JavaBenchmarkTarget {
 	private int alwaysExecutedHookCount;
 	/**
 	 * Read attribute AlwaysExecutedHookCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -278,17 +278,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getAlwaysExecutedHookCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getAlwaysExecutedHookCount
 		attributeValue.setValue(alwaysExecutedHookCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute ReadAttributeHardwareCount, int, Scalar, READ
 	 * description:
@@ -299,7 +299,7 @@ public class JavaBenchmarkTarget {
 	private int readAttributeHardwareCount;
 	/**
 	 * Read attribute ReadAttributeHardwareCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -308,17 +308,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getReadAttributeHardwareCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getReadAttributeHardwareCount
 		attributeValue.setValue(readAttributeHardwareCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute WriteAttributeCounterCount, int, Scalar, READ
 	 * description:
@@ -329,7 +329,7 @@ public class JavaBenchmarkTarget {
 	private int writeAttributeCounterCount;
 	/**
 	 * Read attribute WriteAttributeCounterCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -338,7 +338,7 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getWriteAttributeCounterCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
@@ -349,7 +349,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute ScalarReadsCount, int, Scalar, READ
 	 * description:
@@ -360,7 +360,7 @@ public class JavaBenchmarkTarget {
 	private int scalarReadsCount;
 	/**
 	 * Read attribute ScalarReadsCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -369,17 +369,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getScalarReadsCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getScalarReadsCount
 		attributeValue.setValue(scalarReadsCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute SpectrumReadsCount, int, Scalar, READ
 	 * description:
@@ -390,7 +390,7 @@ public class JavaBenchmarkTarget {
 	private int spectrumReadsCount;
 	/**
 	 * Read attribute SpectrumReadsCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -399,17 +399,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getSpectrumReadsCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getSpectrumReadsCount
 		attributeValue.setValue(spectrumReadsCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute ImageReadsCount, int, Scalar, READ
 	 * description:
@@ -420,7 +420,7 @@ public class JavaBenchmarkTarget {
 	private int imageReadsCount;
 	/**
 	 * Read attribute ImageReadsCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -429,17 +429,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getImageReadsCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getImageReadsCount
 		attributeValue.setValue(imageReadsCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute ScalarWritesCount, int, Scalar, READ
 	 * description:
@@ -450,7 +450,7 @@ public class JavaBenchmarkTarget {
 	private int scalarWritesCount;
 	/**
 	 * Read attribute ScalarWritesCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -459,17 +459,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getScalarWritesCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getScalarWritesCount
 		attributeValue.setValue(scalarWritesCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute SpectrumWritesCount, int, Scalar, READ
 	 * description:
@@ -480,7 +480,7 @@ public class JavaBenchmarkTarget {
 	private int spectrumWritesCount;
 	/**
 	 * Read attribute SpectrumWritesCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -489,17 +489,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getSpectrumWritesCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getSpectrumWritesCount
 		attributeValue.setValue(spectrumWritesCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute ImageWritesCount, int, Scalar, READ
 	 * description:
@@ -510,7 +510,7 @@ public class JavaBenchmarkTarget {
 	private int imageWritesCount;
 	/**
 	 * Read attribute ImageWritesCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -519,17 +519,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getImageWritesCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getImageWritesCount
 		attributeValue.setValue(imageWritesCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute CommandCallsCount, int, Scalar, READ
 	 * description:
@@ -540,7 +540,7 @@ public class JavaBenchmarkTarget {
 	private int commandCallsCount;
 	/**
 	 * Read attribute CommandCallsCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -549,7 +549,7 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getCommandCallsCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
@@ -559,7 +559,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute TimeSinceReset, double, Scalar, READ
 	 * description:
@@ -571,7 +571,7 @@ public class JavaBenchmarkTarget {
 	private double timeSinceReset;
 	/**
 	 * Read attribute TimeSinceReset
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -580,7 +580,7 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getTimeSinceReset) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
@@ -591,7 +591,7 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute PipeReadsCount, int, Scalar, READ
 	 * description:
@@ -602,7 +602,7 @@ public class JavaBenchmarkTarget {
 	private int pipeReadsCount;
 	/**
 	 * Read attribute PipeReadsCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -611,17 +611,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getPipeReadsCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getPipeReadsCount
 		attributeValue.setValue(pipeReadsCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute PipeWritesCount, int, Scalar, READ
 	 * description:
@@ -632,7 +632,7 @@ public class JavaBenchmarkTarget {
 	private int pipeWritesCount;
 	/**
 	 * Read attribute PipeWritesCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -641,17 +641,17 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getPipeWritesCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getPipeWritesCount
 		attributeValue.setValue(pipeWritesCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute EventSleepPeriod, double, Scalar, READ_WRITE
 	 * description:
@@ -663,7 +663,7 @@ public class JavaBenchmarkTarget {
 	private double eventSleepPeriod = 10.0;
 	/**
 	 * Read attribute EventSleepPeriod
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -672,9 +672,9 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getEventSleepPeriod) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getEventSleepPeriod
 		attributeValue.setValue(eventSleepPeriod);
 		xlogger.exit();
@@ -689,11 +689,11 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setEventSleepPeriod) ENABLED START -----*/
 		this.eventSleepPeriod = eventSleepPeriod;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setEventSleepPeriod
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Attribute ScalarEventsCount, int, Scalar, READ
 	 * description:
@@ -704,7 +704,7 @@ public class JavaBenchmarkTarget {
 	private int scalarEventsCount;
 	/**
 	 * Read attribute ScalarEventsCount
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -713,15 +713,15 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getScalarEventsCount) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getScalarEventsCount
 		attributeValue.setValue(scalarEventsCount);
 		xlogger.exit();
 		return attributeValue;
 	}
-	
+
 	/**
 	 * Attribute BenchmarkSpectrumAttribute, double, Spectrum, READ_WRITE
 	 * description:
@@ -732,7 +732,7 @@ public class JavaBenchmarkTarget {
 	private double[] benchmarkSpectrumAttribute = new double[4096];
 	/**
 	 * Read attribute BenchmarkSpectrumAttribute
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -741,12 +741,12 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkSpectrumAttribute) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		spectrumReadsCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getBenchmarkSpectrumAttribute
 		attributeValue.setValue(benchmarkSpectrumAttribute);
 		xlogger.exit();
@@ -763,11 +763,11 @@ public class JavaBenchmarkTarget {
 		this.benchmarkSpectrumAttribute = benchmarkSpectrumAttribute;
 		alwaysExecutedHookCount++;
 		spectrumWritesCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkSpectrumAttribute
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Attribute BenchmarkImageAttribute, double, Image, READ_WRITE
 	 * description:
@@ -778,7 +778,7 @@ public class JavaBenchmarkTarget {
 	private double[][] benchmarkImageAttribute = new double[512][256];
 	/**
 	 * Read attribute BenchmarkImageAttribute
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
@@ -787,12 +787,12 @@ public class JavaBenchmarkTarget {
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkImageAttribute) ENABLED START -----*/
-		
+
 		//	Put read attribute code here
 		alwaysExecutedHookCount++;
 		imageReadsCount++;
 		readAttributeHardwareCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getBenchmarkImageAttribute
 		attributeValue.setValue(benchmarkImageAttribute);
 		xlogger.exit();
@@ -809,11 +809,11 @@ public class JavaBenchmarkTarget {
 		this.benchmarkImageAttribute = benchmarkImageAttribute;
 		alwaysExecutedHookCount++;
 		imageWritesCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkImageAttribute
 		xlogger.exit();
 	}
-	
+
 
 	//========================================================
 	//	Pipe data members and related methods
@@ -827,14 +827,14 @@ public class JavaBenchmarkTarget {
 	private PipeValue benchmarkPipe;
 	/**
 	 * Read Pipe BenchmarkPipe
-	 * 
+	 *
 	 * @return attribute value
 	 * @throws DevFailed if read pipe failed.
 	 */
 	public PipeValue getBenchmarkPipe() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getBenchmarkPipe) ENABLED START -----*/
-		
+
 		//	Put read pipe code here
  		pipeReadsCount++;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getBenchmarkPipe
@@ -852,7 +852,7 @@ public class JavaBenchmarkTarget {
 		this.benchmarkPipe = pipeValue;
 		// alwaysExecutedHookCount++;
 		pipeWritesCount++;
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setBenchmarkPipe
 		xlogger.exit();
 	}
@@ -873,7 +873,7 @@ public class JavaBenchmarkTarget {
 	 */
 	public final DevState getState() throws DevFailed {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getState) ENABLED START -----*/
-		
+
 		//	Put state code here
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getState
 		return state;
@@ -885,7 +885,7 @@ public class JavaBenchmarkTarget {
 	public void setState(final DevState state) {
 		this.state = state;
 	}
-	
+
 	/**
 	 * The status of the device
 	 */
@@ -899,7 +899,7 @@ public class JavaBenchmarkTarget {
 	 */
 	public final String getStatus() throws DevFailed {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getStatus) ENABLED START -----*/
-		
+
 		//	Put status code here
 		status = "State is ON";
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getStatus
@@ -912,7 +912,7 @@ public class JavaBenchmarkTarget {
 	public void setStatus(final String status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * Execute command "BenchmarkCommand".
 	 * description: benchmark command
@@ -922,14 +922,14 @@ public class JavaBenchmarkTarget {
 	public void BenchmarkCommand() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.benchmarkCommand) ENABLED START -----*/
-		
+
 		//	Put command code here
 		alwaysExecutedHookCount++;
 		commandCallsCount++;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.benchmarkCommand
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Execute command "SetSpectrumSize".
 	 * description: set spectrum size
@@ -940,14 +940,14 @@ public class JavaBenchmarkTarget {
 	public void SetSpectrumSize(int setSpectrumSizeIn) throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setSpectrumSize) ENABLED START -----*/
-		
+
 		//	Put command code here
 		// alwaysExecutedHookCount++;
 		benchmarkSpectrumAttribute = new double[setSpectrumSizeIn];
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setSpectrumSize
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Execute command "SetImageSize".
 	 * description: set image size
@@ -958,14 +958,14 @@ public class JavaBenchmarkTarget {
 	public void SetImageSize(int[] setImageSizeIn) throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setImageSize) ENABLED START -----*/
-		
+
 		//	Put command code here
 		// alwaysExecutedHookCount++;
 		benchmarkImageAttribute = new double[setImageSizeIn[0]][setImageSizeIn[1]];
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setImageSize
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Execute command "ResetCounters".
 	 * description: reset counters
@@ -975,31 +975,31 @@ public class JavaBenchmarkTarget {
 	public void ResetCounters() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.resetCounters) ENABLED START -----*/
-		
+
 		//	Put command code here
 		// alwaysExecutedHookCount++;
 		alwaysExecutedHookCount = 0;
 		readAttributeHardwareCount = 0;
 		writeAttributeCounterCount = 0;
-		
+
 		scalarReadsCount = 0;
 		spectrumReadsCount = 0;
 		imageReadsCount = 0;
 		pipeReadsCount = 0;
-		
+
 		scalarWritesCount = 0;
 		spectrumWritesCount = 0;
 		imageWritesCount = 0;
 		pipeWritesCount = 0;
-		
+
  		commandCallsCount = 0;
  		scalarEventsCount = 0;
 		resetTime = System.nanoTime();
-	    
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.resetCounters
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Execute command "StartScalarEvents".
 	 * description: starts a thread which pushes events of BenchmarkScalar Attribute values
@@ -1010,7 +1010,7 @@ public class JavaBenchmarkTarget {
 	public void StartScalarEvents() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.startScalarEvents) ENABLED START -----*/
-		scalarEventsCount = 0;		
+		scalarEventsCount = 0;
 		eventThread = new EventThread(this,
 					      (int)eventSleepPeriod);
 		eventThread.start();
@@ -1018,7 +1018,7 @@ public class JavaBenchmarkTarget {
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.startScalarEvents
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Execute command "StopScalarEvents".
 	 * description: stops a thread which pushes events of BenchmarkScalar Attribute values
@@ -1028,7 +1028,7 @@ public class JavaBenchmarkTarget {
 	public void StopScalarEvents() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.stopScalarEvents) ENABLED START -----*/
-		
+
 		eventThread.setRunning(false);
 		while(!eventThread.getFinished()){
 		    try{
@@ -1045,11 +1045,11 @@ public class JavaBenchmarkTarget {
 		state = DevState.ON;
 		scalarEventsCount = eventThread.getCounter();
 		int errorCounter = eventThread.getErrorCounter();
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.stopScalarEvents
 		xlogger.exit();
 	}
-	
+
 	/**
 	 * Execute command "PushScalarEvent".
 	 * description: pushes an event of BenchmarkScalarAttribute
@@ -1059,38 +1059,39 @@ public class JavaBenchmarkTarget {
 	public void PushScalarEvent() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushScalarEvent) ENABLED START -----*/
-		
+
 		//	Put command code here
+
 		deviceManager.pushEvent("BenchmarkScalarAttribute",
 					new AttributeValue(benchmarkScalarAttribute),
 					EventType.CHANGE_EVENT);
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.pushScalarEvent
 		xlogger.exit();
 	}
-	
+
 
 	//========================================================
 	//	Programmer's methods
 	//========================================================
 	/*----- PROTECTED REGION ID(JavaBenchmarkTarget.methods) ENABLED START -----*/
-	
+
 	//	Put your own methods here
-	
+
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.methods
 
 
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Starts the server.
 	 * @param args program arguments (instance_name [-v[trace level]]  [-nodb [-dlist <device name list>] [-file=fileName]])
 	 */
 	public static void main(final String[] args) {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.main) ENABLED START -----*/
-		
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.main
 		ServerManager.getInstance().start(args, JavaBenchmarkTarget.class);
 		System.out.println("------- Started -------------");
