@@ -147,7 +147,7 @@ public class JavaBenchmarkTarget {
 		benchmarkPipe = new PipeValue(myPipeBlob);
 		state = DevState.ON;
 		eventSleepPeriod = 10.0;
-		eventsAttribute = "BenchmarkScalarAttribute";
+		eventAttribute = "BenchmarkScalarAttribute";
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.initDevice
 		xlogger.exit();
 	}
@@ -724,43 +724,43 @@ public class JavaBenchmarkTarget {
 	}
 	
 	/**
-	 * Attribute EventsAttribute, String, Scalar, READ_WRITE
+	 * Attribute EventAttribute, String, Scalar, READ_WRITE
 	 * description:
 	 *     Attribute passed in events
 	 */
-	@Attribute(name="EventsAttribute")
+	@Attribute(name="EventAttribute")
 	@AttributeProperties(description="Attribute passed in events", label="events attribute")
-	private String eventsAttribute = "";
+	private String eventAttribute = "";
 	/**
-	 * Read attribute EventsAttribute
+	 * Read attribute EventAttribute
 	 * 
 	 * @return attribute value
 	 * @throws DevFailed if read attribute failed.
 	 */
-	public org.tango.server.attribute.AttributeValue getEventsAttribute() throws DevFailed {
+	public org.tango.server.attribute.AttributeValue getEventAttribute() throws DevFailed {
 		xlogger.entry();
 		org.tango.server.attribute.AttributeValue
 			attributeValue = new org.tango.server.attribute.AttributeValue();
-		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getEventsAttribute) ENABLED START -----*/
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getEventAttribute) ENABLED START -----*/
 		
 		//	Put read attribute code here
 		
-		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getEventsAttribute
-		attributeValue.setValue(eventsAttribute);
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getEventAttribute
+		attributeValue.setValue(eventAttribute);
 		xlogger.exit();
 		return attributeValue;
 	}
 	/**
-	 * Write attribute EventsAttribute
-	 * @param  eventsAttribute value to write
+	 * Write attribute EventAttribute
+	 * @param  eventAttribute value to write
 	 * @throws DevFailed if write attribute failed.
 	 */
-	public void setEventsAttribute(String eventsAttribute) throws DevFailed {
+	public void setEventAttribute(String eventAttribute) throws DevFailed {
 		xlogger.entry();
-		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setEventsAttribute) ENABLED START -----*/
-		this.eventsAttribute = eventsAttribute;
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setEventAttribute) ENABLED START -----*/
+		this.eventAttribute = eventAttribute;
 		
-		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setEventsAttribute
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setEventAttribute
 		xlogger.exit();
 	}
 	
@@ -1103,7 +1103,7 @@ public class JavaBenchmarkTarget {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushEvent) ENABLED START -----*/
 		
-               deviceManager.pushEvent(eventsAttribute,
+               deviceManager.pushEvent(eventAttribute,
                                        new AttributeValue(benchmarkScalarAttribute),
                                        EventType.CHANGE_EVENT);
 	       

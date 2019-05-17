@@ -322,21 +322,21 @@ bool CppBenchmarkTarget::is_EventsCount_allowed(TANGO_UNUSED(Tango::AttReqType t
 
 //--------------------------------------------------------
 /**
- *	Method      : CppBenchmarkTarget::is_EventsAttribute_allowed()
- *	Description : Execution allowed for EventsAttribute attribute
+ *	Method      : CppBenchmarkTarget::is_EventAttribute_allowed()
+ *	Description : Execution allowed for EventAttribute attribute
  */
 //--------------------------------------------------------
-bool CppBenchmarkTarget::is_EventsAttribute_allowed(TANGO_UNUSED(Tango::AttReqType type))
+bool CppBenchmarkTarget::is_EventAttribute_allowed(TANGO_UNUSED(Tango::AttReqType type))
 {
-	//	Not any excluded states for EventsAttribute attribute in Write access.
-	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventsAttributeStateAllowed_WRITE) ENABLED START -----*/
+	//	Not any excluded states for EventAttribute attribute in Write access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventAttributeStateAllowed_WRITE) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventsAttributeStateAllowed_WRITE
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventAttributeStateAllowed_WRITE
 
-	//	Not any excluded states for EventsAttribute attribute in read access.
-	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventsAttributeStateAllowed_READ) ENABLED START -----*/
+	//	Not any excluded states for EventAttribute attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventAttributeStateAllowed_READ) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventsAttributeStateAllowed_READ
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventAttributeStateAllowed_READ
 	return true;
 }
 

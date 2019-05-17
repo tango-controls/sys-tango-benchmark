@@ -706,7 +706,10 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         # default
-        # self.proxy.EventSleepPeriod = 10
+        self.assertEqual(self.proxy.EventSleepPeriod, 10)
+        self.assertEqual(self.proxy.EventAttribute,
+                         "BenchmarkScalarAttribute")
+
         self.assertEqual(self.proxy.State(), tango.DevState.ON)
         time.sleep(1)
         self.proxy.StartEvents()
@@ -737,6 +740,9 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         self.proxy.EventSleepPeriod = 10
+        self.assertEqual(self.proxy.EventSleepPeriod, 10)
+        self.assertEqual(self.proxy.EventAttribute,
+                         "BenchmarkScalarAttribute")
         time.sleep(1)
         self.proxy.StartEvents()
         time.sleep(1)
@@ -762,6 +768,9 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         self.proxy.EventSleepPeriod = 100
+        self.assertEqual(self.proxy.EventSleepPeriod, 100)
+        self.assertEqual(self.proxy.EventAttribute,
+                         "BenchmarkScalarAttribute")
         time.sleep(1)
         self.proxy.StartEvents()
         time.sleep(1)
@@ -811,6 +820,264 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
             "BenchmarkScalarAttribute",
             tango.EventType.CHANGE_EVENT,
             counter_cb)
+        self.EventSleepPeriod = 10
+        self.assertEqual(self.proxy.EventSleepPeriod, 10)
+        self.assertEqual(self.proxy.EventAttribute,
+                         "BenchmarkScalarAttribute")
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount, 0)
+        self.assertEqual(counter_cb.counter, 1)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_SpectrumEvents_start_stop(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkSpectrumAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        # default
+        # self.proxy.EventSleepPeriod = 10
+        self.assertEqual(self.proxy.State(), tango.DevState.ON)
+        self.proxy.EventAttribute = "BenchmarkSpectrumAttribute"
+        time.sleep(1)
+        self.proxy.StartEvents()
+        self.assertEqual(self.proxy.State(), tango.DevState.RUNNING)
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.State(), tango.DevState.ON)
+        self.assertEqual(
+            self.proxy.EventsCount + 1,
+            counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 101)
+        self.assertTrue(counter_cb.counter <=
+                        102)
+        self.assertTrue(self.proxy.EventsCount > 50)
+        self.assertTrue(counter_cb.counter > 50)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_SpectrumEvents_sleep_period_10(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkSpectrumAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkSpectrumAttribute"
+        self.proxy.EventSleepPeriod = 10
+        time.sleep(1)
+        self.proxy.StartEvents()
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 101)
+        self.assertTrue(counter_cb.counter <= 102)
+        self.assertTrue(self.proxy.EventsCount > 50)
+        self.assertTrue(counter_cb.counter > 50)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_SpectrumEvents_sleep_period_100(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkSpectrumAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkSpectrumAttribute"
+        self.proxy.EventSleepPeriod = 100
+        time.sleep(1)
+        self.proxy.StartEvents()
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 11)
+        self.assertTrue(counter_cb.counter <= 12)
+        self.assertTrue(self.proxy.EventsCount > 5)
+        self.assertTrue(counter_cb.counter > 5)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_SpectrumEvents_sleep_period_1000(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkSpectrumAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkSpectrumAttribute"
+        self.proxy.EventSleepPeriod = 1000
+        time.sleep(1)
+        self.proxy.StartEvents()
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 2)
+        self.assertTrue(counter_cb.counter <= 3)
+        self.assertTrue(self.proxy.EventsCount > 0)
+        self.assertTrue(counter_cb.counter > 1)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_SpectrumEvents_subscribe(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkSpectrumAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkSpectrumAttribute"
+        self.EventSleepPeriod = 10
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount, 0)
+        self.assertEqual(counter_cb.counter, 1)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ImageEvents_start_stop(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkImageAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        # default
+        # self.proxy.EventSleepPeriod = 10
+        self.assertEqual(self.proxy.State(), tango.DevState.ON)
+        self.proxy.EventAttribute = "BenchmarkImageAttribute"
+        time.sleep(1)
+        self.proxy.StartEvents()
+        self.assertEqual(self.proxy.State(), tango.DevState.RUNNING)
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.State(), tango.DevState.ON)
+        self.assertEqual(
+            self.proxy.EventsCount + 1,
+            counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 101)
+        self.assertTrue(counter_cb.counter <= 102)
+        self.assertTrue(self.proxy.EventsCount > 5)
+        self.assertTrue(counter_cb.counter > 5)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ImageEvents_sleep_period_10(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkImageAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkImageAttribute"
+        self.proxy.EventSleepPeriod = 10
+        time.sleep(1)
+        self.proxy.StartEvents()
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 101)
+        self.assertTrue(counter_cb.counter <= 102)
+        self.assertTrue(self.proxy.EventsCount > 5)
+        self.assertTrue(counter_cb.counter > 5)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ImageEvents_sleep_period_100(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkImageAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkImageAttribute"
+        self.proxy.EventSleepPeriod = 100
+        time.sleep(1)
+        self.proxy.StartEvents()
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 11)
+        self.assertTrue(counter_cb.counter <= 12)
+        self.assertTrue(self.proxy.EventsCount > 2)
+        self.assertTrue(counter_cb.counter > 2)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ImageEvents_sleep_period_1000(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkImageAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkImageAttribute"
+        self.proxy.EventSleepPeriod = 1000
+        time.sleep(1)
+        self.proxy.StartEvents()
+        time.sleep(1)
+        self.proxy.StopEvents()
+        time.sleep(1)
+        self.proxy.unsubscribe_event(id_)
+        self.assertEqual(self.proxy.EventsCount + 1,
+                         counter_cb.counter)
+        self.assertTrue(self.proxy.EventsCount <= 2)
+        self.assertTrue(counter_cb.counter <= 3)
+        self.assertTrue(self.proxy.EventsCount > 0)
+        self.assertTrue(counter_cb.counter > 1)
+        self.assertTrue(not counter_cb.errors)
+
+    def test_ImageEvents_subscribe(self):
+        """Test for start and stop thread of Events"""
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+        counter_cb = TangoCounterCb()
+
+        id_ = self.proxy.subscribe_event(
+            "BenchmarkImageAttribute",
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.proxy.EventAttribute = "BenchmarkImageAttribute"
         self.EventSleepPeriod = 10
         time.sleep(1)
         self.proxy.unsubscribe_event(id_)

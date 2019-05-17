@@ -168,7 +168,7 @@ class PyBenchmarkTarget(Device):
         doc="events count",
     )
 
-    EventsAttribute = attribute(
+    EventAttribute = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
         label="events attribute",
@@ -222,7 +222,7 @@ class PyBenchmarkTarget(Device):
 
         self.__event_sleep_period = 10.
         self.__events_count = 0
-        self.__events_attribute = 'BenchmarkScalarAttribute'
+        self.__event_attribute = 'BenchmarkScalarAttribute'
         self.__state = "ON"
 
         self.__reset_time = time.time()
@@ -249,6 +249,11 @@ class PyBenchmarkTarget(Device):
         self.set_change_event("BenchmarkScalarAttribute", True, False)
         self.set_change_event("BenchmarkSpectrumAttribute", True, False)
         self.set_change_event("BenchmarkImageAttribute", True, False)
+        self.__attribute_varaibles = {
+            "BenchmarkScalarAttribute": self.__benchmark_scalar_attribute,
+            "BenchmarkSpectrumAttribute": self.__benchmark_spectrum_attribute,
+            "BenchmarkImageAttribute": self.__benchmark_image_attribute
+        }
 
     def always_executed_hook(self):
         self.__always_executed_hook_count += 1
@@ -343,11 +348,14 @@ class PyBenchmarkTarget(Device):
     def read_EventsCount(self):
         return self.__events_count
 
-    def read_EventsAttribute(self):
-        return self._events_attribute
+    def read_EventAttribute(self):
+        return self.__event_attribute
 
-    def write_EventsAttribute(self, value):
-        self._events_attribute = value
+    def write_EventAttribute(self, value):
+        if value in self.__attribute_varaibles.keys():
+            self.__event_attribute = value
+        else:
+            self.__event_attribute = "BenchmarkScalarAttribute"
 
     def read_BenchmarkSpectrumAttribute(self):
         self.__spectrum_reads_count += 1
@@ -455,8 +463,9 @@ class PyBenchmarkTarget(Device):
     @DebugIt()
     def PushEvent(self):
         self.push_change_event(
-            self.__events_attribute,
-            self.__benchmark_scalar_attribute)
+            self.__event_attribute,
+            self.__attribute_varaibles[self.__event_attribute]
+        )
 
 # ----------
 # Run server

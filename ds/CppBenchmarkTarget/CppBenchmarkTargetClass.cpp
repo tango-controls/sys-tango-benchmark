@@ -838,23 +838,23 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Memorized
 	att_list.push_back(eventscount);
 
-	//	Attribute : EventsAttribute
-	EventsAttributeAttrib	*eventsattribute = new EventsAttributeAttrib();
+	//	Attribute : EventAttribute
+	EventAttributeAttrib	*eventsattribute = new EventAttributeAttrib();
 	Tango::UserDefaultAttrProp	eventsattribute_prop;
 	eventsattribute_prop.set_description("Attribute passed in events");
 	eventsattribute_prop.set_label("events attribute");
-	//	unit	not set for EventsAttribute
-	//	standard_unit	not set for EventsAttribute
-	//	display_unit	not set for EventsAttribute
-	//	format	not set for EventsAttribute
-	//	max_value	not set for EventsAttribute
-	//	min_value	not set for EventsAttribute
-	//	max_alarm	not set for EventsAttribute
-	//	min_alarm	not set for EventsAttribute
-	//	max_warning	not set for EventsAttribute
-	//	min_warning	not set for EventsAttribute
-	//	delta_t	not set for EventsAttribute
-	//	delta_val	not set for EventsAttribute
+	//	unit	not set for EventAttribute
+	//	standard_unit	not set for EventAttribute
+	//	display_unit	not set for EventAttribute
+	//	format	not set for EventAttribute
+	//	max_value	not set for EventAttribute
+	//	min_value	not set for EventAttribute
+	//	max_alarm	not set for EventAttribute
+	//	min_alarm	not set for EventAttribute
+	//	max_warning	not set for EventAttribute
+	//	min_warning	not set for EventAttribute
+	//	delta_t	not set for EventAttribute
+	//	delta_val	not set for EventAttribute
 	
 	eventsattribute->set_default_properties(eventsattribute_prop);
 	//	Not Polled
