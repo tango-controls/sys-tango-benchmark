@@ -51,6 +51,7 @@ namespace CppBenchmarkTarget_ns
       finished = true;
     }
     omni_thread::exit();
+    return NULL;
   }
 
 } // End of namespace

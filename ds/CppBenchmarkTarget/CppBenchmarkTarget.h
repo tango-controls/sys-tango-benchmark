@@ -79,6 +79,10 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   int command_calls_count = 0;
   int scalar_events_count = 0;
 
+  std::vector<std::string> event_attributes {"BenchmarkScalarAttribute",
+      "BenchmarkSpectrumAttribute",
+      "BenchmarkImageAttribute"};
+
   struct timeval reset_time;
 
   std::string pipe_name = "";

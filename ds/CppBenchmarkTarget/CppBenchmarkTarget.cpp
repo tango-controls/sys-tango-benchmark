@@ -228,6 +228,7 @@ void CppBenchmarkTarget::init_device()
 	scalar_events_count = 0;
 
 	*attr_EventSleepPeriod_read =10.0;
+	*attr_EventAttribute_read = Tango::string_dup(event_attributes[0].c_str());
 
 	gettimeofday(&reset_time, NULL);
 	//   self.__benchmark_pipe = (
@@ -683,8 +684,14 @@ void CppBenchmarkTarget::write_EventAttribute(Tango::WAttribute &attr)
 	Tango::DevString	w_val;
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_EventAttribute) ENABLED START -----*/
-	
-	
+	if (std::find(std::begin(event_attributes),
+		      std::end(event_attributes), std::string(w_val)) != std::end(event_attributes)){
+	  *attr_EventAttribute_read = w_val;
+	}
+	else{
+	  *attr_EventAttribute_read = Tango::string_dup(event_attributes[0].c_str());
+	}
+
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_EventAttribute
 }
 //--------------------------------------------------------
@@ -1049,9 +1056,19 @@ void CppBenchmarkTarget::push_event()
 	DEBUG_STREAM << "CppBenchmarkTarget::PushEvent()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::push_event) ENABLED START -----*/
 
-	//	Add your own code
-	push_change_event("BenchmarkScalarAttribute",
-			  attr_BenchmarkScalarAttribute_read);
+ 	//	Add your own code
+	if(!std::string(*attr_EventAttribute_read).compare(std::string("BenchmarkScalarAttribute"))){
+	  push_change_event("BenchmarkScalarAttribute",
+			    attr_BenchmarkScalarAttribute_read);
+	}
+	else if(!std::string(*attr_EventAttribute_read).compare(std::string("BenchmarkSpectrumAttribute"))){
+	  push_change_event("BenchmarkSpectrumAttribute",
+			    attr_BenchmarkSpectrumAttribute_read);
+	}
+	else if(!std::string(*attr_EventAttribute_read).compare(std::string("BenchmarkImageAttribute"))){
+	  push_change_event("BenchmarkImageAttribute",
+			    attr_BenchmarkImageAttribute_read);
+	}
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::push_event
 }
 //--------------------------------------------------------

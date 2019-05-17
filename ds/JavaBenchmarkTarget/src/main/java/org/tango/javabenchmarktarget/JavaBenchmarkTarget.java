@@ -77,7 +77,8 @@ import fr.esrf.TangoApi.PipeBlob;
 import fr.esrf.TangoApi.PipeDataElement;
 
 import java.lang.System;
-
+import java.util.List;
+import java.util.Arrays;
 import org.tango.javabenchmarktarget.EventThread;
 
 /*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.imports
@@ -105,6 +106,11 @@ public class JavaBenchmarkTarget {
 	//	Put private variables here
     private long resetTime = 0;
     private EventThread eventThread;
+    private List<String> eventAttributes = Arrays.asList(
+							 "BenchmarkScalarAttribute",
+							 "BenchmarkSpectrumAttribute",
+							 "BenchmarkImageAttribute"
+							 );
         // self.__benchmark_pipe = (
         //     'PipeBlob',
         //     (
@@ -758,7 +764,12 @@ public class JavaBenchmarkTarget {
 	public void setEventAttribute(String eventAttribute) throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.setEventAttribute) ENABLED START -----*/
-		this.eventAttribute = eventAttribute;
+		if(eventAttributes.contains(eventAttribute)){
+		    this.eventAttribute = eventAttribute;
+		}
+		else{
+		    this.eventAttribute = "BenchmarkScalarAttribute";
+		}
 		
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.setEventAttribute
 		xlogger.exit();
@@ -1102,10 +1113,23 @@ public class JavaBenchmarkTarget {
 	public void PushEvent() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.pushEvent) ENABLED START -----*/
+
+		if(eventAttribute.equals("BenchmarkScalarAttribute")){
+		    deviceManager.pushEvent(eventAttribute,
+					    new AttributeValue(benchmarkScalarAttribute),
+					    EventType.CHANGE_EVENT);
+		}
+		else if(eventAttribute.equals("BenchmarkSpectrumAttribute")){
+		    deviceManager.pushEvent(eventAttribute,
+					    new AttributeValue(benchmarkSpectrumAttribute),
+					    EventType.CHANGE_EVENT);
+		}
+		else if(eventAttribute.equals("BenchmarkImageAttribute")){
+		    deviceManager.pushEvent(eventAttribute,
+					    new AttributeValue(benchmarkImageAttribute),
+					    EventType.CHANGE_EVENT);
+		}
 		
-               deviceManager.pushEvent(eventAttribute,
-                                       new AttributeValue(benchmarkScalarAttribute),
-                                       EventType.CHANGE_EVENT);
 	       
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.pushEvent
 		xlogger.exit();
