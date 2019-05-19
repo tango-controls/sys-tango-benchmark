@@ -131,6 +131,7 @@ class PyBenchmarkTargetDeviceTest(unittest.TestCase):
                     cnt += 1
                     continue
                 dp = tango.DeviceProxy(dvname)
+                dp.set_timeout_millis(10000)
                 time.sleep(0.1)
                 if dp.state() == tango.DevState.ON:
                     found = True
