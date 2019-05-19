@@ -34,9 +34,10 @@
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::CppBenchmarkTargetStateMachine.cpp
 
 //================================================================
-//  States  |  Description
+//  States   |  Description
 //================================================================
-//  ON      |  state on
+//  ON       |  state on
+//  RUNNING  |  Thread running
 
 
 namespace CppBenchmarkTarget_ns
@@ -275,6 +276,72 @@ bool CppBenchmarkTarget::is_PipeWritesCount_allowed(TANGO_UNUSED(Tango::AttReqTy
 
 //--------------------------------------------------------
 /**
+ *	Method      : CppBenchmarkTarget::is_EventSleepPeriod_allowed()
+ *	Description : Execution allowed for EventSleepPeriod attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_EventSleepPeriod_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Check access type.
+	if ( type!=Tango::READ_REQ )
+	{
+		//	Compare device state with not allowed states for WRITE 
+		if (get_state()==Tango::RUNNING)
+		{
+		/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventSleepPeriodStateAllowed_WRITE) ENABLED START -----*/
+		
+		/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventSleepPeriodStateAllowed_WRITE
+			return false;
+		}
+		return true;
+	}
+	else
+
+	//	Not any excluded states for EventSleepPeriod attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventSleepPeriodStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventSleepPeriodStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_EventsCount_allowed()
+ *	Description : Execution allowed for EventsCount attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_EventsCount_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for EventsCount attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventsCountStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventsCountStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_EventAttribute_allowed()
+ *	Description : Execution allowed for EventAttribute attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_EventAttribute_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for EventAttribute attribute in Write access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventAttributeStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventAttributeStateAllowed_WRITE
+
+	//	Not any excluded states for EventAttribute attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::EventAttributeStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::EventAttributeStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
  *	Method      : CppBenchmarkTarget::is_BenchmarkSpectrumAttribute_allowed()
  *	Description : Execution allowed for BenchmarkSpectrumAttribute attribute
  */
@@ -396,6 +463,55 @@ bool CppBenchmarkTarget::is_ResetCounters_allowed(TANGO_UNUSED(const CORBA::Any 
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::ResetCountersStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::ResetCountersStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_StartEvents_allowed()
+ *	Description : Execution allowed for StartEvents attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_StartEvents_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Compare device state with not allowed states.
+	if (get_state()==Tango::RUNNING)
+	{
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::StartEventsStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::StartEventsStateAllowed
+		return false;
+	}
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_StopEvents_allowed()
+ *	Description : Execution allowed for StopEvents attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_StopEvents_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for StopEvents command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::StopEventsStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::StopEventsStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_PushEvent_allowed()
+ *	Description : Execution allowed for PushEvent attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_PushEvent_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for PushEvent command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::PushEventStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::PushEventStateAllowed
 	return true;
 }
 

@@ -238,6 +238,49 @@ public:
 		{return (static_cast<CppBenchmarkTarget *>(dev))->is_PipeWritesCount_allowed(ty);}
 };
 
+//	Attribute EventSleepPeriod class definition
+class EventSleepPeriodAttrib: public Tango::Attr
+{
+public:
+	EventSleepPeriodAttrib():Attr("EventSleepPeriod",
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
+	~EventSleepPeriodAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_EventSleepPeriod(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->write_EventSleepPeriod(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventSleepPeriod_allowed(ty);}
+};
+
+//	Attribute EventsCount class definition
+class EventsCountAttrib: public Tango::Attr
+{
+public:
+	EventsCountAttrib():Attr("EventsCount",
+			Tango::DEV_LONG, Tango::READ) {};
+	~EventsCountAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_EventsCount(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventsCount_allowed(ty);}
+};
+
+//	Attribute EventAttribute class definition
+class EventAttributeAttrib: public Tango::Attr
+{
+public:
+	EventAttributeAttrib():Attr("EventAttribute",
+			Tango::DEV_STRING, Tango::READ_WRITE) {};
+	~EventAttributeAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_EventAttribute(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->write_EventAttribute(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_EventAttribute_allowed(ty);}
+};
+
 //	Attribute BenchmarkSpectrumAttribute class definition
 class BenchmarkSpectrumAttributeAttrib: public Tango::SpectrumAttr
 {
@@ -383,6 +426,75 @@ public:
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<CppBenchmarkTarget *>(dev))->is_ResetCounters_allowed(any);}
+};
+
+//	Command StartEvents class definition
+class StartEventsClass : public Tango::Command
+{
+public:
+	StartEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	StartEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~StartEventsClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StartEvents_allowed(any);}
+};
+
+//	Command StopEvents class definition
+class StopEventsClass : public Tango::Command
+{
+public:
+	StopEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	StopEventsClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~StopEventsClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_StopEvents_allowed(any);}
+};
+
+//	Command PushEvent class definition
+class PushEventClass : public Tango::Command
+{
+public:
+	PushEventClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	PushEventClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~PushEventClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_PushEvent_allowed(any);}
 };
 
 

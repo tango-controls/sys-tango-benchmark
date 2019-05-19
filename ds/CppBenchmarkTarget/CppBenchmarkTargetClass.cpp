@@ -224,6 +224,60 @@ CORBA::Any *ResetCountersClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(
 	return new CORBA::Any();
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		StartEventsClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *StartEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "StartEventsClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->start_events());
+	return new CORBA::Any();
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		StopEventsClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *StopEventsClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "StopEventsClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->stop_events());
+	return new CORBA::Any();
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		PushEventClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *PushEventClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "PushEventClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->push_event());
+	return new CORBA::Any();
+}
+
 
 //===================================================================
 //	Properties management
@@ -736,6 +790,78 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Memorized
 	att_list.push_back(pipewritescount);
 
+	//	Attribute : EventSleepPeriod
+	EventSleepPeriodAttrib	*eventsleepperiod = new EventSleepPeriodAttrib();
+	Tango::UserDefaultAttrProp	eventsleepperiod_prop;
+	eventsleepperiod_prop.set_description("sleep period of the event thread in milliseconds");
+	//	label	not set for EventSleepPeriod
+	eventsleepperiod_prop.set_unit("ms");
+	//	standard_unit	not set for EventSleepPeriod
+	//	display_unit	not set for EventSleepPeriod
+	//	format	not set for EventSleepPeriod
+	//	max_value	not set for EventSleepPeriod
+	//	min_value	not set for EventSleepPeriod
+	//	max_alarm	not set for EventSleepPeriod
+	//	min_alarm	not set for EventSleepPeriod
+	//	max_warning	not set for EventSleepPeriod
+	//	min_warning	not set for EventSleepPeriod
+	//	delta_t	not set for EventSleepPeriod
+	//	delta_val	not set for EventSleepPeriod
+	
+	eventsleepperiod->set_default_properties(eventsleepperiod_prop);
+	//	Not Polled
+	eventsleepperiod->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(eventsleepperiod);
+
+	//	Attribute : EventsCount
+	EventsCountAttrib	*eventscount = new EventsCountAttrib();
+	Tango::UserDefaultAttrProp	eventscount_prop;
+	eventscount_prop.set_description("events count");
+	//	label	not set for EventsCount
+	//	unit	not set for EventsCount
+	//	standard_unit	not set for EventsCount
+	//	display_unit	not set for EventsCount
+	//	format	not set for EventsCount
+	//	max_value	not set for EventsCount
+	//	min_value	not set for EventsCount
+	//	max_alarm	not set for EventsCount
+	//	min_alarm	not set for EventsCount
+	//	max_warning	not set for EventsCount
+	//	min_warning	not set for EventsCount
+	//	delta_t	not set for EventsCount
+	//	delta_val	not set for EventsCount
+	
+	eventscount->set_default_properties(eventscount_prop);
+	//	Not Polled
+	eventscount->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(eventscount);
+
+	//	Attribute : EventAttribute
+	EventAttributeAttrib	*eventsattribute = new EventAttributeAttrib();
+	Tango::UserDefaultAttrProp	eventsattribute_prop;
+	eventsattribute_prop.set_description("Attribute passed in events");
+	eventsattribute_prop.set_label("events attribute");
+	//	unit	not set for EventAttribute
+	//	standard_unit	not set for EventAttribute
+	//	display_unit	not set for EventAttribute
+	//	format	not set for EventAttribute
+	//	max_value	not set for EventAttribute
+	//	min_value	not set for EventAttribute
+	//	max_alarm	not set for EventAttribute
+	//	min_alarm	not set for EventAttribute
+	//	max_warning	not set for EventAttribute
+	//	min_warning	not set for EventAttribute
+	//	delta_t	not set for EventAttribute
+	//	delta_val	not set for EventAttribute
+	
+	eventsattribute->set_default_properties(eventsattribute_prop);
+	//	Not Polled
+	eventsattribute->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(eventsattribute);
+
 	//	Attribute : BenchmarkSpectrumAttribute
 	BenchmarkSpectrumAttributeAttrib	*benchmarkspectrumattribute = new BenchmarkSpectrumAttributeAttrib();
 	Tango::UserDefaultAttrProp	benchmarkspectrumattribute_prop;
@@ -873,6 +999,33 @@ void CppBenchmarkTargetClass::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(pResetCountersCmd);
+
+	//	Command StartEvents
+	StartEventsClass	*pStartEventsCmd =
+		new StartEventsClass("StartEvents",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pStartEventsCmd);
+
+	//	Command StopEvents
+	StopEventsClass	*pStopEventsCmd =
+		new StopEventsClass("StopEvents",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pStopEventsCmd);
+
+	//	Command PushEvent
+	PushEventClass	*pPushEventCmd =
+		new PushEventClass("PushEvent",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pPushEventCmd);
 
 	/*----- PROTECTED REGION ID(CppBenchmarkTargetClass::command_factory_after) ENABLED START -----*/
 	

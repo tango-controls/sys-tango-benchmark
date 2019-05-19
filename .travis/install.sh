@@ -41,7 +41,7 @@ fi
 docker exec -it --user root s2i /bin/sh -c 'curl -O https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb; dpkg -i ./libtango-java_9.2.5a-1_all.deb'
 
 echo "install CppBenchmarkTarget"
-docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make'
+docker exec -it --user root s2i /bin/sh -c 'cd ds/CppBenchmarkTarget; make clean; make'
 
 echo "install JavaBenchmarkTarget"
 docker exec -it --user root s2i /bin/sh -c 'cd ds/JavaBenchmarkTarget; mvn clean install'

@@ -119,12 +119,14 @@ include $(MAKE_ENV)/tango.opt
 #=============================================================================
 # SVC_OBJS is the list of all objects needed to make the output
 #
-SVC_INCL =  $(PACKAGE_NAME).h $(PACKAGE_NAME)Class.h 
+SVC_INCL =  $(PACKAGE_NAME).h $(PACKAGE_NAME)Class.h \
+		EventThread.h
 
 
 SVC_OBJS =      \
 		$(LIB_OBJS) \
 		$(OBJDIR)/ClassFactory.o  \
+	$(OBJDIR)/EventThread.o \
         $(OBJDIR)/main.o
 
 LIB_OBJS = \

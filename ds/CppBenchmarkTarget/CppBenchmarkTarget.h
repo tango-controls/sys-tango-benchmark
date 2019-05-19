@@ -8,20 +8,20 @@
 // project :     Benchmark device
 //
 // This file is part of Tango device class.
-// 
+//
 // Tango is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Tango is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with Tango.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 //
 //
 //=============================================================================
@@ -48,7 +48,7 @@ namespace CppBenchmarkTarget_ns
 /*----- PROTECTED REGION ID(CppBenchmarkTarget::Additional Class Declarations) ENABLED START -----*/
 
 //	Additional Class Declarations
-
+  class EventThread;
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Additional Class Declarations
 
 class CppBenchmarkTarget : public TANGO_BASE_CLASS
@@ -65,18 +65,24 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   int always_executed_hook_count = 0;
   int read_attribute_hardware_count = 0;
   int write_attribute_counter_count = 0;
-  
+
   int scalar_reads_count = 0;
   int spectrum_reads_count = 0;
   int image_reads_count = 0;
   int pipe_reads_count = 0;
-  
+
   int scalar_writes_count = 0;
   int spectrum_writes_count = 0;
   int image_writes_count = 0;
   int pipe_writes_count = 0;
-  
+
   int command_calls_count = 0;
+  int scalar_events_count = 0;
+
+  std::vector<std::string> event_attributes {"BenchmarkScalarAttribute",
+      "BenchmarkSpectrumAttribute",
+      "BenchmarkImageAttribute"};
+
   struct timeval reset_time;
 
   std::string pipe_name = "";
@@ -84,6 +90,11 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   std::vector<std::string> pipe_element_names {"EvenFirstDE","EvenSecondDE"};
   size_t pipe_size = 2;
 
+  omni_mutex m_mutex;
+  EventThread* event_thread = NULL;
+  Tango::DevState m_state = Tango::ON; // replace by your own algorithm
+  
+  
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
 
@@ -103,6 +114,9 @@ public:
 	Tango::DevDouble	*attr_TimeSinceReset_read;
 	Tango::DevLong	*attr_PipeReadsCount_read;
 	Tango::DevLong	*attr_PipeWritesCount_read;
+	Tango::DevDouble	*attr_EventSleepPeriod_read;
+	Tango::DevLong	*attr_EventsCount_read;
+	Tango::DevString	*attr_EventAttribute_read;
 	Tango::DevDouble	*attr_BenchmarkSpectrumAttribute_read;
 	Tango::DevDouble	*attr_BenchmarkImageAttribute_read;
 
@@ -297,6 +311,35 @@ public:
 	virtual void read_PipeWritesCount(Tango::Attribute &attr);
 	virtual bool is_PipeWritesCount_allowed(Tango::AttReqType type);
 /**
+ *	Attribute EventSleepPeriod related methods
+ *	Description: sleep period of the event thread in milliseconds
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_EventSleepPeriod(Tango::Attribute &attr);
+	virtual void write_EventSleepPeriod(Tango::WAttribute &attr);
+	virtual bool is_EventSleepPeriod_allowed(Tango::AttReqType type);
+/**
+ *	Attribute EventsCount related methods
+ *	Description: events count
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_EventsCount(Tango::Attribute &attr);
+	virtual bool is_EventsCount_allowed(Tango::AttReqType type);
+/**
+ *	Attribute EventAttribute related methods
+ *	Description: Attribute passed in events
+ *
+ *	Data type:	Tango::DevString
+ *	Attr type:	Scalar
+ */
+	virtual void read_EventAttribute(Tango::Attribute &attr);
+	virtual void write_EventAttribute(Tango::WAttribute &attr);
+	virtual bool is_EventAttribute_allowed(Tango::AttReqType type);
+/**
  *	Attribute BenchmarkSpectrumAttribute related methods
  *	Description: benchmark spectrum attribute
  *
@@ -381,6 +424,27 @@ public:
 	 */
 	virtual void reset_counters();
 	virtual bool is_ResetCounters_allowed(const CORBA::Any &any);
+	/**
+	 *	Command StartEvents related method
+	 *	Description: starts a thread which pushes events of BenchmarkScalar Attribute values
+	 *
+	 */
+	virtual void start_events();
+	virtual bool is_StartEvents_allowed(const CORBA::Any &any);
+	/**
+	 *	Command StopEvents related method
+	 *	Description: stops a thread which pushes events of BenchmarkScalar Attribute values
+	 *
+	 */
+	virtual void stop_events();
+	virtual bool is_StopEvents_allowed(const CORBA::Any &any);
+	/**
+	 *	Command PushEvent related method
+	 *	Description: pushes an event of BenchmarkScalarAttribute
+	 *
+	 */
+	virtual void push_event();
+	virtual bool is_PushEvent_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

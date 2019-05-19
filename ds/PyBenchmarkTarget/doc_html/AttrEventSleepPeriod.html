@@ -1,13 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<title> PyBenchmarkTarget Tango Class Attribute BenchmarkSpectrumAttribute </title>
+<title> PyBenchmarkTarget Tango Class Attribute EventSleepPeriod </title>
 </head>
 <body text="Black" bgcolor="White" link="Blue" vlink="Purple" alink="Red">
 <br><br><br>
-<font size="+1"><u><b> Attribute BenchmarkSpectrumAttribute : </b></u></font>
+<font size="+1"><u><b> Attribute EventSleepPeriod : </b></u></font>
 <ul>
-	benchmark spectrum attribute
+	sleep period of the event thread in milliseconds
 </ul>
 <br><br><br>
 <Table Border=0 Cellpadding=0 CELLSPACING=20>
@@ -19,7 +19,7 @@
 				</tr>
 				<tr>
 					<td> Attribute Type </td>
-					<td> Spectrum  ( 4096 ) </td>
+					<td> Scalar </td>
 				</tr>
 				<tr>
 					<td> R/W Type </td>
@@ -55,8 +55,8 @@
 					<td> All states </td>
 				</tr>
 				<tr>
-					<td> Write allowed for </td>
-					<td> All states </td>
+					<td> Write NOT allowed for </td>
+					<td> <font size="-1">  <li> RUNNING </li> </font> </td>
 				</tr>
 			</table>
 		</td>
@@ -71,7 +71,7 @@
 				</tr>
 				<tr>
 					<td> unit </td>
-					<td>  </td>
+					<td> ms </td>
 				</tr>
 				<tr>
 					<td> standard unit </td>
@@ -152,10 +152,6 @@
 			<Tr BGCOLOR="#CCCCFF"><Td><Hr></Td><Td><Hr></Td></Tr>
 				<tr>
 					<td> Push Change event by user code </td>
-					<td> true </td>
-				</tr>
-				<tr>
-					<td> <ul> Criteria checked by TANGO </td>
 					<td> false </td>
 				</tr>
 			<Tr BGCOLOR="#CCCCFF"><Td> </Td><Td> </Td></Tr>
