@@ -13,6 +13,7 @@ def cb_tango(*args):
         # print(event_data.errors)
         pass
 
+
 class Worker(multiprocessing.Process):
     """ worker instance
     """
