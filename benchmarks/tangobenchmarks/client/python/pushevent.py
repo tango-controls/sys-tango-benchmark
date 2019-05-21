@@ -87,7 +87,7 @@ class Worker(multiprocessing.Process):
             try:
                 self.__proxy.StopEvents()
                 finished = True
-            except tango.DevFailed as e:
+            except tango.DevFailed:
                 # print(str(e))
                 self.__errors += 1
         etime = time.time()
