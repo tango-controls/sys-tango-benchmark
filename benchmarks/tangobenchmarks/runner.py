@@ -29,9 +29,10 @@ from multiprocessing import Queue
 from argparse import RawTextHelpFormatter
 
 from . import release
-from . import readbenchmark
-from . import writebenchmark
-from . import eventbenchmark
+from . import read_benchmark
+from . import write_benchmark
+from . import event_benchmark
+from . import cmd_benchmark
 from . import pipe_read_benchmark
 from . import pipe_write_benchmark
 from . import servers
@@ -102,9 +103,10 @@ def main():
         sys.exit(255)
 
     scripts = {
-        "readbenchmark": readbenchmark,
-        "writebenchmark": writebenchmark,
-        "eventbenchmark": eventbenchmark,
+        "read_benchmark": read_benchmark,
+        "write_benchmark": write_benchmark,
+        "event_benchmark": event_benchmark,
+        "cmd_benchmark": cmd_benchmark,
         "pipe_read_benchmark": pipe_read_benchmark,
         "pipe_write_benchmark": pipe_write_benchmark,
     }

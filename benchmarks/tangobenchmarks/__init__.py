@@ -27,7 +27,7 @@ Benchmark device for counting attribute, command and pipe calls
 """
 
 from . import release
-from .readbenchmark import main
+from .read_benchmark import main
 
 __all__ = [main]
 __version__ = release.version

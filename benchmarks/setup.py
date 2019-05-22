@@ -57,10 +57,10 @@ install_requires = [
 entrypoint_scripts = [
     'tg_pipe_read_benchmark = tangobenchmarks.pipe_read_benchmark:main',
     'tg_pipe_write_benchmark = tangobenchmarks.pipe_write_benchmark:main',
-    'tg_readbenchmark = tangobenchmarks.readbenchmark:main',
-    'tg_writebenchmark = tangobenchmarks.writebenchmark:main',
-    'tg_eventbenchmark = tangobenchmarks.eventbenchmark:main',
-    'tg_cmdbenchmark = tangobenchmarks.cmdbenchmark:main',
+    'tg_read_benchmark = tangobenchmarks.read_benchmark:main',
+    'tg_write_benchmark = tangobenchmarks.write_benchmark:main',
+    'tg_event_benchmark = tangobenchmarks.event_benchmark:main',
+    'tg_cmd_benchmark = tangobenchmarks.cmd_benchmark:main',
     'tg_benchmarkrunner = tangobenchmarks.runner:main',
     ]
 

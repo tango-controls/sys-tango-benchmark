@@ -1,5 +1,5 @@
 
-- benchmark: readbenchmark
+- benchmark: read_benchmark
   title: "python read benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01
@@ -7,7 +7,7 @@
   worker: tangobenchmarks.client.external.Worker
   worker_program: ../cppclient/bin/tg_benchmark_client_read
 
-- benchmark: writebenchmark
+- benchmark: write_benchmark
   title: "python write benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01
@@ -15,7 +15,7 @@
   worker: tangobenchmarks.client.external.Worker
   worker_program: ../cppclient/bin/tg_benchmark_client_write
 
-- benchmark: eventbenchmark
+- benchmark: event_benchmark
   title: "python event benchmark"
   clients: 4,6,8,10
   device: test/pybenchmarktarget/01

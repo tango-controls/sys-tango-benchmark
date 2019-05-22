@@ -1,16 +1,16 @@
-- benchmark: readbenchmark
+- benchmark: read_benchmark
   title: "cpp read benchmark"
   clients: 4,6,8,10
   device: test/cppbenchmarktarget/01
   period: 1
 
-- benchmark: writebenchmark
+- benchmark: write_benchmark
   title: "cpp write benchmark"
   clients: 4,6,8,10
   device: test/cppbenchmarktarget/01
   period: 1
 
-- benchmark: eventbenchmark
+- benchmark: event_benchmark
   title: "cpp event benchmark"
   clients: 4,6,8,10
   device: test/cppbenchmarktarget/01

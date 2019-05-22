@@ -1,14 +1,14 @@
-- benchmark: writebenchmark
+- benchmark: write_benchmark
   title: "python write benchmark"
   clients: 4,6,8,10
   device: p00/pybenchmarktarget/01
 
-- benchmark: readbenchmark
+- benchmark: read_benchmark
   title: "python read benchmark"
   clients: 4,6,8,10
   device: p00/pybenchmarktarget/01
 
-- benchmark: eventbenchmark
+- benchmark: event_benchmark
   title: "python event benchmark"
   clients: 4,6,8,10
   device: p00/pybenchmarktarget/01

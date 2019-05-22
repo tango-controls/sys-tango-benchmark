@@ -2,19 +2,19 @@
     {"device": "test/pybenchmarktarget/01",
      "clients": "4,6,8,10",
      "period": "1",
-     "benchmark": "readbenchmark",
+     "benchmark": "read_benchmark",
      "title": "python read benchmark"},
 
     {"device": "test/pybenchmarktarget/01",
      "clients": "4,6,8,10",
      "period": "1",
-     "benchmark": "writebenchmark",
+     "benchmark": "write_benchmark",
      "title": "python write benchmark"},
 
     {"device": "test/pybenchmarktarget/01",
      "clients": "4,6,8,10",
      "period": "1",
-     "benchmark": "eventbenchmark",
+     "benchmark": "event_benchmark",
      "title": "python event benchmark"},
 
     {"device": "test/pybenchmarktarget/01",
