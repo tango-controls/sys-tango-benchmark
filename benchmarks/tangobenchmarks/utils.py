@@ -95,6 +95,7 @@ class Benchmark(object):
         mtm = avg.ctime()
         mspd = avg.speed()
         errs = avg.errorsum()
+        print(errs)
         # mspd = avg.simplespeed()
         scnts = [nn * vl for vl in mcnts]
         sspd = [nn * vl for vl in mspd]

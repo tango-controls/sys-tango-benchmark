@@ -1,17 +1,30 @@
 import tango
 import time
 import multiprocessing
+# import threading
 
 import tangobenchmarks.utils as utils
 
 
-def cb_tango(*args):
-    """ tango callback
+class TangoCounterCb(object):
+    """callback class which counts events
     """
-    event_data = args[0]
-    if event_data.err:
-        # print(event_data.errors)
-        pass
+
+    def __init__(self):
+        self.counter = 0
+        self.errors = 0
+        # self.lock = threading.Lock()
+
+    def push_event(self, *args, **kwargs):
+        """callback method receiving the event
+        """
+        # with self.lock:
+        event_data = args[0]
+        if event_data.err:
+            self.errors += 1
+            # print(event_data.err)
+        else:
+            self.counter += 1
 
 
 class Worker(multiprocessing.Process):
@@ -33,6 +46,8 @@ class Worker(multiprocessing.Process):
         self.__wid = wid
         # : (:obj:`float`) time period in seconds
         self.__period = float(options.period)
+        # : (:obj:`float`) event period in milliseconds
+        self.__speriod = float(options.speriod)
         #: (:obj:`str`) device proxy
         self.__device = options.device
         #: (:obj:`str`) device attribute name
@@ -52,24 +67,34 @@ class Worker(multiprocessing.Process):
         if hasattr(tango.ApiUtil, 'cleanup'):
             tango.ApiUtil.cleanup()
         self.__proxy = tango.DeviceProxy(self.__device)
+        self.__proxy.set_timeout_millis(10000)
 
+        counter_cb = TangoCounterCb()
+
+        id_ = self.__proxy.subscribe_event(
+            self.__attribute,
+            tango.EventType.CHANGE_EVENT,
+            counter_cb)
+        self.__proxy.EventAttribute = self.__attribute
+        self.__proxy.EventSleepPeriod = self.__speriod
+        time.sleep(1)
         stime = time.time()
         etime = stime
-        ids = []
-        while etime - stime < self.__period:
+        self.__proxy.StartEvents()
+        time.sleep(self.__period)
+        finished = False
+        while finished:
             try:
-                id_ = self.__proxy.subscribe_event(
-                    self.__attribute,
-                    tango.EventType.CHANGE_EVENT,
-                    cb_tango)
-                ids.append(id_)
-            except Exception:
+                self.__proxy.StopEvents()
+                finished = True
+            except tango.DevFailed:
+                # print(str(e))
                 self.__errors += 1
-            else:
-                self.__counter += 1
-            etime = time.time()
-        for id_ in ids:
-            self.__proxy.unsubscribe_event(id_)
+        etime = time.time()
+        time.sleep(1)
+        self.__proxy.unsubscribe_event(id_)
+        self.__counter = counter_cb.counter
+        self.__errors += counter_cb.errors
         self.__qresult.put(
             utils.Result(self.__wid, self.__counter, etime - stime,
                          self.__errors))

@@ -33,6 +33,7 @@ from . import read_benchmark
 from . import write_benchmark
 from . import event_benchmark
 from . import cmd_benchmark
+from . import push_event_benchmark
 from . import pipe_read_benchmark
 from . import pipe_write_benchmark
 from . import servers
@@ -105,8 +106,9 @@ def main():
     scripts = {
         "read_benchmark": read_benchmark,
         "write_benchmark": write_benchmark,
-        "event_benchmark": event_benchmark,
         "cmd_benchmark": cmd_benchmark,
+        "event_benchmark": event_benchmark,
+        "push_event_benchmark": push_event_benchmark,
         "pipe_read_benchmark": pipe_read_benchmark,
         "pipe_write_benchmark": pipe_write_benchmark,
     }

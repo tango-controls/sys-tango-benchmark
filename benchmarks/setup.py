@@ -61,6 +61,7 @@ entrypoint_scripts = [
     'tg_write_benchmark = tangobenchmarks.write_benchmark:main',
     'tg_event_benchmark = tangobenchmarks.event_benchmark:main',
     'tg_cmd_benchmark = tangobenchmarks.cmd_benchmark:main',
+    'tg_push_event_benchmark = tangobenchmarks.push_event_benchmark:main',
     'tg_benchmarkrunner = tangobenchmarks.runner:main',
     ]
 
