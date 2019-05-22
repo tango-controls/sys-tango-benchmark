@@ -47,7 +47,7 @@ class Worker(multiprocessing.Process):
         # : (:obj:`float`) time period in seconds
         self.__period = float(options.period)
         # : (:obj:`float`) event period in milliseconds
-        self.__speriod = float(options.speriod)
+        self.__sleep = float(options.sleep)
         #: (:obj:`str`) device proxy
         self.__device = options.device
         #: (:obj:`str`) device attribute name
@@ -76,7 +76,7 @@ class Worker(multiprocessing.Process):
             tango.EventType.CHANGE_EVENT,
             counter_cb)
         self.__proxy.EventAttribute = self.__attribute
-        self.__proxy.EventSleepPeriod = self.__speriod
+        self.__proxy.EventSleepPeriod = self.__sleep
         time.sleep(1)
         stime = time.time()
         etime = stime

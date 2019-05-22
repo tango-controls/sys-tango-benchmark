@@ -27,7 +27,7 @@ def _add_arguments(parser):
         default="BenchmarkScalarAttribute",
         help="attribute which will be read, default: BenchmarkScalarAttribute")
     parser.add_argument(
-        "-s", "--sleep-period", dest="speriod", default="10",
+        "-s", "--sleep-period", dest="sleep", default="10",
         help="time in milliseconds between push_event calls,"
         "default: 10")
 
@@ -36,7 +36,7 @@ def _update_options(options):
     if not options.attribute:
         options.attribute = "BenchmarkScalarAttribute"
     if not options.attribute:
-        options.speriod = "10"
+        options.sleep = "10"
 
 
 def main(**kargs):
