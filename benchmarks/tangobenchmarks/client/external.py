@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 import multiprocessing
@@ -14,7 +15,7 @@ class Worker(multiprocessing.Process):
         self.__options = options
 
     def _build_env(self):
-        env = dict()
+        env = os.environ.copy()
         for k, v in vars(self.__options).items():
             env["_TANGO_BENCHMARK_" + k] = str(v)
         return env
