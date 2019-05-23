@@ -27,13 +27,13 @@ def _build_extra_options(options):
     __value = 0
 
     try:
-        shape = list(map(int, options.shape.split(',')))
+        shape = [int(sh) for sh in options.shape.split(',')]
     except Exception:
         shape = None
 
     try:
-        value = list(
-            map(float, options.value.replace('m', '-').split(',')))
+        value = [
+            float(vl) for vl in options.value.replace('m', '-').split(',')]
     except Exception:
         value = [0]
     if shape is None:

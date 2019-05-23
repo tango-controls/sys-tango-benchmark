@@ -55,6 +55,14 @@ BENCHMARK_RST_SETUP_READ = (
     'period=1'
 )
 
+BENCHMARK_RST_SETUP_CMD = (
+    'clients=4,6,8,10\n'
+    'command=BenchmarkCommand\n'
+    'csvfile=\n'
+    'device=%s\n'
+    'period=1'
+)
+
 BENCHMARK_RST_SETUP_WRITE = (
     'attribute=BenchmarkScalarAttribute\n'
     'clients=4,6,8,10\n'
@@ -71,6 +79,15 @@ BENCHMARK_RST_SETUP_EVENT = (
     'csvfile=\n'
     'device=%s\n'
     'period=1'
+)
+
+BENCHMARK_RST_SETUP_PUSHEVENT = (
+    'attribute=BenchmarkScalarAttribute\n'
+    'clients=4,6,8,10\n'
+    'csvfile=\n'
+    'device=%s\n'
+    'period=1\n'
+    'sleep=10'
 )
 
 BENCHMARK_RST_SETUP_PIPE_WRITE = (
@@ -231,6 +248,56 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertTrue(vl)
         print(vl)
         self.check_default(vl, "python")
+
+    def test_cmd_benchmark(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        text, er = self.runscript(
+            'benchmarkrunner -c test/assets/cmdtest.yml'.split())
+
+        self.assertEqual('', er)
+        self.assertTrue(text)
+        print(text)
+        # self.check_default(vl, "python")
+        lang = "python"
+        dvname = self.get_target_device_name(lang)
+        document = self.parse_rst(text)
+
+        self.assertEqual(len(document), 1)
+
+        self.check_benchmark_rst_output(
+            document[0],
+            has_duplicate_targets=False,
+            title=('%s command benchmark' % lang),
+            operation='call',
+            setup=(BENCHMARK_RST_SETUP_CMD % dvname)
+        )
+
+    def test_push_event_benchmark(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        text, er = self.runscript(
+            'benchmarkrunner -c test/assets/pushevent.yml'.split())
+
+        self.assertEqual('', er)
+        self.assertTrue(text)
+        print(text)
+        # self.check_default(vl, "python")
+        lang = "python"
+        dvname = self.get_target_device_name(lang)
+        document = self.parse_rst(text)
+
+        self.assertEqual(len(document), 1)
+
+        self.check_benchmark_rst_output(
+            document[0],
+            has_duplicate_targets=False,
+            title=('%s push event benchmark' % lang),
+            operation='event',
+            setup=(BENCHMARK_RST_SETUP_PUSHEVENT % dvname)
+        )
 
     def get_target_device_name(self, lang):
         if lang == "python":

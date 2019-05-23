@@ -1,0 +1,10 @@
+- benchmark: push_event_benchmark
+  title: "python push event benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+
+- server_instance: PyBenchmarkTarget/rtest
+  device_class: PyBenchmarkTarget
+  target_device: test/pybenchmarktarget/01
+# host: localhost:10000

@@ -25,7 +25,7 @@ def common_main(
         description,
         title,
         header_text,
-        build_extra_options=lambda _: dict()):
+        build_extra_options=None):
 
     parser = argparse.ArgumentParser(
         description='perform check if and how a number of simultaneous '
@@ -104,7 +104,7 @@ def common_main(
             sclients = options.clients.split(',')
             for sc in sclients:
                 if ":" in sc:
-                    sld = list(map(int, sc.split(":")))
+                    sld = [int(sl) for sl in sc.split(":")]
                     clients.extend(list(range(*sld)))
                 else:
                     clients.append(int(sc))
@@ -131,14 +131,15 @@ def common_main(
 
     update_options(options)
 
-    headers = list(map(lambda s: s.format(header_text), [
+    header_template = [
         "Run no.", "No. clients",
         "Sum counts [{0}]", "SD [{0}]",
         "Sum Speed [{0}/s]", "SD [{0}/s]",
         "Counts [{0}]", "SD [{0}]",
         "Speed [{0}/s]", "SD [{0}/s]",
         "  Time [s]  ", " SD [s]  ", " Errors "
-    ]))
+    ]
+    headers = [s.format(header_text) for s in header_template]
 
     if options.csvfile:
         csvo = utils.CSVOutput(options.csvfile, options)
@@ -154,7 +155,8 @@ def common_main(
     if not options.worker:
         options.worker = default_worker
 
-    extra_options = build_extra_options(options)
+    extra_options = build_extra_options(options) \
+        if build_extra_options else {}
     worker_class = _load_worker(options.worker)
 
     for i, cl in enumerate(clients):

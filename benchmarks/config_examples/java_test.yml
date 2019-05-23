@@ -1,16 +1,16 @@
-- benchmark: readbenchmark
+- benchmark: read_benchmark
   title: "java read benchmark"
   clients: 20:201:20
   device: test/javabenchmarktarget/01
   period: 10
 
-- benchmark: writebenchmark
+- benchmark: write_benchmark
   title: "java write benchmark"
   clients: 20:201:20
   device: test/javabenchmarktarget/01
   period: 10
 
-- benchmark: eventbenchmark
+- benchmark: event_benchmark
   title: "java event benchmark"
   clients: 20:201:20
   device: test/javabenchmarktarget/01
