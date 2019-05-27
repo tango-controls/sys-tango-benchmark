@@ -470,6 +470,13 @@ public:
 	 */
 	virtual void create_dynamic_attributes(const Tango::DevVarLongArray *argin);
 	virtual bool is_CreateDynamicAttributes_allowed(const CORBA::Any &any);
+	/**
+	 *	Command ClearDynamicAttributes related method
+	 *	Description: remove all dynamic attributes
+	 *
+	 */
+	virtual void clear_dynamic_attributes();
+	virtual bool is_ClearDynamicAttributes_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

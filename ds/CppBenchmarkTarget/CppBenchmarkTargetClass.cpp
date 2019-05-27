@@ -298,6 +298,24 @@ CORBA::Any *CreateDynamicAttributesClass::execute(Tango::DeviceImpl *device, con
 	return new CORBA::Any();
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		ClearDynamicAttributesClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *ClearDynamicAttributesClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "ClearDynamicAttributesClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->clear_dynamic_attributes());
+	return new CORBA::Any();
+}
+
 
 //===================================================================
 //	Properties management
@@ -1055,6 +1073,15 @@ void CppBenchmarkTargetClass::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(pCreateDynamicAttributesCmd);
+
+	//	Command ClearDynamicAttributes
+	ClearDynamicAttributesClass	*pClearDynamicAttributesCmd =
+		new ClearDynamicAttributesClass("ClearDynamicAttributes",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pClearDynamicAttributesCmd);
 
 	/*----- PROTECTED REGION ID(CppBenchmarkTargetClass::command_factory_after) ENABLED START -----*/
 	

@@ -550,6 +550,21 @@ bool CppBenchmarkTarget::is_CreateDynamicAttributes_allowed(TANGO_UNUSED(const C
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_ClearDynamicAttributes_allowed()
+ *	Description : Execution allowed for ClearDynamicAttributes attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_ClearDynamicAttributes_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for ClearDynamicAttributes command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::ClearDynamicAttributesStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::ClearDynamicAttributesStateAllowed
+	return true;
+}
+
 
 /*----- PROTECTED REGION ID(CppBenchmarkTarget::CppBenchmarkTargetStateAllowed.AdditionalMethods) ENABLED START -----*/
 

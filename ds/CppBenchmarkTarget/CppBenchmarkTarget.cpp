@@ -63,6 +63,7 @@
 //  StopEvents               |  stop_events
 //  PushEvent                |  push_event
 //  CreateDynamicAttributes  |  create_dynamic_attributes
+//  ClearDynamicAttributes   |  clear_dynamic_attributes
 //================================================================
 
 //================================================================
@@ -1134,6 +1135,22 @@ void CppBenchmarkTarget::create_dynamic_attributes(const Tango::DevVarLongArray 
 	//	Add your own code
 	
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::create_dynamic_attributes
+}
+//--------------------------------------------------------
+/**
+ *	Command ClearDynamicAttributes related method
+ *	Description: remove all dynamic attributes
+ *
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::clear_dynamic_attributes()
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::ClearDynamicAttributes()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::clear_dynamic_attributes) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::clear_dynamic_attributes
 }
 //--------------------------------------------------------
 /**
