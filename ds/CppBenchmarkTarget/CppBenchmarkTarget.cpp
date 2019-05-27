@@ -1156,10 +1156,12 @@ void CppBenchmarkTarget::push_event()
  *	Description: creates dynamic attributes
  *
  *	@param argin attribute configuration
+ *	@returns total number of attributes
  */
 //--------------------------------------------------------
-void CppBenchmarkTarget::create_dynamic_attributes(const Tango::DevVarLongArray *argin)
+Tango::DevLong CppBenchmarkTarget::create_dynamic_attributes(const Tango::DevVarLongArray *argin)
 {
+	Tango::DevLong argout;
 	DEBUG_STREAM << "CppBenchmarkTarget::CreateDynamicAttributes()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::create_dynamic_attributes) ENABLED START -----*/
 	
@@ -1182,8 +1184,11 @@ void CppBenchmarkTarget::create_dynamic_attributes(const Tango::DevVarLongArray 
 
 		num_of_dynamic_attributes++;
 	}
+
+	argout = num_of_dynamic_attributes;
 	
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::create_dynamic_attributes
+	return argout;
 }
 //--------------------------------------------------------
 /**
@@ -1209,6 +1214,10 @@ void CppBenchmarkTarget::clear_dynamic_attributes()
 			BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX + attribute_suffix,
 			delete_memory);
 	}
+
+	dynamic_attribute_sizes.clear();
+
+	num_of_dynamic_attributes = 0;
 	
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::clear_dynamic_attributes
 }

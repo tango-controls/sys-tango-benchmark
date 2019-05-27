@@ -469,8 +469,9 @@ public:
 	 *	Description: creates dynamic attributes
 	 *
 	 *	@param argin attribute configuration
+	 *	@returns total number of attributes
 	 */
-	virtual void create_dynamic_attributes(const Tango::DevVarLongArray *argin);
+	virtual Tango::DevLong create_dynamic_attributes(const Tango::DevVarLongArray *argin);
 	virtual bool is_CreateDynamicAttributes_allowed(const CORBA::Any &any);
 	/**
 	 *	Command ClearDynamicAttributes related method

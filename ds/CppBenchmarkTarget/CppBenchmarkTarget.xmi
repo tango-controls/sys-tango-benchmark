@@ -91,8 +91,8 @@
       <argin description="attribute configuration">
         <type xsi:type="pogoDsl:IntArrayType"/>
       </argin>
-      <argout description="">
-        <type xsi:type="pogoDsl:VoidType"/>
+      <argout description="total number of attributes">
+        <type xsi:type="pogoDsl:IntType"/>
       </argout>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>

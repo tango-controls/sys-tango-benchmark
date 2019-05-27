@@ -294,8 +294,7 @@ CORBA::Any *CreateDynamicAttributesClass::execute(Tango::DeviceImpl *device, con
 	cout2 << "CreateDynamicAttributesClass::execute(): arrived" << endl;
 	const Tango::DevVarLongArray *argin;
 	extract(in_any, argin);
-	((static_cast<CppBenchmarkTarget *>(device))->create_dynamic_attributes(argin));
-	return new CORBA::Any();
+	return insert((static_cast<CppBenchmarkTarget *>(device))->create_dynamic_attributes(argin));
 }
 
 //--------------------------------------------------------
@@ -1085,9 +1084,9 @@ void CppBenchmarkTargetClass::command_factory()
 	//	Command CreateDynamicAttributes
 	CreateDynamicAttributesClass	*pCreateDynamicAttributesCmd =
 		new CreateDynamicAttributesClass("CreateDynamicAttributes",
-			Tango::DEVVAR_LONGARRAY, Tango::DEV_VOID,
+			Tango::DEVVAR_LONGARRAY, Tango::DEV_LONG,
 			"attribute configuration",
-			"",
+			"total number of attributes",
 			Tango::OPERATOR);
 	command_list.push_back(pCreateDynamicAttributesCmd);
 
