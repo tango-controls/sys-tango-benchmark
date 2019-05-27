@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
-  <classes name="CppBenchmarkTarget" pogoRevision="9.4">
-    <description description="Benchmark device for counting attribute, command and pipe calls" title="Benchmark device" sourcePath="/home/jkotan/sources/sys-tango-benchmark/ds/CppBenchmarkTarget" language="Cpp" filestogenerate="XMI   file,Code files,Makefile,VC12 Project,Protected Regions,Eclipse Project,html Pages" license="GPL" copyright="" hasMandatoryProperty="false" hasConcreteProperty="false" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
+  <classes name="CppBenchmarkTarget" pogoRevision="9.6">
+    <description description="Benchmark device for counting attribute, command and pipe calls" title="Benchmark device" sourcePath="/home/tango-cs/sys-tango-benchmark/ds/CppBenchmarkTarget" language="Cpp" filestogenerate="XMI   file,Code files,Protected Regions" license="GPL" copyright="" hasMandatoryProperty="false" hasConcreteProperty="false" hasAbstractCommand="false" hasAbstractAttribute="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at gmail.com - jankotan" author="jankotan" emailDomain="gmail.com" classFamily="Simulators" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="" reference=""/>
     </description>
@@ -81,6 +81,15 @@
     <commands name="PushEvent" description="pushes an event of BenchmarkScalarAttribute" execMethod="push_event" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </commands>
+    <commands name="CreateDynamicAttributes" description="creates dynamic attributes" execMethod="create_dynamic_attributes" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
+      <argin description="attribute configuration">
+        <type xsi:type="pogoDsl:IntArrayType"/>
       </argin>
       <argout description="">
         <type xsi:type="pogoDsl:VoidType"/>
@@ -247,6 +256,6 @@
     <states name="RUNNING" description="Thread running">
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </states>
-    <preferences docHome="./doc_html" makefileHome="/usr/share/pogo/preferences"/>
+    <preferences docHome="./doc_html" makefileHome="/usr/local/share/pogo/preferences"/>
   </classes>
 </pogoDsl:PogoSystem>

@@ -497,6 +497,29 @@ public:
 	{return (static_cast<CppBenchmarkTarget *>(dev))->is_PushEvent_allowed(any);}
 };
 
+//	Command CreateDynamicAttributes class definition
+class CreateDynamicAttributesClass : public Tango::Command
+{
+public:
+	CreateDynamicAttributesClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	CreateDynamicAttributesClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~CreateDynamicAttributesClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_CreateDynamicAttributes_allowed(any);}
+};
+
 
 /**
  *	The CppBenchmarkTargetClass singleton definition

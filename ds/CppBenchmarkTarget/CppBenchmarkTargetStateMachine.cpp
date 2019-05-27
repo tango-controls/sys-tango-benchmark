@@ -515,6 +515,21 @@ bool CppBenchmarkTarget::is_PushEvent_allowed(TANGO_UNUSED(const CORBA::Any &any
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_CreateDynamicAttributes_allowed()
+ *	Description : Execution allowed for CreateDynamicAttributes attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_CreateDynamicAttributes_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for CreateDynamicAttributes command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::CreateDynamicAttributesStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::CreateDynamicAttributesStateAllowed
+	return true;
+}
+
 
 /*----- PROTECTED REGION ID(CppBenchmarkTarget::CppBenchmarkTargetStateAllowed.AdditionalMethods) ENABLED START -----*/
 

@@ -51,17 +51,18 @@
 //  The following table gives the correspondence
 //  between command and method names.
 //
-//  Command name      |  Method name
+//  Command name             |  Method name
 //================================================================
-//  State             |  dev_state
-//  Status            |  dev_status
-//  BenchmarkCommand  |  benchmark_command
-//  SetSpectrumSize   |  set_spectrum_size
-//  SetImageSize      |  set_image_size
-//  ResetCounters     |  reset_counters
-//  StartEvents       |  start_events
-//  StopEvents        |  stop_events
-//  PushEvent         |  push_event
+//  State                    |  dev_state
+//  Status                   |  dev_status
+//  BenchmarkCommand         |  benchmark_command
+//  SetSpectrumSize          |  set_spectrum_size
+//  SetImageSize             |  set_image_size
+//  ResetCounters            |  reset_counters
+//  StartEvents              |  start_events
+//  StopEvents               |  stop_events
+//  PushEvent                |  push_event
+//  CreateDynamicAttributes  |  create_dynamic_attributes
 //================================================================
 
 //================================================================
@@ -83,7 +84,7 @@
 //  PipeWritesCount             |  Tango::DevLong	Scalar
 //  EventSleepPeriod            |  Tango::DevDouble	Scalar
 //  EventsCount                 |  Tango::DevLong	Scalar
-//  EventAttribute             |  Tango::DevString	Scalar
+//  EventAttribute              |  Tango::DevString	Scalar
 //  BenchmarkSpectrumAttribute  |  Tango::DevDouble	Spectrum  ( max = 4096)
 //  BenchmarkImageAttribute     |  Tango::DevDouble	Image  ( max = 4096 x 4096)
 //================================================================
@@ -1070,6 +1071,23 @@ void CppBenchmarkTarget::push_event()
 			    attr_BenchmarkImageAttribute_read);
 	}
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::push_event
+}
+//--------------------------------------------------------
+/**
+ *	Command CreateDynamicAttributes related method
+ *	Description: creates dynamic attributes
+ *
+ *	@param argin attribute configuration
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::create_dynamic_attributes(const Tango::DevVarLongArray *argin)
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::CreateDynamicAttributes()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::create_dynamic_attributes) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::create_dynamic_attributes
 }
 //--------------------------------------------------------
 /**

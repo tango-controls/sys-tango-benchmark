@@ -445,6 +445,14 @@ public:
 	 */
 	virtual void push_event();
 	virtual bool is_PushEvent_allowed(const CORBA::Any &any);
+	/**
+	 *	Command CreateDynamicAttributes related method
+	 *	Description: creates dynamic attributes
+	 *
+	 *	@param argin attribute configuration
+	 */
+	virtual void create_dynamic_attributes(const Tango::DevVarLongArray *argin);
+	virtual bool is_CreateDynamicAttributes_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------
