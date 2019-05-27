@@ -360,6 +360,23 @@ public:
 	virtual void write_BenchmarkImageAttribute(Tango::WAttribute &attr);
 	virtual bool is_BenchmarkImageAttribute_allowed(Tango::AttReqType type);
 
+//	Dynamic attribute methods
+public:
+
+	/**
+	 *	Attribute BenchmarkDynamicSpectrumAttribute related methods
+	 *	Description: dynamic spectrum attribute
+	 *
+	 *	Data type:	Tango::DevDouble
+	 *	Attr type:	Spectrum max = 4096
+	 */
+	virtual void read_BenchmarkDynamicSpectrumAttribute(Tango::Attribute &attr);
+	virtual void write_BenchmarkDynamicSpectrumAttribute(Tango::WAttribute &attr);
+	virtual bool is_BenchmarkDynamicSpectrumAttribute_allowed(Tango::AttReqType type);
+	void add_BenchmarkDynamicSpectrumAttribute_dynamic_attribute(string attname, Tango::DevDouble *ptr=NULL);
+	void remove_BenchmarkDynamicSpectrumAttribute_dynamic_attribute(string attname, bool free_it=true);
+	Tango::DevDouble *get_BenchmarkDynamicSpectrumAttribute_data_ptr(string &name);
+	map<string,Tango::DevDouble *>	   BenchmarkDynamicSpectrumAttribute_data;
 
 	//--------------------------------------------------------
 	/**

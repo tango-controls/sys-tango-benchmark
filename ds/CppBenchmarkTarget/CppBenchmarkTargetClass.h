@@ -313,6 +313,25 @@ public:
 
 
 //=========================================
+//	Define classes for dynamic attributes
+//=========================================
+//	Attribute BenchmarkDynamicSpectrumAttribute class definition
+class BenchmarkDynamicSpectrumAttributeAttrib: public Tango::SpectrumAttr
+{
+public:
+	BenchmarkDynamicSpectrumAttributeAttrib(const string &att_name):SpectrumAttr(att_name.c_str(), 
+			Tango::DEV_DOUBLE, Tango::READ_WRITE, 4096) {};
+	~BenchmarkDynamicSpectrumAttributeAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_BenchmarkDynamicSpectrumAttribute(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->write_BenchmarkDynamicSpectrumAttribute(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_BenchmarkDynamicSpectrumAttribute_allowed(ty);}
+};
+
+
+//=========================================
 //	Define classes for pipes
 //=========================================
 //	Pipe BenchmarkPipe class definition

@@ -380,6 +380,26 @@ bool CppBenchmarkTarget::is_BenchmarkImageAttribute_allowed(TANGO_UNUSED(Tango::
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_BenchmarkDynamicSpectrumAttribute_allowed()
+ *	Description : Execution allowed for BenchmarkDynamicSpectrumAttribute attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_BenchmarkDynamicSpectrumAttribute_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for BenchmarkDynamicSpectrumAttribute attribute in Write access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_WRITE
+
+	//	Not any excluded states for BenchmarkDynamicSpectrumAttribute attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_READ
+	return true;
+}
+
 //=================================================
 //		pipe Allowed Methods
 //=================================================

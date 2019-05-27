@@ -791,6 +791,48 @@ void CppBenchmarkTarget::write_BenchmarkImageAttribute(Tango::WAttribute &attr)
 
 //--------------------------------------------------------
 /**
+ *	Read attribute BenchmarkDynamicSpectrumAttribute related method
+ *	Description: dynamic spectrum attribute
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Spectrum max = 4096
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute(Tango::Attribute &attr) entering... " << endl;
+	Tango::DevDouble	*att_value = get_BenchmarkDynamicSpectrumAttribute_data_ptr(attr.get_name());
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(att_value, 4096);
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute
+}
+//--------------------------------------------------------
+/**
+ *	Write attribute BenchmarkDynamicSpectrumAttribute related method
+ *	Description: dynamic spectrum attribute
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Spectrum max = 4096
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute(Tango::WAttribute &attr)
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve number of write values
+	int	w_length = attr.get_write_value_length();
+
+	//	Retrieve pointer on write values (Do not delete !)
+	const Tango::DevDouble	*w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute) ENABLED START -----*/
+	
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute
+}
+//--------------------------------------------------------
+/**
  *	Method      : CppBenchmarkTarget::add_dynamic_attributes()
  *	Description : Create the dynamic attributes if any
  *                for specified device.
@@ -798,6 +840,10 @@ void CppBenchmarkTarget::write_BenchmarkImageAttribute(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void CppBenchmarkTarget::add_dynamic_attributes()
 {
+	//	Example to add dynamic attribute:
+	//	Copy inside the following protected area to create instance(s) at startup.
+	//	add_BenchmarkDynamicSpectrumAttribute_dynamic_attribute("MyBenchmarkDynamicSpectrumAttributeAttribute");
+	
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::add_dynamic_attributes) ENABLED START -----*/
 
 	//	Add your own code to create and add dynamic attributes if any

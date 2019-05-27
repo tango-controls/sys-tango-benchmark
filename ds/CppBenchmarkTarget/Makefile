@@ -133,6 +133,7 @@ LIB_OBJS = \
         $(OBJDIR)/$(PACKAGE_NAME).o \
         $(OBJDIR)/$(PACKAGE_NAME)Class.o \
         $(OBJDIR)/$(PACKAGE_NAME)StateMachine.o \
+        $(OBJDIR)/$(PACKAGE_NAME)DynAttrUtils.o \
         $(ADDITIONAL_OBJS) 
 
 SVC_INHERITANCE_OBJ =  \
