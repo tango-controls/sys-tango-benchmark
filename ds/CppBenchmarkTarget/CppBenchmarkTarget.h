@@ -477,6 +477,14 @@ public:
 	 */
 	virtual void clear_dynamic_attributes();
 	virtual bool is_ClearDynamicAttributes_allowed(const CORBA::Any &any);
+	/**
+	 *	Command GetMemoryUsage related method
+	 *	Description: calculates current memory usage
+	 *
+	 *	@returns memory usage
+	 */
+	virtual Tango::DevLong get_memory_usage();
+	virtual bool is_GetMemoryUsage_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

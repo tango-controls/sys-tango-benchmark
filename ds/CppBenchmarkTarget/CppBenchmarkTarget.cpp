@@ -64,6 +64,7 @@
 //  PushEvent                |  push_event
 //  CreateDynamicAttributes  |  create_dynamic_attributes
 //  ClearDynamicAttributes   |  clear_dynamic_attributes
+//  GetMemoryUsage           |  get_memory_usage
 //================================================================
 
 //================================================================
@@ -1151,6 +1152,25 @@ void CppBenchmarkTarget::clear_dynamic_attributes()
 	//	Add your own code
 	
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::clear_dynamic_attributes
+}
+//--------------------------------------------------------
+/**
+ *	Command GetMemoryUsage related method
+ *	Description: calculates current memory usage
+ *
+ *	@returns memory usage
+ */
+//--------------------------------------------------------
+Tango::DevLong CppBenchmarkTarget::get_memory_usage()
+{
+	Tango::DevLong argout;
+	DEBUG_STREAM << "CppBenchmarkTarget::GetMemoryUsage()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::get_memory_usage) ENABLED START -----*/
+	
+	//	Add your own code
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::get_memory_usage
+	return argout;
 }
 //--------------------------------------------------------
 /**

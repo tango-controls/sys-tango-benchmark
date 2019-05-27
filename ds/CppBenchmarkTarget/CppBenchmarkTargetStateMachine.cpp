@@ -565,6 +565,21 @@ bool CppBenchmarkTarget::is_ClearDynamicAttributes_allowed(TANGO_UNUSED(const CO
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_GetMemoryUsage_allowed()
+ *	Description : Execution allowed for GetMemoryUsage attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_GetMemoryUsage_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for GetMemoryUsage command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::GetMemoryUsageStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::GetMemoryUsageStateAllowed
+	return true;
+}
+
 
 /*----- PROTECTED REGION ID(CppBenchmarkTarget::CppBenchmarkTargetStateAllowed.AdditionalMethods) ENABLED START -----*/
 

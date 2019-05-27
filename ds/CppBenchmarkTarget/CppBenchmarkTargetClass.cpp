@@ -316,6 +316,23 @@ CORBA::Any *ClearDynamicAttributesClass::execute(Tango::DeviceImpl *device, TANG
 	return new CORBA::Any();
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		GetMemoryUsageClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *GetMemoryUsageClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "GetMemoryUsageClass::execute(): arrived" << endl;
+	return insert((static_cast<CppBenchmarkTarget *>(device))->get_memory_usage());
+}
+
 
 //===================================================================
 //	Properties management
@@ -1082,6 +1099,15 @@ void CppBenchmarkTargetClass::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(pClearDynamicAttributesCmd);
+
+	//	Command GetMemoryUsage
+	GetMemoryUsageClass	*pGetMemoryUsageCmd =
+		new GetMemoryUsageClass("GetMemoryUsage",
+			Tango::DEV_VOID, Tango::DEV_LONG,
+			"",
+			"memory usage",
+			Tango::OPERATOR);
+	command_list.push_back(pGetMemoryUsageCmd);
 
 	/*----- PROTECTED REGION ID(CppBenchmarkTargetClass::command_factory_after) ENABLED START -----*/
 	

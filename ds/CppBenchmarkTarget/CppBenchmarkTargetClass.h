@@ -562,6 +562,29 @@ public:
 	{return (static_cast<CppBenchmarkTarget *>(dev))->is_ClearDynamicAttributes_allowed(any);}
 };
 
+//	Command GetMemoryUsage class definition
+class GetMemoryUsageClass : public Tango::Command
+{
+public:
+	GetMemoryUsageClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	GetMemoryUsageClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~GetMemoryUsageClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_GetMemoryUsage_allowed(any);}
+};
+
 
 /**
  *	The CppBenchmarkTargetClass singleton definition
