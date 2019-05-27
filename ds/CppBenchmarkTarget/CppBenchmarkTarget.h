@@ -94,6 +94,8 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   EventThread* event_thread = NULL;
   Tango::DevState m_state = Tango::ON; // replace by your own algorithm
   
+  std::map<int, int> dynamic_attribute_sizes = {};
+  int num_of_dynamic_attributes = 0;
   
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
