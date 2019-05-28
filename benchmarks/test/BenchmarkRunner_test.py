@@ -101,6 +101,13 @@ BENCHMARK_RST_SETUP_PIPE_WRITE = (
 
 BENCHMARK_RST_SETUP_PIPE_READ = BENCHMARK_RST_SETUP_PIPE_WRITE
 
+BENCHMARK_RST_SETUP_DYN_ATTR_MEM = (
+    'csvfile=\n'
+    'device=%s\n'
+    'number_of_attributes=[100, 200, 300, 400]\n'
+    'spectrum_size=10000'
+)
+
 BENCHMARK_RST_TABLE_HEADERS = (
     '<thead><row>'
     '<entry><paragraph>Run no.</paragraph></entry>'
@@ -442,6 +449,119 @@ class BenchmarkRunnerTest(unittest.TestCase):
             setup=(BENCHMARK_RST_SETUP_PIPE_READ % dvname)
         )
 
+    def test_cmd_dynamic_attribute_memory(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        text, er = self.runscript([
+            'benchmarkrunner',
+            '-c',
+            'test/assets/dynamic_attribute_memory.yml'])
+
+        self.assertEqual('', er)
+        self.assertTrue(text)
+        # print(text)
+        lang = "cpp"
+        dvname = self.get_target_device_name(lang)
+        document = self.parse_rst(text)
+
+        self.assertEqual(len(document), 1)
+
+        self.check_benchmark_rst_memory_output(
+            document[0],
+            has_duplicate_targets=False,
+            title="Dynamic attribute memory benchmark",
+            operation='call',
+            setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname)
+        )
+
+    def check_benchmark_rst_memory_output(
+            self,
+            section,
+            has_duplicate_targets,
+            title,
+            operation,
+            setup):
+        self.assertEqual(section.tagname, 'section')
+
+        self.assertEqual(len(section), 5)
+
+        self.assertEqual(len(section[0]), 1)
+        self.assertEqual(str(section[0]), '<title>%s</title>' % title)
+
+        self.assertEqual(len(section[1]), 1)
+        self.assertEqual(str(section[1]), (
+            '<paragraph>Measures dynamic attribute impact '
+            'on memory consumption</paragraph>'))
+
+        self.assertEqual(len(section[2]), 2)
+        self.assertEqual(len(section[2][0]), 1)
+        self.assertEqual(str(section[2][0]), '<strong>Date:</strong>')
+        date = dateutil.parser.parse(str(section[2][1]))
+        self.assertIsInstance(date, datetime.datetime)
+
+        self.assertEqual(len(section[3]), 3 if has_duplicate_targets else 2)
+        self.assertEqual(len(section[3][0]), 1)
+        self.assertEqual(str(section[3][0]), '<title>Benchmark setup</title>')
+        self.assertTrue(str(section[3][1]))
+
+        if has_duplicate_targets:
+            self.assertEqual(section[3][1].tagname, 'system_message')
+            self.assertEqual(
+                str(section[3][1][0]),
+                '<paragraph>'
+                'Duplicate implicit target name: "benchmark setup".'
+                '</paragraph>'
+            )
+
+        self.assertEqual(
+            str(section[3][2 if has_duplicate_targets else 1]),
+            '<paragraph>%s</paragraph>' % setup)
+
+        self.assertEqual(len(section[4]), 3 if has_duplicate_targets else 2)
+        self.assertEqual(len(section[4][0]), 1)
+        self.assertEqual(str(section[4][0]), '<title>Results</title>')
+
+        if has_duplicate_targets:
+            self.assertEqual(section[4][1].tagname, 'system_message')
+            self.assertEqual(
+                str(section[4][1][0]),
+                '<paragraph>'
+                'Duplicate implicit target name: "results".'
+                '</paragraph>'
+            )
+
+        table = section[4][2 if has_duplicate_targets else 1]
+        self.assertEqual(table.tagname, 'table')
+        self.assertEqual(len(table), 1)
+        self.assertEqual(table[0].tagname, 'tgroup')
+        self.assertEqual(len(table[0]), 6)
+        for i in range(4):
+            self.assertEqual(table[0][i].tagname, 'colspec')
+        self.assertEqual(table[0][4].tagname, 'thead')
+        self.assertEqual(
+            str(table[0][4]),
+            ('<thead><row>'
+            '<entry><paragraph>Run no.</paragraph>'
+            '</entry><entry><paragraph>No. of attributes</paragraph></entry>'
+            '<entry><paragraph>Used memory [B]</paragraph></entry>'
+            '<entry><paragraph>Errors</paragraph></entry>'
+            '</row></thead>')
+        )
+        tbody = table[0][5]
+        self.assertEqual(tbody.tagname, 'tbody')
+        self.assertEqual(len(tbody), 4)
+        for i in range(4):
+            self.assertEqual(int(tbody[i][0][0][0]), i)
+        self.assertEqual(len(tbody[0]), 4)
+        for i in range(4):
+            self.assertEqual(tbody[i].tagname, 'row')
+            for j in range(4):
+                self.assertEqual(tbody[i][j].tagname, 'entry')
+                self.assertEqual(tbody[i][j][0].tagname, 'paragraph')
+                self.assertEqual(tbody[i][j][0][0].tagname, '#text')
+                self.assertTrue(
+                    isinstance(float(tbody[i][j][0][0]), float))
 
 def main():
     """ main function"""
