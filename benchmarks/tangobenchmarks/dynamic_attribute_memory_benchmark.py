@@ -76,7 +76,7 @@ def _benchmark(options):
         return
 
     total_num_of_attr = 0
-    
+
     for (i, num_of_attr) in enumerate(options.number_of_attributes):
         delta_num_of_attr = max(0, num_of_attr - total_num_of_attr)
 
@@ -96,12 +96,12 @@ def _benchmark(options):
                 proxy.write_attribute(
                     "BenchmarkDynamicSpectrumAttribute_{}".format(n),
                     [])
-        except:
+        except Exception:
             errors += 1
 
         try:
             memory = proxy.command_inout("GetMemoryUsage")
-        except:
+        except Exception:
             pass
 
         total_num_of_attr += delta_num_of_attr

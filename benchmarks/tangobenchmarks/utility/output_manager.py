@@ -1,6 +1,7 @@
 
 from tangobenchmarks.utils import CSVOutput, RSTOutput
 
+
 class BenchmarkOutputWriter(object):
 
     def __init__(self, csv, rst):

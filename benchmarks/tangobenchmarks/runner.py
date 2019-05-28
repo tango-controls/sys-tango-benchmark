@@ -114,10 +114,9 @@ def main():
         "pipe_write_benchmark": pipe_write_benchmark,
     }
 
-    new_scripts = {
-        'dynamic_attribute_memory_benchmark': \
-            dynamic_attribute_memory_benchmark
-    }
+    new_scripts = dict(
+        dynamic_attribute_memory_benchmark=dynamic_attribute_memory_benchmark
+    )
 
     stqueue = Queue()
     starter = servers.Starter(devices, stqueue)

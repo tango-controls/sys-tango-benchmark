@@ -82,7 +82,7 @@ def update_list_slices_option(options, key):
     try:
         value = build_list_from_slices(slices)
         options[key] = value
-    except:
+    except Exception:
         assert False, "{} option has incorrect value {}".format(key, slices)
 
 

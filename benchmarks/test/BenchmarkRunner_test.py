@@ -542,11 +542,11 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(
             str(table[0][4]),
             ('<thead><row>'
-            '<entry><paragraph>Run no.</paragraph>'
-            '</entry><entry><paragraph>No. of attributes</paragraph></entry>'
-            '<entry><paragraph>Used memory [B]</paragraph></entry>'
-            '<entry><paragraph>Errors</paragraph></entry>'
-            '</row></thead>')
+             '<entry><paragraph>Run no.</paragraph>'
+             '</entry><entry><paragraph>No. of attributes</paragraph></entry>'
+             '<entry><paragraph>Used memory [B]</paragraph></entry>'
+             '<entry><paragraph>Errors</paragraph></entry>'
+             '</row></thead>')
         )
         tbody = table[0][5]
         self.assertEqual(tbody.tagname, 'tbody')
@@ -562,6 +562,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
                 self.assertEqual(tbody[i][j][0][0].tagname, '#text')
                 self.assertTrue(
                     isinstance(float(tbody[i][j][0][0]), float))
+
 
 def main():
     """ main function"""
