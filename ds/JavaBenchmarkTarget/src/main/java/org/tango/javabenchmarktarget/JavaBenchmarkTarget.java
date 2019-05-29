@@ -828,7 +828,7 @@ public class JavaBenchmarkTarget {
 	 */
 	@Attribute(name="BenchmarkImageAttribute", pushChangeEvent=true, checkChangeEvent=false)
 	@AttributeProperties(description="benchmark image attribute")
-	private double[][] benchmarkImageAttribute = new double[512][256];
+	private double[][] benchmarkImageAttribute = new double[4096][4096];
 	/**
 	 * Read attribute BenchmarkImageAttribute
 	 * 
@@ -916,7 +916,7 @@ public class JavaBenchmarkTarget {
 	/**
 	 * The state of the device
 	*/
-	@State
+	@State 
 	private DevState state = DevState.UNKNOWN;
 	/**
 	 * Execute command "State".
@@ -942,7 +942,7 @@ public class JavaBenchmarkTarget {
 	/**
 	 * The status of the device
 	 */
-	@Status
+	@Status 
 	private String status = "Server is starting. The device state is unknown";
 	/**
 	 * Execute command "Status".
@@ -1133,6 +1133,62 @@ public class JavaBenchmarkTarget {
 	       
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.pushEvent
 		xlogger.exit();
+	}
+	
+	/**
+	 * Execute command "CreateDynamicAttributes".
+	 * description: creates dynamic attributes
+	 * @param createDynamicAttributesIn attribute configuration
+	 * @return total number of attributes
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="CreateDynamicAttributes", inTypeDesc="attribute configuration",
+	         outTypeDesc="total number of attributes")
+	public int CreateDynamicAttributes(int[] createDynamicAttributesIn) throws DevFailed {
+		xlogger.entry();
+		int createDynamicAttributesOut;
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.createDynamicAttributes) ENABLED START -----*/
+		
+        createDynamicAttributesOut = 0;
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.createDynamicAttributes
+		xlogger.exit();
+		return createDynamicAttributesOut;
+	}
+	
+	/**
+	 * Execute command "ClearDynamicAttributes".
+	 * description: remove all dynamic attributes
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="ClearDynamicAttributes", inTypeDesc="", outTypeDesc="")
+	public void ClearDynamicAttributes() throws DevFailed {
+		xlogger.entry();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.clearDynamicAttributes) ENABLED START -----*/
+		
+		//	Put command code here
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.clearDynamicAttributes
+		xlogger.exit();
+	}
+	
+	/**
+	 * Execute command "GetMemoryUsage".
+	 * description: calculates current memory usage
+	 * @return memory usage
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="GetMemoryUsage", inTypeDesc="", outTypeDesc="memory usage")
+	public int GetMemoryUsage() throws DevFailed {
+		xlogger.entry();
+		int getMemoryUsageOut;
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getMemoryUsage) ENABLED START -----*/
+		
+		getMemoryUsageOut = 0;
+		
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getMemoryUsage
+		xlogger.exit();
+		return getMemoryUsageOut;
 	}
 	
 
