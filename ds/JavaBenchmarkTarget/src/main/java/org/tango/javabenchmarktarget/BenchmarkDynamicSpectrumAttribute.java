@@ -56,7 +56,9 @@ public class BenchmarkDynamicSpectrumAttribute implements IAttributeBehavior {
 	/*----- PROTECTED REGION ID(JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.dataMembers) ENABLED START -----*/
 	
 	//	Put your data member declarations
-	
+
+    double[] data = new double[1];
+
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.dataMembers
 
 	/**
@@ -83,6 +85,7 @@ public class BenchmarkDynamicSpectrumAttribute implements IAttributeBehavior {
 		config.setFormat(AttrDataFormat.SPECTRUM);
 		config.setWritable(AttrWriteType.READ_WRITE);
 		config.setDispLevel(DispLevel.OPERATOR);
+		config.setMaxX(4096);
 	
 		//	Set attribute properties
 		AttributePropertiesImpl	properties = new AttributePropertiesImpl();
@@ -115,7 +118,7 @@ public class BenchmarkDynamicSpectrumAttribute implements IAttributeBehavior {
 		double[]	readValue;
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.getValue) ENABLED START -----*/
 
-		readValue = new double[1];
+		readValue = data;
 
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.getValue
 		return new AttributeValue(readValue);
@@ -129,14 +132,19 @@ public class BenchmarkDynamicSpectrumAttribute implements IAttributeBehavior {
 	@Override
 	public void setValue(AttributeValue writeValue) throws DevFailed {
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.setValue) ENABLED START -----*/
-		System.out.println("Writing " + writeValue + "to hardware");
-		
+
+		data = (double[]) writeValue.getValue();
+
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.setValue
 	}
 
 	/*----- PROTECTED REGION ID(JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.methods) ENABLED START -----*/
 	
 	//	Put your own methods
+
+	public void setData(double[] newData) {
+	    data = newData;
+	}
 	
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.BenchmarkDynamicSpectrumAttribute.methods
 }

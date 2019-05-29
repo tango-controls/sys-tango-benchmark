@@ -499,6 +499,31 @@ class BenchmarkRunnerTest(unittest.TestCase):
             operation='call',
             setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname))
 
+    def test_cmd_dynamic_attribute_memory_java(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        text, er = self.runscript([
+            'benchmarkrunner',
+            '-c',
+            'test/assets/dynattr_mem_java.yml'])
+
+        self.assertEqual('', er)
+        self.assertTrue(text)
+        print(text)
+        lang = "java"
+        dvname = self.get_target_device_name(lang)
+        document = self.parse_rst(text)
+
+        self.assertEqual(len(document), 1)
+
+        self.check_benchmark_rst_memory_output(
+            document[0],
+            has_duplicate_targets=False,
+            title="Dynamic attribute memory benchmark",
+            operation='call',
+            setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname))
+
     def check_benchmark_rst_memory_output(
             self,
             section,
