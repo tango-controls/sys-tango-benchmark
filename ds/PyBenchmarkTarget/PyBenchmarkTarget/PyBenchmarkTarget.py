@@ -484,10 +484,10 @@ class PyBenchmarkTarget(Device):
         )
 
     @command(
-    dtype_in=('int',),
-    doc_in="attribute configuration",
-    dtype_out='int',
-    doc_out="total number of attributes",
+        dtype_in=('int',),
+        doc_in="attribute configuration",
+        dtype_out='int',
+        doc_out="total number of attributes",
     )
     @DebugIt()
     def CreateDynamicAttributes(self, argin):
@@ -522,8 +522,8 @@ class PyBenchmarkTarget(Device):
         self.__num_of_dynamic_attributes = 0
 
     @command(
-    dtype_out='int',
-    doc_out="memory usage",
+        dtype_out='int',
+        doc_out="memory usage",
     )
     @DebugIt()
     def GetMemoryUsage(self):
