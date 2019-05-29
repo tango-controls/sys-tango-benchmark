@@ -839,7 +839,7 @@ public class JavaBenchmarkTarget {
 	 */
 	@Attribute(name="BenchmarkImageAttribute", pushChangeEvent=true, checkChangeEvent=false)
 	@AttributeProperties(description="benchmark image attribute")
-	private double[][] benchmarkImageAttribute = new double[4096][4096];
+	private double[][] benchmarkImageAttribute = new double[512][512];
 	/**
 	 * Read attribute BenchmarkImageAttribute
 	 * 
