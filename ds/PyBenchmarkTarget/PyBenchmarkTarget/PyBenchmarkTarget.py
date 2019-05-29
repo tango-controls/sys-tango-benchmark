@@ -35,9 +35,13 @@ from tango import AttrWriteType, PipeWriteType
 import numpy as np
 import time
 from threading import Thread
+import os
 
 
 __all__ = ["PyBenchmarkTarget", "main"]
+
+
+BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX = "BenchmarkDynamicSpectrumAttribute_{}"
 
 
 class EventThread(Thread):
@@ -255,6 +259,9 @@ class PyBenchmarkTarget(Device):
             "BenchmarkImageAttribute": self.__benchmark_image_attribute
         }
 
+        self.__BenchmarkDynamicSpectrumAttribute_data = dict()
+        self.__num_of_dynamic_attributes = 0
+
     def always_executed_hook(self):
         self.__always_executed_hook_count += 1
 
@@ -373,6 +380,15 @@ class PyBenchmarkTarget(Device):
         self.__image_writes_count += 1
         self.__benchmark_image_attribute = value
 
+    def read_BenchmarkDynamicSpectrumAttribute(self, attr):
+        name = attr.get_name()
+        attr.set_value(self.__BenchmarkDynamicSpectrumAttribute_data[name])
+
+    def write_BenchmarkDynamicSpectrumAttribute(self, attr):
+        name = attr.get_name()
+        data = attr.get_write_value()
+        self.__BenchmarkDynamicSpectrumAttribute_data[name] = data
+
     # -------------
     # Pipes methods
     # -------------
@@ -466,6 +482,57 @@ class PyBenchmarkTarget(Device):
             self.__event_attribute,
             self.__attribute_varaibles[self.__event_attribute]
         )
+
+    @command(
+    dtype_in=('int',),
+    doc_in="attribute configuration",
+    dtype_out='int',
+    doc_out="total number of attributes",
+    )
+    @DebugIt()
+    def CreateDynamicAttributes(self, argin):
+        num_of_attributes_to_create = argin[0]
+        attribute_size = argin[1]
+        value = [0] * attribute_size
+        for i in range(num_of_attributes_to_create):
+            attr_idx = self.__num_of_dynamic_attributes
+            attr_name = BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX.format(attr_idx)
+            attr = tango.SpectrumAttr(
+                attr_name,
+                tango.DevDouble,
+                tango.READ_WRITE,
+                4096)
+            self.add_attribute(
+                attr,
+                PyBenchmarkTarget.read_BenchmarkDynamicSpectrumAttribute,
+                PyBenchmarkTarget.write_BenchmarkDynamicSpectrumAttribute,
+                None)
+            self.__BenchmarkDynamicSpectrumAttribute_data[attr_name] = value
+            self.__num_of_dynamic_attributes += 1
+        return self.__num_of_dynamic_attributes
+
+    @command(
+    )
+    @DebugIt()
+    def ClearDynamicAttributes(self):
+        for i in range(self.__num_of_dynamic_attributes):
+            self.remove_attribute(
+                BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX.format(i))
+        self.__BenchmarkDynamicSpectrumAttribute_data.clear()
+        self.__num_of_dynamic_attributes = 0
+
+    @command(
+    dtype_out='int',
+    doc_out="memory usage",
+    )
+    @DebugIt()
+    def GetMemoryUsage(self):
+        try:
+            with open("/proc/self/statm", 'r') as file:
+                statm = file.readline().split()
+                return int(statm[1]) * os.sysconf("SC_PAGE_SIZE")
+        except Exception:
+            return 0
 
 # ----------
 # Run server
