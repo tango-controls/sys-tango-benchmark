@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import sys
 import time
 import tango
 
@@ -21,7 +20,7 @@ from tangobenchmarks.utility.benchmark import run_benchmark
 OUTPUT_HEADERS = [
     "Run no.",
     "No. of devices",
-    "Startup time [s]",
+    "   Startup time [s]   ",
     "Errors"
 ]
 

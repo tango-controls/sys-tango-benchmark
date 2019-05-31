@@ -577,7 +577,8 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(str(section[0]), '<title>%s</title>' % title)
 
         self.assertEqual(len(section[1]), 1)
-        self.assertEqual(str(section[1]),
+        self.assertEqual(
+            str(section[1]),
             '<paragraph>{}</paragraph>'.format(description))
 
         self.assertEqual(len(section[2]), 2)
@@ -654,7 +655,6 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertTrue(text)
         print(text)
         lang = "cpp"
-        dvname = self.get_target_device_name(lang)
         document = self.parse_rst(text)
 
         self.assertEqual(len(document), 1)
