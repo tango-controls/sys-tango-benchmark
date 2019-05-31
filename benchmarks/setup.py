@@ -64,6 +64,8 @@ entrypoint_scripts = [
     'tg_push_event_benchmark = tangobenchmarks.push_event_benchmark:main',
     ('tg_dynamic_attribute_memory_benchmark = '
      'tangobenchmarks.dynamic_attribute_memory_benchmark:main'),
+    ('tg_server_startup_time_benchmark = '
+     'tangobenchmarks.server_startup_time_benchmark:main'),
     'tg_benchmarkrunner = tangobenchmarks.runner:main',
     ]
 

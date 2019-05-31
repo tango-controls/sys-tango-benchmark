@@ -1,0 +1,6 @@
+- benchmark: server_startup_time_benchmark
+  number_of_devices: "100,200,300,400"
+  device_name_base: "test/pybenchmarktarget/dev_"
+  device_class: "PyBenchmarkTarget"
+  device_server: "PyBenchmarkTarget/rtest"
+  with_starter: False

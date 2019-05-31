@@ -108,6 +108,16 @@ BENCHMARK_RST_SETUP_DYN_ATTR_MEM = (
     'spectrum_size=10000'
 )
 
+BENCHMARK_RST_SETUP_STARTUP_TIME = (
+    'csvfile=\n'
+    'device_class=PyBenchmarkTarget\n'
+    'device_name_base=test/pybenchmarktarget/dev_\n'
+    'device_server=PyBenchmarkTarget/rtest\n'
+    'number_of_devices=[100, 200, 300, 400]\n'
+    'ping_last=\n'
+    'with_starter='
+)
+
 BENCHMARK_RST_TABLE_HEADERS = (
     '<thead><row>'
     '<entry><paragraph>Run no.</paragraph></entry>'
@@ -125,6 +135,30 @@ BENCHMARK_RST_TABLE_HEADERS = (
     '<entry><paragraph>Errors</paragraph></entry>'
     '</row></thead>'
 )
+
+BENCHMARK_RST_TABLE_HEADERS_MEMORY = (
+    '<thead><row>'
+    '<entry><paragraph>Run no.</paragraph>'
+    '</entry><entry><paragraph>No. of attributes</paragraph></entry>'
+    '<entry><paragraph>Used memory [B]</paragraph></entry>'
+    '<entry><paragraph>Errors</paragraph></entry>'
+    '</row></thead>'
+)
+
+BENCHMARK_RST_TABLE_HEADERS_STARTUP_TIME = (
+    '<thead><row>'
+    '<entry><paragraph>Run no.</paragraph>'
+    '</entry><entry><paragraph>No. of devices</paragraph></entry>'
+    '<entry><paragraph>Startup time [s]</paragraph></entry>'
+    '<entry><paragraph>Errors</paragraph></entry>'
+    '</row></thead>'
+)
+
+BENCHMARK_DESCRIPTION_MEMORY = (
+    'Measures dynamic attribute impact on memory consumption')
+
+BENCHMARK_DESCRIPTION_STARTUP_TIME = (
+    "Measures number of devices impact on server startup time")
 
 
 # Device test case
@@ -467,11 +501,12 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
         self.assertEqual(len(document), 1)
 
-        self.check_benchmark_rst_memory_output(
+        self.check_benchmark_rst_short_output(
             document[0],
             has_duplicate_targets=False,
             title="Dynamic attribute memory benchmark",
-            operation='call',
+            headers=BENCHMARK_RST_TABLE_HEADERS_MEMORY,
+            description=BENCHMARK_DESCRIPTION_MEMORY,
             setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname))
 
     def test_cmd_dynamic_attribute_memory_py(self):
@@ -492,11 +527,12 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
         self.assertEqual(len(document), 1)
 
-        self.check_benchmark_rst_memory_output(
+        self.check_benchmark_rst_short_output(
             document[0],
             has_duplicate_targets=False,
             title="Dynamic attribute memory benchmark",
-            operation='call',
+            headers=BENCHMARK_RST_TABLE_HEADERS_MEMORY,
+            description=BENCHMARK_DESCRIPTION_MEMORY,
             setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname))
 
     def test_cmd_dynamic_attribute_memory_java(self):
@@ -517,19 +553,21 @@ class BenchmarkRunnerTest(unittest.TestCase):
 
         self.assertEqual(len(document), 1)
 
-        self.check_benchmark_rst_memory_output(
+        self.check_benchmark_rst_short_output(
             document[0],
             has_duplicate_targets=False,
             title="Dynamic attribute memory benchmark",
-            operation='call',
+            headers=BENCHMARK_RST_TABLE_HEADERS_MEMORY,
+            description=BENCHMARK_DESCRIPTION_MEMORY,
             setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname))
 
-    def check_benchmark_rst_memory_output(
+    def check_benchmark_rst_short_output(
             self,
             section,
             has_duplicate_targets,
             title,
-            operation,
+            headers,
+            description,
             setup):
         self.assertEqual(section.tagname, 'section')
 
@@ -539,9 +577,8 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual(str(section[0]), '<title>%s</title>' % title)
 
         self.assertEqual(len(section[1]), 1)
-        self.assertEqual(str(section[1]), (
-            '<paragraph>Measures dynamic attribute impact '
-            'on memory consumption</paragraph>'))
+        self.assertEqual(str(section[1]),
+            '<paragraph>{}</paragraph>'.format(description))
 
         self.assertEqual(len(section[2]), 2)
         self.assertEqual(len(section[2][0]), 1)
@@ -588,15 +625,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         for i in range(4):
             self.assertEqual(table[0][i].tagname, 'colspec')
         self.assertEqual(table[0][4].tagname, 'thead')
-        self.assertEqual(
-            str(table[0][4]),
-            ('<thead><row>'
-             '<entry><paragraph>Run no.</paragraph>'
-             '</entry><entry><paragraph>No. of attributes</paragraph></entry>'
-             '<entry><paragraph>Used memory [B]</paragraph></entry>'
-             '<entry><paragraph>Errors</paragraph></entry>'
-             '</row></thead>')
-        )
+        self.assertEqual(str(table[0][4]), headers)
         tbody = table[0][5]
         self.assertEqual(tbody.tagname, 'tbody')
         self.assertEqual(len(tbody), 4)
@@ -611,6 +640,32 @@ class BenchmarkRunnerTest(unittest.TestCase):
                 self.assertEqual(tbody[i][j][0][0].tagname, '#text')
                 self.assertTrue(
                     isinstance(float(tbody[i][j][0][0]), float))
+
+    def test_server_startup_time_py(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        text, er = self.runscript([
+            'benchmarkrunner',
+            '-c',
+            'test/assets/startup_time_py.yml'])
+
+        self.assertEqual('', er)
+        self.assertTrue(text)
+        print(text)
+        lang = "cpp"
+        dvname = self.get_target_device_name(lang)
+        document = self.parse_rst(text)
+
+        self.assertEqual(len(document), 1)
+
+        self.check_benchmark_rst_short_output(
+            document[0],
+            has_duplicate_targets=False,
+            title="Server startup time benchmark",
+            headers=BENCHMARK_RST_TABLE_HEADERS_STARTUP_TIME,
+            description=BENCHMARK_DESCRIPTION_STARTUP_TIME,
+            setup=BENCHMARK_RST_SETUP_STARTUP_TIME)
 
 
 def main():
