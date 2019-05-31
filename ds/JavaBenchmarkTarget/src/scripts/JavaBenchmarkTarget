@@ -21,7 +21,7 @@ echo "CLASSPATH=$CLASSPATH"
 
 # JAVA_OPTS="-Xmx2G -server -Xshare:off -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow"
 
-java \
+exec java \
   -cp $CLASSPATH \
   -DTANGO_HOST=$TANGO_HOST \
   -Dlogback.configurationFile="$LOGBACK" \
