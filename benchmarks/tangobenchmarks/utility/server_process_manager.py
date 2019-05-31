@@ -3,6 +3,7 @@ import os
 import tango
 import subprocess
 
+
 class ServerProcessManager(object):
 
     def __init__(self, name, starter=None):
@@ -32,4 +33,5 @@ class ServerProcessManager(object):
                 self.__starter.HardKillServer(self.__name)
         else:
             self.__proc.terminate()
+            self.__proc.wait()
             self.__stdout.close()
