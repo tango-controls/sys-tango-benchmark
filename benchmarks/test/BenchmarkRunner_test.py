@@ -654,7 +654,6 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertEqual('', er)
         self.assertTrue(text)
         print(text)
-        lang = "cpp"
         document = self.parse_rst(text)
 
         self.assertEqual(len(document), 1)
