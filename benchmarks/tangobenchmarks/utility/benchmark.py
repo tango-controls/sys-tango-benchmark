@@ -5,6 +5,8 @@ import importlib
 from tangobenchmarks import release
 from tangobenchmarks import utils
 
+from tangobenchmarks.utility.output_manager import BenchmarkOutputManager
+
 
 def _load_worker(worker_class):
     try:
@@ -184,3 +186,9 @@ def common_main(
     rst.printEnd()
     if options.csvfile:
         csvo.printEnd()
+
+
+def run_benchmark(benchmark, options, output_headers):
+    with BenchmarkOutputManager(output_headers, options) as output:
+        for record in benchmark(options):
+            output.print_line(record)

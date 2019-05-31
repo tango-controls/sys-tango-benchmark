@@ -313,6 +313,25 @@ public:
 
 
 //=========================================
+//	Define classes for dynamic attributes
+//=========================================
+//	Attribute BenchmarkDynamicSpectrumAttribute class definition
+class BenchmarkDynamicSpectrumAttributeAttrib: public Tango::SpectrumAttr
+{
+public:
+	BenchmarkDynamicSpectrumAttributeAttrib(const string &att_name):SpectrumAttr(att_name.c_str(), 
+			Tango::DEV_DOUBLE, Tango::READ_WRITE, 4096) {};
+	~BenchmarkDynamicSpectrumAttributeAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->read_BenchmarkDynamicSpectrumAttribute(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<CppBenchmarkTarget *>(dev))->write_BenchmarkDynamicSpectrumAttribute(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CppBenchmarkTarget *>(dev))->is_BenchmarkDynamicSpectrumAttribute_allowed(ty);}
+};
+
+
+//=========================================
 //	Define classes for pipes
 //=========================================
 //	Pipe BenchmarkPipe class definition
@@ -495,6 +514,75 @@ public:
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<CppBenchmarkTarget *>(dev))->is_PushEvent_allowed(any);}
+};
+
+//	Command CreateDynamicAttributes class definition
+class CreateDynamicAttributesClass : public Tango::Command
+{
+public:
+	CreateDynamicAttributesClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	CreateDynamicAttributesClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~CreateDynamicAttributesClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_CreateDynamicAttributes_allowed(any);}
+};
+
+//	Command ClearDynamicAttributes class definition
+class ClearDynamicAttributesClass : public Tango::Command
+{
+public:
+	ClearDynamicAttributesClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	ClearDynamicAttributesClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~ClearDynamicAttributesClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_ClearDynamicAttributes_allowed(any);}
+};
+
+//	Command GetMemoryUsage class definition
+class GetMemoryUsageClass : public Tango::Command
+{
+public:
+	GetMemoryUsageClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	GetMemoryUsageClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~GetMemoryUsageClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CppBenchmarkTarget *>(dev))->is_GetMemoryUsage_allowed(any);}
 };
 
 

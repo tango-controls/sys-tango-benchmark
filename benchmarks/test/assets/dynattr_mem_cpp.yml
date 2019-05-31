@@ -1,0 +1,8 @@
+- benchmark: dynamic_attribute_memory_benchmark
+  device: test/cppbenchmarktarget/01
+  number_of_attributes: 100,200,300,400
+  spectrum_size: 10000
+
+- server_instance: CppBenchmarkTarget/rtest
+  device_class: CppBenchmarkTarget
+  target_device: test/cppbenchmarktarget/01

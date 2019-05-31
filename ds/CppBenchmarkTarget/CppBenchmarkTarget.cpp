@@ -51,17 +51,20 @@
 //  The following table gives the correspondence
 //  between command and method names.
 //
-//  Command name      |  Method name
+//  Command name             |  Method name
 //================================================================
-//  State             |  dev_state
-//  Status            |  dev_status
-//  BenchmarkCommand  |  benchmark_command
-//  SetSpectrumSize   |  set_spectrum_size
-//  SetImageSize      |  set_image_size
-//  ResetCounters     |  reset_counters
-//  StartEvents       |  start_events
-//  StopEvents        |  stop_events
-//  PushEvent         |  push_event
+//  State                    |  dev_state
+//  Status                   |  dev_status
+//  BenchmarkCommand         |  benchmark_command
+//  SetSpectrumSize          |  set_spectrum_size
+//  SetImageSize             |  set_image_size
+//  ResetCounters            |  reset_counters
+//  StartEvents              |  start_events
+//  StopEvents               |  stop_events
+//  PushEvent                |  push_event
+//  CreateDynamicAttributes  |  create_dynamic_attributes
+//  ClearDynamicAttributes   |  clear_dynamic_attributes
+//  GetMemoryUsage           |  get_memory_usage
 //================================================================
 
 //================================================================
@@ -83,7 +86,7 @@
 //  PipeWritesCount             |  Tango::DevLong	Scalar
 //  EventSleepPeriod            |  Tango::DevDouble	Scalar
 //  EventsCount                 |  Tango::DevLong	Scalar
-//  EventAttribute             |  Tango::DevString	Scalar
+//  EventAttribute              |  Tango::DevString	Scalar
 //  BenchmarkSpectrumAttribute  |  Tango::DevDouble	Spectrum  ( max = 4096)
 //  BenchmarkImageAttribute     |  Tango::DevDouble	Image  ( max = 4096 x 4096)
 //================================================================
@@ -93,6 +96,29 @@ namespace CppBenchmarkTarget_ns
 /*----- PROTECTED REGION ID(CppBenchmarkTarget::namespace_starting) ENABLED START -----*/
 
 //	static initializations
+
+const std::string BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX = "BenchmarkDynamicSpectrumAttribute_";
+
+// calculates RSS in bytes
+size_t getCurrentRSS()
+{
+	FILE* fp = NULL;
+	if ((fp = fopen("/proc/self/statm", "r")) == NULL)
+	{
+		return (size_t)0;
+	}
+
+	long rss = 0;
+	if (fscanf(fp, "%*s%ld", &rss) != 1)
+	{
+		fclose(fp);
+		return (size_t)0;
+	}
+
+	fclose(fp);
+
+	return (size_t)rss * (size_t)sysconf( _SC_PAGESIZE);
+}
 
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::namespace_starting
 
@@ -790,6 +816,55 @@ void CppBenchmarkTarget::write_BenchmarkImageAttribute(Tango::WAttribute &attr)
 
 //--------------------------------------------------------
 /**
+ *	Read attribute BenchmarkDynamicSpectrumAttribute related method
+ *	Description: dynamic spectrum attribute
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Spectrum max = 4096
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute(Tango::Attribute &attr) entering... " << endl;
+	Tango::DevDouble	*att_value = get_BenchmarkDynamicSpectrumAttribute_data_ptr(attr.get_name());
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute) ENABLED START -----*/
+	//	Set the attribute value
+	
+	int attribute_idx = 0;
+	std::sscanf(attr.get_name().c_str(), "%*s_%d", &attribute_idx);
+	const int attribute_size = dynamic_attribute_sizes[attribute_idx];
+	attr.set_value(att_value, attribute_size);
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::read_BenchmarkDynamicSpectrumAttribute
+}
+//--------------------------------------------------------
+/**
+ *	Write attribute BenchmarkDynamicSpectrumAttribute related method
+ *	Description: dynamic spectrum attribute
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Spectrum max = 4096
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute(Tango::WAttribute &attr)
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve number of write values
+	int	w_length = attr.get_write_value_length();
+
+	//	Retrieve pointer on write values (Do not delete !)
+	const Tango::DevDouble	*w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute) ENABLED START -----*/
+	
+	Tango::DevDouble *att_value = get_BenchmarkDynamicSpectrumAttribute_data_ptr(attr.get_name());
+	for (int i = 0; i < w_length; ++i)
+		att_value[i] = w_val[i];
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::write_BenchmarkDynamicSpectrumAttribute
+}
+//--------------------------------------------------------
+/**
  *	Method      : CppBenchmarkTarget::add_dynamic_attributes()
  *	Description : Create the dynamic attributes if any
  *                for specified device.
@@ -797,6 +872,10 @@ void CppBenchmarkTarget::write_BenchmarkImageAttribute(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void CppBenchmarkTarget::add_dynamic_attributes()
 {
+	//	Example to add dynamic attribute:
+	//	Copy inside the following protected area to create instance(s) at startup.
+	//	add_BenchmarkDynamicSpectrumAttribute_dynamic_attribute("MyBenchmarkDynamicSpectrumAttributeAttribute");
+	
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::add_dynamic_attributes) ENABLED START -----*/
 
 	//	Add your own code to create and add dynamic attributes if any
@@ -1070,6 +1149,96 @@ void CppBenchmarkTarget::push_event()
 			    attr_BenchmarkImageAttribute_read);
 	}
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::push_event
+}
+//--------------------------------------------------------
+/**
+ *	Command CreateDynamicAttributes related method
+ *	Description: creates dynamic attributes
+ *
+ *	@param argin attribute configuration
+ *	@returns total number of attributes
+ */
+//--------------------------------------------------------
+Tango::DevLong CppBenchmarkTarget::create_dynamic_attributes(const Tango::DevVarLongArray *argin)
+{
+	Tango::DevLong argout;
+	DEBUG_STREAM << "CppBenchmarkTarget::CreateDynamicAttributes()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::create_dynamic_attributes) ENABLED START -----*/
+	
+	const int num_of_attributes_to_create = (*argin)[0];
+	const int attribute_size = (*argin)[1];
+
+	char attribute_suffix[10];
+
+	for (int i = 0; i < num_of_attributes_to_create; ++i)
+	{
+		const int attribute_idx = num_of_dynamic_attributes;
+
+		std::sprintf(attribute_suffix, "%d", attribute_idx);
+
+		add_BenchmarkDynamicSpectrumAttribute_dynamic_attribute(
+			BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX + attribute_suffix,
+			new Tango::DevDouble[attribute_size]);
+
+		dynamic_attribute_sizes[attribute_idx] = attribute_size;
+
+		num_of_dynamic_attributes++;
+	}
+
+	argout = num_of_dynamic_attributes;
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::create_dynamic_attributes
+	return argout;
+}
+//--------------------------------------------------------
+/**
+ *	Command ClearDynamicAttributes related method
+ *	Description: remove all dynamic attributes
+ *
+ */
+//--------------------------------------------------------
+void CppBenchmarkTarget::clear_dynamic_attributes()
+{
+	DEBUG_STREAM << "CppBenchmarkTarget::ClearDynamicAttributes()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::clear_dynamic_attributes) ENABLED START -----*/
+	
+	const bool delete_memory = true;
+
+	char attribute_suffix[10];
+
+	for (int i = 0; i < num_of_dynamic_attributes; ++i)
+	{
+		std::sprintf(attribute_suffix, "%d", i);
+
+		remove_BenchmarkDynamicSpectrumAttribute_dynamic_attribute(
+			BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX + attribute_suffix,
+			delete_memory);
+	}
+
+	dynamic_attribute_sizes.clear();
+
+	num_of_dynamic_attributes = 0;
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::clear_dynamic_attributes
+}
+//--------------------------------------------------------
+/**
+ *	Command GetMemoryUsage related method
+ *	Description: calculates current memory usage
+ *
+ *	@returns memory usage
+ */
+//--------------------------------------------------------
+Tango::DevLong CppBenchmarkTarget::get_memory_usage()
+{
+	Tango::DevLong argout;
+	DEBUG_STREAM << "CppBenchmarkTarget::GetMemoryUsage()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::get_memory_usage) ENABLED START -----*/
+	
+	argout = getCurrentRSS();
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::get_memory_usage
+	return argout;
 }
 //--------------------------------------------------------
 /**

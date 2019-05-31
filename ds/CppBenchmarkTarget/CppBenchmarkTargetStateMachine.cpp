@@ -380,6 +380,26 @@ bool CppBenchmarkTarget::is_BenchmarkImageAttribute_allowed(TANGO_UNUSED(Tango::
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_BenchmarkDynamicSpectrumAttribute_allowed()
+ *	Description : Execution allowed for BenchmarkDynamicSpectrumAttribute attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_BenchmarkDynamicSpectrumAttribute_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for BenchmarkDynamicSpectrumAttribute attribute in Write access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_WRITE
+
+	//	Not any excluded states for BenchmarkDynamicSpectrumAttribute attribute in read access.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::BenchmarkDynamicSpectrumAttributeStateAllowed_READ
+	return true;
+}
+
 //=================================================
 //		pipe Allowed Methods
 //=================================================
@@ -512,6 +532,51 @@ bool CppBenchmarkTarget::is_PushEvent_allowed(TANGO_UNUSED(const CORBA::Any &any
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::PushEventStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::PushEventStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_CreateDynamicAttributes_allowed()
+ *	Description : Execution allowed for CreateDynamicAttributes attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_CreateDynamicAttributes_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for CreateDynamicAttributes command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::CreateDynamicAttributesStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::CreateDynamicAttributesStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_ClearDynamicAttributes_allowed()
+ *	Description : Execution allowed for ClearDynamicAttributes attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_ClearDynamicAttributes_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for ClearDynamicAttributes command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::ClearDynamicAttributesStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::ClearDynamicAttributesStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CppBenchmarkTarget::is_GetMemoryUsage_allowed()
+ *	Description : Execution allowed for GetMemoryUsage attribute
+ */
+//--------------------------------------------------------
+bool CppBenchmarkTarget::is_GetMemoryUsage_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for GetMemoryUsage command.
+	/*----- PROTECTED REGION ID(CppBenchmarkTarget::GetMemoryUsageStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::GetMemoryUsageStateAllowed
 	return true;
 }
 

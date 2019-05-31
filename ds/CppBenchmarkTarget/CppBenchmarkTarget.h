@@ -94,6 +94,8 @@ class CppBenchmarkTarget : public TANGO_BASE_CLASS
   EventThread* event_thread = NULL;
   Tango::DevState m_state = Tango::ON; // replace by your own algorithm
   
+  std::map<int, int> dynamic_attribute_sizes = {};
+  int num_of_dynamic_attributes = 0;
   
 /*----- PROTECTED REGION END -----*/	//	CppBenchmarkTarget::Data Members
 
@@ -360,6 +362,23 @@ public:
 	virtual void write_BenchmarkImageAttribute(Tango::WAttribute &attr);
 	virtual bool is_BenchmarkImageAttribute_allowed(Tango::AttReqType type);
 
+//	Dynamic attribute methods
+public:
+
+	/**
+	 *	Attribute BenchmarkDynamicSpectrumAttribute related methods
+	 *	Description: dynamic spectrum attribute
+	 *
+	 *	Data type:	Tango::DevDouble
+	 *	Attr type:	Spectrum max = 4096
+	 */
+	virtual void read_BenchmarkDynamicSpectrumAttribute(Tango::Attribute &attr);
+	virtual void write_BenchmarkDynamicSpectrumAttribute(Tango::WAttribute &attr);
+	virtual bool is_BenchmarkDynamicSpectrumAttribute_allowed(Tango::AttReqType type);
+	void add_BenchmarkDynamicSpectrumAttribute_dynamic_attribute(string attname, Tango::DevDouble *ptr=NULL);
+	void remove_BenchmarkDynamicSpectrumAttribute_dynamic_attribute(string attname, bool free_it=true);
+	Tango::DevDouble *get_BenchmarkDynamicSpectrumAttribute_data_ptr(string &name);
+	map<string,Tango::DevDouble *>	   BenchmarkDynamicSpectrumAttribute_data;
 
 	//--------------------------------------------------------
 	/**
@@ -445,6 +464,30 @@ public:
 	 */
 	virtual void push_event();
 	virtual bool is_PushEvent_allowed(const CORBA::Any &any);
+	/**
+	 *	Command CreateDynamicAttributes related method
+	 *	Description: creates dynamic attributes
+	 *
+	 *	@param argin attribute configuration
+	 *	@returns total number of attributes
+	 */
+	virtual Tango::DevLong create_dynamic_attributes(const Tango::DevVarLongArray *argin);
+	virtual bool is_CreateDynamicAttributes_allowed(const CORBA::Any &any);
+	/**
+	 *	Command ClearDynamicAttributes related method
+	 *	Description: remove all dynamic attributes
+	 *
+	 */
+	virtual void clear_dynamic_attributes();
+	virtual bool is_ClearDynamicAttributes_allowed(const CORBA::Any &any);
+	/**
+	 *	Command GetMemoryUsage related method
+	 *	Description: calculates current memory usage
+	 *
+	 *	@returns memory usage
+	 */
+	virtual Tango::DevLong get_memory_usage();
+	virtual bool is_GetMemoryUsage_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

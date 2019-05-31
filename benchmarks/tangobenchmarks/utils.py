@@ -24,6 +24,7 @@ import pytz
 import datetime
 import csv
 import sys
+import re
 
 from multiprocessing import Queue
 
@@ -301,8 +302,12 @@ class RSTOutput(object):
         print("Benchmark setup")
         print("---------------")
         print("")
+
+        def escape(s):
+            return re.sub('_$', '\\_', str(s))
+
         for key in sorted(self._dictoptions.keys()):
-            print("%s=%s" % (key, self._dictoptions[key] or ""))
+            print("%s=%s" % (key, escape(self._dictoptions[key] or "")))
         print("")
         print("Results")
         print("-------")

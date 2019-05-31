@@ -1,0 +1,8 @@
+- benchmark: dynamic_attribute_memory_benchmark
+  device: test/pybenchmarktarget/01
+  number_of_attributes: 100,200,300,400
+  spectrum_size: 10000
+
+- server_instance: PyBenchmarkTarget/rtest
+  device_class: PyBenchmarkTarget
+  target_device: test/pybenchmarktarget/01

@@ -278,6 +278,60 @@ CORBA::Any *PushEventClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(cons
 	return new CORBA::Any();
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		CreateDynamicAttributesClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *CreateDynamicAttributesClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
+{
+	cout2 << "CreateDynamicAttributesClass::execute(): arrived" << endl;
+	const Tango::DevVarLongArray *argin;
+	extract(in_any, argin);
+	return insert((static_cast<CppBenchmarkTarget *>(device))->create_dynamic_attributes(argin));
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		ClearDynamicAttributesClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *ClearDynamicAttributesClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "ClearDynamicAttributesClass::execute(): arrived" << endl;
+	((static_cast<CppBenchmarkTarget *>(device))->clear_dynamic_attributes());
+	return new CORBA::Any();
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		GetMemoryUsageClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *GetMemoryUsageClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "GetMemoryUsageClass::execute(): arrived" << endl;
+	return insert((static_cast<CppBenchmarkTarget *>(device))->get_memory_usage());
+}
+
 
 //===================================================================
 //	Properties management
@@ -839,10 +893,10 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	att_list.push_back(eventscount);
 
 	//	Attribute : EventAttribute
-	EventAttributeAttrib	*eventsattribute = new EventAttributeAttrib();
-	Tango::UserDefaultAttrProp	eventsattribute_prop;
-	eventsattribute_prop.set_description("Attribute passed in events");
-	eventsattribute_prop.set_label("events attribute");
+	EventAttributeAttrib	*eventattribute = new EventAttributeAttrib();
+	Tango::UserDefaultAttrProp	eventattribute_prop;
+	eventattribute_prop.set_description("Attribute passed in events");
+	eventattribute_prop.set_label("events attribute");
 	//	unit	not set for EventAttribute
 	//	standard_unit	not set for EventAttribute
 	//	display_unit	not set for EventAttribute
@@ -856,11 +910,11 @@ void CppBenchmarkTargetClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	delta_t	not set for EventAttribute
 	//	delta_val	not set for EventAttribute
 	
-	eventsattribute->set_default_properties(eventsattribute_prop);
+	eventattribute->set_default_properties(eventattribute_prop);
 	//	Not Polled
-	eventsattribute->set_disp_level(Tango::OPERATOR);
+	eventattribute->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
-	att_list.push_back(eventsattribute);
+	att_list.push_back(eventattribute);
 
 	//	Attribute : BenchmarkSpectrumAttribute
 	BenchmarkSpectrumAttributeAttrib	*benchmarkspectrumattribute = new BenchmarkSpectrumAttributeAttrib();
@@ -1027,6 +1081,33 @@ void CppBenchmarkTargetClass::command_factory()
 			Tango::OPERATOR);
 	command_list.push_back(pPushEventCmd);
 
+	//	Command CreateDynamicAttributes
+	CreateDynamicAttributesClass	*pCreateDynamicAttributesCmd =
+		new CreateDynamicAttributesClass("CreateDynamicAttributes",
+			Tango::DEVVAR_LONGARRAY, Tango::DEV_LONG,
+			"attribute configuration",
+			"total number of attributes",
+			Tango::OPERATOR);
+	command_list.push_back(pCreateDynamicAttributesCmd);
+
+	//	Command ClearDynamicAttributes
+	ClearDynamicAttributesClass	*pClearDynamicAttributesCmd =
+		new ClearDynamicAttributesClass("ClearDynamicAttributes",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pClearDynamicAttributesCmd);
+
+	//	Command GetMemoryUsage
+	GetMemoryUsageClass	*pGetMemoryUsageCmd =
+		new GetMemoryUsageClass("GetMemoryUsage",
+			Tango::DEV_VOID, Tango::DEV_LONG,
+			"",
+			"memory usage",
+			Tango::OPERATOR);
+	command_list.push_back(pGetMemoryUsageCmd);
+
 	/*----- PROTECTED REGION ID(CppBenchmarkTargetClass::command_factory_after) ENABLED START -----*/
 	
 	//	Add your own code
@@ -1105,7 +1186,7 @@ void CppBenchmarkTargetClass::erase_dynamic_attributes(const Tango::DevVarString
 
 //--------------------------------------------------------
 /**
- *	Method      : CppBenchmarkTargetClass::get_attr_by_name()
+ *	Method      : CppBenchmarkTargetClass::get_attr_object_by_name()
  *	Description : returns Tango::Attr * object found by name
  */
 //--------------------------------------------------------

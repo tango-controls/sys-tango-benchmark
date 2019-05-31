@@ -36,6 +36,7 @@ from . import cmd_benchmark
 from . import push_event_benchmark
 from . import pipe_read_benchmark
 from . import pipe_write_benchmark
+from . import dynamic_attribute_memory_benchmark
 from . import servers
 
 
@@ -113,6 +114,10 @@ def main():
         "pipe_write_benchmark": pipe_write_benchmark,
     }
 
+    new_scripts = dict(
+        dynamic_attribute_memory_benchmark=dynamic_attribute_memory_benchmark
+    )
+
     stqueue = Queue()
     starter = servers.Starter(devices, stqueue)
     starter.start()
@@ -124,7 +129,9 @@ def main():
 
     for bmk in benchmarks:
         script = bmk.pop("benchmark")
-        if script.lower() in scripts.keys():
+        if script in new_scripts.keys():
+            new_scripts[script].run(bmk)
+        elif script.lower() in scripts.keys():
             scripts[script].main(**bmk)
 
     if tostop:

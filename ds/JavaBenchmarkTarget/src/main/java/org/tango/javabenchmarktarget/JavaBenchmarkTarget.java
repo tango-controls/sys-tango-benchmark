@@ -81,6 +81,11 @@ import java.util.List;
 import java.util.Arrays;
 import org.tango.javabenchmarktarget.EventThread;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.lang.reflect.Field;
+import sun.misc.Unsafe;
+
 /*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.imports
 
 /**
@@ -99,6 +104,9 @@ public class JavaBenchmarkTarget {
     /*----- PROTECTED REGION ID(JavaBenchmarkTarget.variables) ENABLED START -----*/
 
     //	Put static variables here
+
+	protected static final String BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX = "BenchmarkDynamicSpectrumAttribute_";
+
 
     /*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.variables
 	/*----- PROTECTED REGION ID(JavaBenchmarkTarget.private) ENABLED START -----*/
@@ -123,6 +131,8 @@ public class JavaBenchmarkTarget {
         //         {'name': 'DevBoolean', 'value': True},
         //     )
         // )
+
+	private int numOfDynamicAttributes = 0;
 
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.private
 
@@ -154,6 +164,7 @@ public class JavaBenchmarkTarget {
 		state = DevState.ON;
 		eventSleepPeriod = 10.0;
 		eventAttribute = "BenchmarkScalarAttribute";
+		numOfDynamicAttributes = 0;
 		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.initDevice
 		xlogger.exit();
 	}
@@ -828,7 +839,7 @@ public class JavaBenchmarkTarget {
 	 */
 	@Attribute(name="BenchmarkImageAttribute", pushChangeEvent=true, checkChangeEvent=false)
 	@AttributeProperties(description="benchmark image attribute")
-	private double[][] benchmarkImageAttribute = new double[512][256];
+	private double[][] benchmarkImageAttribute = new double[512][512];
 	/**
 	 * Read attribute BenchmarkImageAttribute
 	 * 
@@ -916,7 +927,7 @@ public class JavaBenchmarkTarget {
 	/**
 	 * The state of the device
 	*/
-	@State
+	@State 
 	private DevState state = DevState.UNKNOWN;
 	/**
 	 * Execute command "State".
@@ -942,7 +953,7 @@ public class JavaBenchmarkTarget {
 	/**
 	 * The status of the device
 	 */
-	@Status
+	@Status 
 	private String status = "Server is starting. The device state is unknown";
 	/**
 	 * Execute command "Status".
@@ -1135,6 +1146,92 @@ public class JavaBenchmarkTarget {
 		xlogger.exit();
 	}
 	
+	/**
+	 * Execute command "CreateDynamicAttributes".
+	 * description: creates dynamic attributes
+	 * @param createDynamicAttributesIn attribute configuration
+	 * @return total number of attributes
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="CreateDynamicAttributes", inTypeDesc="attribute configuration",
+	         outTypeDesc="total number of attributes")
+	public int CreateDynamicAttributes(int[] createDynamicAttributesIn) throws DevFailed {
+		xlogger.entry();
+		int createDynamicAttributesOut;
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.createDynamicAttributes) ENABLED START -----*/
+
+		final int numOfAttributesToCreate = createDynamicAttributesIn[0];
+		final int attributeSize = createDynamicAttributesIn[1];
+		double[] value = new double[attributeSize];
+
+		for (int i = 0; i < numOfAttributesToCreate; i++) {
+
+			final int attrIdx = numOfDynamicAttributes;
+			final String attrName = BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX + Integer.toString(attrIdx);
+
+			BenchmarkDynamicSpectrumAttribute attr = new BenchmarkDynamicSpectrumAttribute(attrName);
+			attr.setData(value);
+
+			dynamicManager.addAttribute(attr);
+
+			numOfDynamicAttributes++;
+		}
+
+		createDynamicAttributesOut = numOfDynamicAttributes;
+
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.createDynamicAttributes
+		xlogger.exit();
+		return createDynamicAttributesOut;
+	}
+	
+	/**
+	 * Execute command "ClearDynamicAttributes".
+	 * description: remove all dynamic attributes
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="ClearDynamicAttributes", inTypeDesc="", outTypeDesc="")
+	public void ClearDynamicAttributes() throws DevFailed {
+		xlogger.entry();
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.clearDynamicAttributes) ENABLED START -----*/
+
+		for (int i = 0; i < numOfDynamicAttributes; i++) {
+			final String attrName = BENCHMARK_DYNAMIC_ATTRIBUTE_PREFIX + Integer.toString(i);
+			dynamicManager.removeAttribute(attrName);
+		}
+
+		numOfDynamicAttributes = 0;
+
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.clearDynamicAttributes
+		xlogger.exit();
+	}
+	
+	/**
+	 * Execute command "GetMemoryUsage".
+	 * description: calculates current memory usage
+	 * @return memory usage
+	 * @throws DevFailed if command execution failed.
+	 */
+	@Command(name="GetMemoryUsage", inTypeDesc="", outTypeDesc="memory usage")
+	public int GetMemoryUsage() throws DevFailed {
+		xlogger.entry();
+		int getMemoryUsageOut;
+		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.getMemoryUsage) ENABLED START -----*/
+
+		try {
+			String[] statm = Files
+				.readAllLines(Paths.get("/proc/self/statm"))
+				.get(0)
+				.split(" ");
+			getMemoryUsageOut = Integer.parseInt(statm[1]) * getPageSize();
+		} catch (Exception e) {
+			getMemoryUsageOut = 0;
+		}
+
+		/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.getMemoryUsage
+		xlogger.exit();
+		return getMemoryUsageOut;
+	}
+	
 
 	//========================================================
 	//	Programmer's methods
@@ -1142,6 +1239,13 @@ public class JavaBenchmarkTarget {
 	/*----- PROTECTED REGION ID(JavaBenchmarkTarget.methods) ENABLED START -----*/
 
 	//	Put your own methods here
+
+	public static int getPageSize() throws Exception {
+		Field f = Unsafe.class.getDeclaredField("theUnsafe");
+		f.setAccessible(true);
+		Unsafe unsafe = (Unsafe)f.get(null);
+		return unsafe.pageSize();
+	}
 
 	/*----- PROTECTED REGION END -----*/	//	JavaBenchmarkTarget.methods
 
