@@ -37,6 +37,7 @@ from . import push_event_benchmark
 from . import pipe_read_benchmark
 from . import pipe_write_benchmark
 from . import dynamic_attribute_memory_benchmark
+from . import server_startup_time_benchmark
 from . import servers
 
 
@@ -115,7 +116,8 @@ def main():
     }
 
     new_scripts = dict(
-        dynamic_attribute_memory_benchmark=dynamic_attribute_memory_benchmark
+        dynamic_attribute_memory_benchmark=dynamic_attribute_memory_benchmark,
+        server_startup_time_benchmark=server_startup_time_benchmark,
     )
 
     stqueue = Queue()
