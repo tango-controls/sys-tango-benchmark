@@ -1,0 +1,21 @@
+- &common
+  benchmark: server_startup_time_benchmark
+  title: "Python server startup time"
+  number_of_devices: "100:501:100"
+  device_name_base: "test/pybenchmarktarget/dev_"
+  device_class: "PyBenchmarkTarget"
+  device_server: "PyBenchmarkTarget/rtest"
+  with_starter: False
+
+- <<: *common
+  title: "Java server startup time"
+  number_of_devices: "1,2,3,4,5"
+  device_name_base: "test/javabenchmarktarget/dev_"
+  device_class: "JavaBenchmarkTarget"
+  device_server: "JavaBenchmarkTarget/rtest"
+
+- <<: *common
+  title: "C++ server startup time"
+  device_name_base: "test/javabenchmarktarget/dev_"
+  device_class: "CppBenchmarkTarget"
+  device_server: "CppBenchmarkTarget/rtest"
