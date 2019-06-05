@@ -35,6 +35,13 @@ def create_argparser(defaults):
     parser = create_common_argparser(defaults)
 
     parser.add_argument(
+        "-d",
+        "--device",
+        dest="device",
+        required=True,
+        help="target device")
+
+    parser.add_argument(
         "-n",
         "--numbers-of-attributes",
         metavar="N",
@@ -61,6 +68,7 @@ def create_argparser(defaults):
 
 def validate_options(options):
     check, _ = validate_common_options(options)
+    check('device', str)
     check('number_of_attributes', list)
     check('spectrum_size', int)
 

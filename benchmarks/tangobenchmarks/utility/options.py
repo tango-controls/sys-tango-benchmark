@@ -26,13 +26,6 @@ def create_common_argparser(defaults):
         action="version",
         version="%(prog)s {}".format(tangobenchmarks.release.version))
 
-    parser.add_argument(
-        "-d",
-        "--device",
-        dest="device",
-        required=True,
-        help="target device")
-
     csvfile_arg = parser.add_argument(
         "-f",
         "--csv-file",
@@ -96,7 +89,6 @@ def validate_common_options(options):
         assert (key in options) and type(options[key]) in [tpe, type(None)], \
             "{} option must be of type {}".format(key, tpe)
 
-    check('device', str)
     check('title', str)
     check('description', str)
     check('verbose', bool)
