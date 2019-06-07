@@ -74,3 +74,8 @@ fi
 
 echo "install cpp clients"
 docker exec -it --user root s2i /bin/sh -c 'cd cppclient && make all'
+
+echo "install java clients"
+docker exec -it --user root s2i /bin/sh -c 'cd javaclient; for d in tg-benchmark-client-*; do cd $d && mvn package; cd ..; done'
+docker exec -it --user root s2i /bin/sh -c 'cd javaclient; cp -f tg-benchmark-client-*/target/*.jar ${TANGO_ROOT:-/usr}/share/java'
+docker exec -it --user root s2i /bin/sh -c $'cd javaclient; for d in tg-benchmark-client-*; do client=$(echo $d | awk -F- \'{print $NF}\') && outfile=${TANGO_ROOT:-/usr}/bin/tg_benchmark_client_java_$client && cat script-template | sed "s/^CLIENT=$/CLIENT=$client/g" > $outfile && chmod +x $outfile; done'

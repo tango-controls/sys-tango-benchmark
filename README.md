@@ -75,6 +75,14 @@ For client side (benchmark runners):
     # or make install INSTALL_DIR=~/.local/bin
     ```
 
+1. Install Java workers:
+    ```bash
+    cd javaclient
+    for d in tg-benchmark-client-*; do cd $d && mvn package; cd ..; done
+    sudo cp -f tg-benchmark-client-*/target/*.jar ${TANGO_ROOT:-/usr}/share/java
+    sudo bash -c $'for d in tg-benchmark-client-*; do client=$(echo $d | awk -F- \'{print $NF}\') && outfile=${TANGO_ROOT:-/usr}/bin/tg_benchmark_client_java_$client && cat script-template | sed "s/^CLIENT=$/CLIENT=$client/g" > $outfile && chmod +x $outfile; done'
+    ```
+
 ### Running a default benchmark
 
 The benchmark runner (`tg_benchmarkrunner`) uses a configuration script provided with `-c` command line options. 

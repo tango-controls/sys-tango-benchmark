@@ -1,0 +1,40 @@
+- &opts
+  clients: "1:21:5"
+  device: test/pybenchmarktarget/01
+  period: 5
+  worker: tangobenchmarks.client.external.Worker
+
+- benchmark: read_benchmark
+  title: "python read benchmark with java client"
+  worker_program: tg_benchmark_client_java_read
+  <<: *opts
+
+- benchmark: write_benchmark
+  title: "Python attribute write benchmark with java client"
+  worker_program: tg_benchmark_client_java_write
+  <<: *opts
+
+- benchmark: cmd_benchmark
+  title: "Python command benchmark with java client"
+  worker_program: tg_benchmark_client_java_command
+  <<: *opts
+
+- benchmark: event_benchmark
+  title: "Python event subscription benchmark with java client"
+  worker_program: tg_benchmark_client_java_event
+  <<: *opts
+
+- benchmark: pipe_write_benchmark
+  title: "Python pipe write benchmark with java client"
+  size: 256
+  worker_program: tg_benchmark_client_java_pipewrite
+  <<: *opts
+
+- benchmark: pipe_read_benchmark
+  title: "Python pipe read benchmark with java client"
+  worker_program: tg_benchmark_client_java_piperead
+  <<: *opts
+
+- server_instance: PyBenchmarkTarget/rtest
+  device_class: PyBenchmarkTarget
+  target_device: test/pybenchmarktarget/01
