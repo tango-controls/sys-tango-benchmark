@@ -9,8 +9,8 @@ env:
   # - OS=ubuntu18.04 PY=3 TEST=devices
   # - OS=debian10 PY=3 TEST=runner
   # - OS=debian10 PY=2 TEST=runner
-  - OS=debian10 PY=2 TEST=test
-  # - OS=ubuntu18.04 PY=2 TEST=runner
+  # - OS=debian10 PY=2 TEST=test
+  - OS=ubuntu18.04 PY=2 TEST=runner
   # - OS=ubuntu18.04 PY=3 TEST=runner
 #   - OS=debian9 PY=3 TEST=devices
 #   - OS=debian9 PY=2 TEST=devices
