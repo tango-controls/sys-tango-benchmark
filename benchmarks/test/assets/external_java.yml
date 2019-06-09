@@ -15,13 +15,13 @@
 #   worker: tangobenchmarks.client.external.Worker
 #   worker_program: tg_benchmark_client_java_write
 
-# - benchmark: event_benchmark
-#   title: "python event benchmark"
-#   clients: 4,6,8,10
-#   device: test/pybenchmarktarget/01
-#   period: 1
-#   worker: tangobenchmarks.client.external.Worker
-#   worker_program: tg_benchmark_client_java_event
+- benchmark: event_benchmark
+  title: "python event benchmark"
+  clients: 4,6,8,10
+  device: test/pybenchmarktarget/01
+  period: 1
+  worker: tangobenchmarks.client.external.Worker
+  worker_program: tg_benchmark_client_java_event
 
 # - benchmark: pipe_write_benchmark
 #   title: "python pipe write benchmark"

@@ -282,6 +282,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             operation='write',
             setup=(BENCHMARK_RST_SETUP_WRITE % dvname))
 
+    @unittest.skip("nada")
     def test_external_cpp_client(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -295,7 +296,6 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertTrue(vl)
         self.check_default(vl, "python")
 
-    @unittest.skip("nada")
     def test_external_java_client(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
