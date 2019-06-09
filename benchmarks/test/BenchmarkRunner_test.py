@@ -209,6 +209,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print(vl)
         self.check_default(vl, 'python')
 
+    @unittest.skip("nada")
     def test_BenchmarkRunnerDefaultJSON(self):
         """Test for BenchmarkRunner default"""
         print("Run: %s.%s() " % (
@@ -222,6 +223,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print(vl)
         self.check_default(vl, 'python')
 
+    @unittest.skip("nada")
     def test_BenchmarkRunnerDefaultJava(self):
         """Test for BenchmarkRunner default"""
         print("Run: %s.%s() " % (
@@ -235,6 +237,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print(vl)
         self.check_default(vl, "java")
 
+    @unittest.skip("nada")
     def test_BenchmarkRunnerDefaultCPP(self):
         """Test for BenchmarkRunner default"""
         print("Run: %s.%s() " % (
@@ -248,6 +251,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print(vl)
         self.check_default(vl, "cpp")
 
+    @unittest.skip("nada")
     def test_external_dummy_client(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -291,6 +295,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertTrue(vl)
         self.check_default(vl, "python")
 
+    @unittest.skip("nada")
     def test_external_java_client(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -304,6 +309,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         self.assertTrue(vl)
         self.check_default(vl, "python")
 
+    @unittest.skip("nada")
     def test_cmd_benchmark(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -329,6 +335,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             setup=(BENCHMARK_RST_SETUP_CMD % dvname)
         )
 
+    @unittest.skip("nada")
     def test_push_event_benchmark(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -497,6 +504,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             setup=(BENCHMARK_RST_SETUP_PIPE_READ % dvname)
         )
 
+    @unittest.skip("nada")
     def test_cmd_dynamic_attribute_memory_cpp(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -523,6 +531,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             description=BENCHMARK_DESCRIPTION_MEMORY,
             setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname))
 
+    @unittest.skip("nada")
     def test_cmd_dynamic_attribute_memory_py(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -549,6 +558,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
             description=BENCHMARK_DESCRIPTION_MEMORY,
             setup=(BENCHMARK_RST_SETUP_DYN_ATTR_MEM % dvname))
 
+    @unittest.skip("nada")
     def test_cmd_dynamic_attribute_memory_java(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -656,6 +666,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
                 self.assertTrue(
                     isinstance(float(tbody[i][j][0][0]), float))
 
+    @unittest.skip("nada")
     def test_server_startup_time_py(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))

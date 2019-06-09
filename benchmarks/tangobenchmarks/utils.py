@@ -78,6 +78,7 @@ class Benchmark(object):
                     err = qres.get(block=False)
                     print("WORKER produced out={}\n".format(out))
                     print("WORKER produced err={}\n".format(err))
+                print("TESTING benchmark output!!!")
                 self._results.append(res)
                 if verbose:
                     print("VERBOSE: id: %s,  counts: %s,  "
