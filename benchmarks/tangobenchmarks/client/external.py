@@ -44,12 +44,15 @@ class Worker(multiprocessing.Process):
     def _join(self):
         out, err = self.__process.communicate()
 
-        sys.stderr.write("WORKER produced {}\n".format(out))
+        # sys.stderr.write("WORKER produced {}\n".format(out))
 
+        outorg = out
         out = out.splitlines()
         res = out[1] if out[0].startswith("========== ZMQ") else out[0]
 
         self.__qresult.put(self._build_result(res))
+        self.__qresult.put(outorg)
+        self.__qresult.put(err)
         if err:
             sys.stderr.write(err + "\n")
 

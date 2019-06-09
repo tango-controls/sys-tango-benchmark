@@ -25,6 +25,7 @@ import datetime
 import csv
 import sys
 import re
+import sys
 
 from multiprocessing import Queue
 
@@ -72,6 +73,11 @@ class Benchmark(object):
         for qres in self._qresults:
             try:
                 res = qres.get(block=False)
+                if not qres.empty():
+                    out = qres.get(block=False)
+                    err = qres.get(block=False)
+                    print("WORKER produced out={}\n".format(out))
+                    print("WORKER produced err={}\n".format(err))
                 self._results.append(res)
                 if verbose:
                     print("VERBOSE: id: %s,  counts: %s,  "
