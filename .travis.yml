@@ -7,8 +7,9 @@ env:
   # - OS=debian10 PY=2 TEST=devices
   # - OS=ubuntu18.04 PY=2 TEST=devices
   # - OS=ubuntu18.04 PY=3 TEST=devices
-  - OS=debian10 PY=3 TEST=runner
-  - OS=debian10 PY=2 TEST=runner
+  # - OS=debian10 PY=3 TEST=runner
+  # - OS=debian10 PY=2 TEST=runner
+  - OS=debian10 PY=2 TEST=test
   # - OS=ubuntu18.04 PY=2 TEST=runner
   # - OS=ubuntu18.04 PY=3 TEST=runner
 #   - OS=debian9 PY=3 TEST=devices
@@ -32,6 +33,7 @@ before_script:
 script:
   - if [ "$TEST" == "devices" ]; then .travis/testdevices.sh ${PY}; fi
   - if [ "$TEST" == "runner" ]; then .travis/testrunner.sh ${PY}; fi
+  - if [ "$TEST" == "test" ]; then docker exec -it --user root s2i /bin/sh -c 'cd benchmarks; tg_benchmarkrunner -c test/assets/external_cpp.yml'; fi
   - if [ "$TEST" == "flake8" ]; then flake8; fi
 
 

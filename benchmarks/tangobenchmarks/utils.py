@@ -69,6 +69,7 @@ class Benchmark(object):
         :param verbose: verbose mode
         :type verbose: :obj:`bool`
         """
+        print("TESTIN fetchResults")
         self._results = []
         for qres in self._qresults:
             try:
