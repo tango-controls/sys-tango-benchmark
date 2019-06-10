@@ -290,6 +290,18 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print(vl)
         self.check_default(vl, "python")
 
+    def test_external_java_client(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        vl, er = self.runscript(
+            'benchmarkrunner -c test/assets/external_java.yml'.split())
+
+        print(vl)
+        self.assertEqual('', er)
+        self.assertTrue(vl)
+        self.check_default(vl, "python")
+
     def test_cmd_benchmark(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
