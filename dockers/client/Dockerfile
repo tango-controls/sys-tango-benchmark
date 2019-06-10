@@ -29,6 +29,33 @@ RUN cd /opt/sys-tango-benchmark/cppclient \
  && make \
  && make install
 
+RUN echo '\
+deb http://snapshot.debian.org/archive/debian/20190326T120000Z buster main \n\
+deb http://snapshot.debian.org/archive/debian-security/20190326T120000Z buster/updates main \n\
+deb http://snapshot.debian.org/archive/debian/20190326T120000Z buster-updates main' \
+> /etc/apt/sources.list
+
+RUN apt -o Acquire::Check-Valid-Until=false update \
+ && apt install -y openjdk-8-jre openjdk-8-jdk liblog4j1.2-java libzmq-java maven
+
+RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
+
+RUN cd /opt \
+ && curl -O https://people.debian.org/~picca/libtango-java_9.2.5a-1_all.deb \
+ && dpkg -i ./libtango-java_9.2.5a-1_all.deb \
+ && rm libtango-java_9.2.5a-1_all.deb
+
+RUN cd /opt/sys-tango-benchmark/javaclient \
+ && for d in tg-benchmark-client-*; do cd $d && mvn package; cd ..; done \
+ && cp -f tg-benchmark-client-*/target/*.jar ${TANGO_ROOT:-/usr}/share/java
+
+RUN cd /opt/sys-tango-benchmark/javaclient \
+ && for d in tg-benchmark-client-*; do \
+        client=$(echo $d | awk -F- '{print $NF}') \
+        && outfile=${TANGO_ROOT:-/usr}/bin/tg_benchmark_client_java_$client \
+        && cat script-template | sed "s/^CLIENT=$/CLIENT=$client/g" > $outfile \
+        && chmod +x $outfile; \
+    done
 
 # ##########################################
 
