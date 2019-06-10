@@ -342,7 +342,7 @@ class BenchmarkRunnerTest(unittest.TestCase):
         dvname = self.get_target_device_name(lang)
         document = self.parse_rst(text)
 
-        self.assertEqual(len(document), 2)
+        self.assertEqual(len(document), 3)
 
         self.check_benchmark_rst_output(
             document[0],
@@ -355,6 +355,13 @@ class BenchmarkRunnerTest(unittest.TestCase):
             document[1],
             has_duplicate_targets=True,
             title=('%s push event benchmark with java worker' % lang),
+            operation='event',
+            setup=(BENCHMARK_RST_SETUP_PUSHEVENT % dvname))
+
+        self.check_benchmark_rst_output(
+            document[2],
+            has_duplicate_targets=True,
+            title=('%s push event benchmark with cpp worker' % lang),
             operation='event',
             setup=(BENCHMARK_RST_SETUP_PUSHEVENT % dvname))
 
