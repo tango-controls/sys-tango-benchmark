@@ -45,17 +45,8 @@ RUN cd /opt \
  && dpkg -i ./libtango-java_9.2.5a-1_all.deb \
  && rm libtango-java_9.2.5a-1_all.deb
 
-RUN cd /opt/sys-tango-benchmark/javaclient \
- && for d in tg-benchmark-client-*; do cd $d && mvn package; cd ..; done \
- && cp -f tg-benchmark-client-*/target/*.jar ${TANGO_ROOT:-/usr}/share/java
-
-RUN cd /opt/sys-tango-benchmark/javaclient \
- && for d in tg-benchmark-client-*; do \
-        client=$(echo $d | awk -F- '{print $NF}') \
-        && outfile=${TANGO_ROOT:-/usr}/bin/tg_benchmark_client_java_$client \
-        && cat script-template | sed "s/^CLIENT=$/CLIENT=$client/g" > $outfile \
-        && chmod +x $outfile; \
-    done
+RUN /opt/sys-tango-benchmark/javaclient/javaclient-build.sh \
+ && /opt/sys-tango-benchmark/javaclient/javaclient-install.sh
 
 # ##########################################
 
