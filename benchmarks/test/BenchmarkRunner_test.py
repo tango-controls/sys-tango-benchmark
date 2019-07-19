@@ -290,6 +290,18 @@ class BenchmarkRunnerTest(unittest.TestCase):
         print(vl)
         self.check_default(vl, "python")
 
+    def test_external_java_client(self):
+        print("Run: %s.%s() " % (
+            self.__class__.__name__, sys._getframe().f_code.co_name))
+
+        vl, er = self.runscript(
+            'benchmarkrunner -c test/assets/external_java.yml'.split())
+
+        print(vl)
+        self.assertEqual('', er)
+        self.assertTrue(vl)
+        self.check_default(vl, "python")
+
     def test_cmd_benchmark(self):
         print("Run: %s.%s() " % (
             self.__class__.__name__, sys._getframe().f_code.co_name))
@@ -330,15 +342,28 @@ class BenchmarkRunnerTest(unittest.TestCase):
         dvname = self.get_target_device_name(lang)
         document = self.parse_rst(text)
 
-        self.assertEqual(len(document), 1)
+        self.assertEqual(len(document), 3)
 
         self.check_benchmark_rst_output(
             document[0],
             has_duplicate_targets=False,
             title=('%s push event benchmark' % lang),
             operation='event',
-            setup=(BENCHMARK_RST_SETUP_PUSHEVENT % dvname)
-        )
+            setup=(BENCHMARK_RST_SETUP_PUSHEVENT % dvname))
+
+        self.check_benchmark_rst_output(
+            document[1],
+            has_duplicate_targets=True,
+            title=('%s push event benchmark with java worker' % lang),
+            operation='event',
+            setup=(BENCHMARK_RST_SETUP_PUSHEVENT % dvname))
+
+        self.check_benchmark_rst_output(
+            document[2],
+            has_duplicate_targets=True,
+            title=('%s push event benchmark with cpp worker' % lang),
+            operation='event',
+            setup=(BENCHMARK_RST_SETUP_PUSHEVENT % dvname))
 
     def get_target_device_name(self, lang):
         if lang == "python":

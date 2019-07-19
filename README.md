@@ -75,6 +75,14 @@ For client side (benchmark runners):
     # or make install INSTALL_DIR=~/.local/bin
     ```
 
+1. Install Java workers:
+    ```bash
+    cd javaclient
+    ./javaclient-build.sh
+    sudo ./javaclient-install.sh
+    # or INSTALL_PREFIX=~/.local ./javaclient-install.sh
+    ```
+
 ### Running a default benchmark
 
 The benchmark runner (`tg_benchmarkrunner`) uses a configuration script provided with `-c` command line options. 

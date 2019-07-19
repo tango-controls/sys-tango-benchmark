@@ -21,17 +21,22 @@ class Worker(multiprocessing.Process):
         return env
 
     def _build_result(self, output):
-        try:
-            counter, time, errors = output.split()
-            return utils.Result(
-                self.__wid,
-                int(counter),
-                float(time),
-                int(errors))
-        except Exception:
-            sys.stderr.write(
-                "Malformed result from external client: %s\n" % output)
-            return utils.Result(self.__wid, 0, 0, 0)
+        counter, time, errors = output.split()
+        return utils.Result(
+            self.__wid,
+            int(counter),
+            float(time),
+            int(errors))
+
+    def _parse_output(self, output_lines):
+        for line in output_lines.splitlines():
+            try:
+                return self._build_result(line)
+            except Exception:
+                pass
+        sys.stderr.write(
+            "Malformed result from external client: %s\n" % output_lines)
+        return utils.Result(self.__wid, 0, 0, 0)
 
     def _start(self):
         self.__process = subprocess.Popen(
@@ -43,7 +48,7 @@ class Worker(multiprocessing.Process):
 
     def _join(self):
         out, err = self.__process.communicate()
-        self.__qresult.put(self._build_result(out))
+        self.__qresult.put(self._parse_output(out))
         if err:
             sys.stderr.write(err + "\n")
 

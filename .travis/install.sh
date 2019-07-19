@@ -74,3 +74,7 @@ fi
 
 echo "install cpp clients"
 docker exec -it --user root s2i /bin/sh -c 'cd cppclient && make all'
+
+echo "install java clients"
+docker exec -it --user root s2i ./javaclient/javaclient-build.sh
+docker exec -it --user root s2i ./javaclient/javaclient-install.sh

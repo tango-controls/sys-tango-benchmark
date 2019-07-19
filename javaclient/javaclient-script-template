@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [ ! $TANGO_HOST ] && [ -f /etc/tangorc ]; then
+  . /etc/tangorc
+fi
+
+if [ ! $TANGO_ROOT ]; then
+  export TANGO_ROOT=/usr
+fi
+
+CLIENT=
+
+LOGBACK=${TANGO_LOGBACK:-/usr/local/share/tango/logback.xml}
+
+JAVALIB=$TANGO_ROOT/share/java
+JARPKG=$JAVALIB/tg-benchmark-client-$CLIENT-1.0-SNAPSHOT.jar
+CLASSPATH=$JAVALIB/JTango.jar:$JAVALIB/log4j.jar:$JAVALIB/zmq.jar:$JARPKG
+
+exec java \
+  -cp $CLASSPATH \
+  -DTANGO_HOST=$TANGO_HOST \
+  -Dlogback.configurationFile="$LOGBACK" \
+  com.s2innovation.tango.benchmark.client.$CLIENT.App "$@"
