@@ -52,12 +52,6 @@ class Starter(Process):
         if hasattr(tango.ApiUtil, 'cleanup'):
             tango.ApiUtil.cleanup()
         self.__db = tango.Database()
-        starters = self.__db.get_device_exported_for_class(
-            "Starter").value_string
-        try:
-            self.__starter = tango.DeviceProxy(starters[0])
-        except Exception:
-            self.__starter = None
 
         for device in self.__devices:
             self.register(**device)
@@ -138,15 +132,27 @@ class Starter(Process):
         sinfo.level = 1
         self.__db.put_server_info(sinfo)
 
-        # if self.__starter:
-        #     self.__starter.UpdateServersInfo()
-        #     running = self.__starter.DevGetRunningServers(True)
+        try:
+            if host:
+                starter_name = "tango/admin/{}".format(sinfo.host)
+                starter = tango.DeviceProxy(starter_name)
+                running = starter.DevGetRunningServers(True)
+        except Exception:
+            running = []
+
         found = False
         found = self.checkDevice(target_device, 1)
 
         if not found and server_instance not in running:
             try:
-                self.__starter.DevStart(server_instance)
+                if host:
+                    starter_name = "tango/admin/{}".format(sinfo.host)
+                    starter = tango.DeviceProxy(starter_name)
+                    starter.DevStart(server_instance)
+                else:
+                    raise Exception(
+                        "Failed to start server with starter: {}".format(
+                            server_instance))
                 if not self.checkDevice(target_device):
                     raise Exception(
                         "Server %s start failed" % server_instance)
@@ -273,12 +279,6 @@ class Stoper(Process):
         if hasattr(tango.ApiUtil, 'cleanup'):
             tango.ApiUtil.cleanup()
         self.__db = tango.Database()
-        starters = self.__db.get_device_exported_for_class(
-            "Starter").value_string
-        try:
-            self.__starter = tango.DeviceProxy(starters[0])
-        except Exception:
-            self.__starter = None
         self.stopServers()
         self.unregisterServers()
 
@@ -287,8 +287,9 @@ class Stoper(Process):
         """
         for server_instance in self.__launched:
             try:
-                self.__starter.DevStop(server_instance)
-                # self.__starter.HardKillServer(server_instance)
+                admin_name = "dserver/{}".format(server_instance)
+                dserver = tango.DeviceProxy(admin_name)
+                dserver.Kill()
             except Exception:
                 server, instance = server_instance.split("/")
                 grepserver = \
