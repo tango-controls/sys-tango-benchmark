@@ -134,8 +134,6 @@ class Starter(Process):
         sinfo = self.__db.get_server_info(server_instance)
         sinfo.name = server_instance
         sinfo.host = host or socket.gethostname()
-        sinfo.mode = 1
-        sinfo.level = 1
         self.__db.put_server_info(sinfo)
 
         # if self.__starter:
