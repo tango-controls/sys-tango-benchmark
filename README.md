@@ -131,9 +131,12 @@ to define a scope of tests. Please use `--help` option to list them. Below is a 
   also impact of data size,
 - `tg_pipe_write_benchmark` checks how number of clients affects pipe write speed. Size of pipe may be provided to check 
   also impact of data size,
-- `tg_eventbanchmark` checks how event subscription time is affected by number of clients.
+- `tg_event_banchmark` checks how event subscription time is affected by number of clients,
+- `tg_push_event_benchmark` checks how event push performance is affected by the number of clients,
+- `tg_dynamic_attribute_memory_benchmark` checks how memory consumption is affected by the number of configured dynamic attributes,
+- `tg_server_startup_time_benchmark` checks how server startup time is affected by the number of configured devices.
 
-Please note, new ones will be provided soon :).
+Everyone is welcome to submit a new benchmark via a Pull Request :)
 
 ### Target devices
 
