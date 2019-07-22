@@ -171,7 +171,7 @@ void CppBenchmarkTarget::delete_device()
 	int* nret;
 	if(event_thread){
 	  event_thread->join((void**)&nret);
-	  delete(event_thread);
+	  // omni_thread deletes itself
 	  event_thread = NULL;
 	}
 
@@ -1074,6 +1074,11 @@ void CppBenchmarkTarget::start_events()
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::start_events) ENABLED START -----*/
 
 	//	Add your own code
+	if (m_state == Tango::RUNNING)
+	{
+		std::cout << "Events are already being pushed, ignoring StartEvents" << std::endl;
+		return;
+	}
 	double speriod(*attr_EventSleepPeriod_read);
 	long usperiod;
 	int* nret;
@@ -1081,7 +1086,9 @@ void CppBenchmarkTarget::start_events()
 	usperiod = static_cast<long>(speriod * 1000);
 	if(event_thread){
 	  event_thread->join((void**)&nret);
-	  delete(event_thread);
+	  // omni_thread deletes itself during join
+	  // https://sourceforge.net/p/omniorb/svn/HEAD/tree/tags/4_2_3/omniORB/src/lib/omnithread/posix.cc#l671
+	  event_thread = NULL;
 	}
 	event_thread = new EventThread(this, usperiod, m_mutex);
 	m_state = Tango::RUNNING;
@@ -1100,6 +1107,11 @@ void CppBenchmarkTarget::stop_events()
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::stop_events) ENABLED START -----*/
 
 	//	Add your own code
+	if (m_state != Tango::RUNNING)
+	{
+		std::cout << "Events are not being pushed, ignoring StopEvents" << std::endl;
+		return;
+	}
 	int* nret;
 	{
 	  omni_mutex_lock l(m_mutex);
