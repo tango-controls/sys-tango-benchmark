@@ -83,7 +83,7 @@ class Worker(multiprocessing.Process):
         self.__proxy.StartEvents()
         time.sleep(self.__period)
         finished = False
-        while finished:
+        while not finished:
             try:
                 self.__proxy.StopEvents()
                 finished = True

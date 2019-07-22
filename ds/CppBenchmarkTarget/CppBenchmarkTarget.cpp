@@ -171,7 +171,7 @@ void CppBenchmarkTarget::delete_device()
 	int* nret;
 	if(event_thread){
 	  event_thread->join((void**)&nret);
-	  delete(event_thread);
+	  // omni_thread deletes itself
 	  event_thread = NULL;
 	}
 
@@ -1081,7 +1081,9 @@ void CppBenchmarkTarget::start_events()
 	usperiod = static_cast<long>(speriod * 1000);
 	if(event_thread){
 	  event_thread->join((void**)&nret);
-	  delete(event_thread);
+	  // omni_thread deletes itself during join
+	  // https://sourceforge.net/p/omniorb/svn/HEAD/tree/tags/4_2_3/omniORB/src/lib/omnithread/posix.cc#l671
+	  event_thread = NULL;
 	}
 	event_thread = new EventThread(this, usperiod, m_mutex);
 	m_state = Tango::RUNNING;
