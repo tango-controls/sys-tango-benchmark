@@ -453,6 +453,9 @@ class PyBenchmarkTarget(Device):
     @command()
     @DebugIt()
     def StartEvents(self):
+        if self.__state == "RUNNING":
+            print("Events are already being pushed, ignoring StartEvents")
+            return
         self.__events_count = 0
         self.__event_thread = EventThread(
             self, self.__event_sleep_period)
@@ -465,6 +468,9 @@ class PyBenchmarkTarget(Device):
     @command()
     @DebugIt()
     def StopEvents(self):
+        if self.__state != "RUNNING":
+            print("Events are not being pushed, ignoring StopEvents")
+            return
         self.__event_thread.running = False
         while not self.__event_thread.finished:
             time.sleep(0.01)

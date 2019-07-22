@@ -1074,6 +1074,11 @@ void CppBenchmarkTarget::start_events()
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::start_events) ENABLED START -----*/
 
 	//	Add your own code
+	if (m_state == Tango::RUNNING)
+	{
+		std::cout << "Events are already being pushed, ignoring StartEvents" << std::endl;
+		return;
+	}
 	double speriod(*attr_EventSleepPeriod_read);
 	long usperiod;
 	int* nret;
@@ -1102,6 +1107,11 @@ void CppBenchmarkTarget::stop_events()
 	/*----- PROTECTED REGION ID(CppBenchmarkTarget::stop_events) ENABLED START -----*/
 
 	//	Add your own code
+	if (m_state != Tango::RUNNING)
+	{
+		std::cout << "Events are not being pushed, ignoring StopEvents" << std::endl;
+		return;
+	}
 	int* nret;
 	{
 	  omni_mutex_lock l(m_mutex);

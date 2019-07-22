@@ -1070,10 +1070,14 @@ public class JavaBenchmarkTarget {
 	 * @throws DevFailed if command execution failed.
 	 */
 	@Command(name="StartEvents", inTypeDesc="", outTypeDesc="")
-	@StateMachine(deniedStates={DeviceState.RUNNING})
 	public void StartEvents() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.startEvents) ENABLED START -----*/
+		if (state == DevState.RUNNING)
+		{
+			xlogger.info("Events are already being pushed, ignoring StartEvents");
+			return;
+		}
 		eventsCount = 0;
 		eventThread = new EventThread(this,
 					      (int)eventSleepPeriod);
@@ -1093,6 +1097,11 @@ public class JavaBenchmarkTarget {
 	public void StopEvents() throws DevFailed {
 		xlogger.entry();
 		/*----- PROTECTED REGION ID(JavaBenchmarkTarget.stopEvents) ENABLED START -----*/
+		if (state != DevState.RUNNING)
+		{
+			xlogger.info("Events are not being pushed, ignoring StopEvents");
+			return;
+		}
 		eventThread.setRunning(false);
 		while(!eventThread.getFinished()){
 		    try{
