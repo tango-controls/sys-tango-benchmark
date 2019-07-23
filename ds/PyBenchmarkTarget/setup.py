@@ -26,10 +26,18 @@ import sys
 import subprocess
 from setuptools import setup
 from distutils.core import Command
-from sphinx.setup_command import BuildDoc
-from PyBenchmarkTarget.release import name, version
+cmd_class = {}
+try:
+    from sphinx.setup_command import BuildDoc
+    cmd_class['build_sphinx'] = BuildDoc
+except ImportError:
+    print("WARNING: sphinx not available, not adding 'build_sphinx' command.")
 
 setup_dir = os.path.dirname(os.path.abspath(__file__))
+
+release_info = {}
+exec(open(os.path.join('PyBenchmarkTarget', 'release.py')).read(),
+     release_info)
 
 # make sure we use latest info from local code
 sys.path.insert(0, setup_dir)
@@ -65,10 +73,13 @@ class TestCommand(Command):
         raise SystemExit(errno)
 
 
+cmd_class['test'] = TestCommand
+
+
 #: metadata for distutils
 SETUPDATA = dict(
-    name=name,
-    version=version,
+    name=release_info['name'],
+    version=release_info['version'],
     description='Benchmark device for counting attribute, '
     'command and pipe calls',
     packages=pack,
@@ -82,7 +93,8 @@ SETUPDATA = dict(
     long_description=long_description,
     url='www.tango-controls.org',
     platforms="All Platforms",
-    cmdclass={'test': TestCommand, 'build_sphinx': BuildDoc},
+    install_requires=['sphinx', 'numpy'],
+    cmdclass=cmd_class
 )
 
 
