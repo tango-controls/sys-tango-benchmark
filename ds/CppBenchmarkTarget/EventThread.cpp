@@ -24,7 +24,7 @@ namespace CppBenchmarkTarget_ns
   void* EventThread::run_undetached(void*)
   {
     bool loop = true;
-    while(running){
+    while(loop){
       try{
 	{
 	  Tango::AutoTangoMonitor synch(m_objServer);
